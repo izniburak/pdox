@@ -3,7 +3,7 @@
 *
 * PHP PDO Database Class for MySQL, PostgreSQL and SQLite
 *
-* @ Author: İzni Burak Demirtaş / @izniburak <info@burakdemirtas.org>
+* @ Author: izni Burak Demirtas / @izniburak <info@burakdemirtas.org>
 *
 * @ Web: http://burakdemirtas.org
 *
