@@ -23,11 +23,17 @@ $config = array(
 $db = new PDOx($config);
 
 
-$records = $db->select('id, name, surname, age')->from('users')->where('age', '>', 18)->orderBy('id', 'desc')->limit(20)->getAll();
+$records = $db->
+	select('id, name, surname, age')->
+	from('users')->
+	where('age', '>', 18)->
+	orderBy('id', 'desc')->
+	limit(20)->
+	getAll();
 
 foreach($records as $record) {
 
-	echo $record->id . ' - ' . $record->name . ' ' . $record->surname . ' / ' . $record->age . '<br />';
+	echo $record->id . ' - ' . $record->name . ' / ' . $record->age . '<br />';
 
 }
 ```
