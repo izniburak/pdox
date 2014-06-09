@@ -1,7 +1,6 @@
 ## PDOx
 Useful PHP PDO Class
 
-[![PayPal ile Destek Ol][paypal-donate-img]][paypal-donate-url]
 
 
 ## Function Lists
