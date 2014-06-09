@@ -6,6 +6,10 @@ Useful PHP PDO Class
 
 Example
 ====
+```php
+
+include('pdox.class.php');
+
 $config = array(
 	'user'		=> 'root',
 	'pass'		=> '',
@@ -26,3 +30,4 @@ foreach($records as $record) {
 	echo $record->id . ' - ' . $record->name . ' ' . $record->surname . ' / ' . $record->age . '<br />';
 
 }
+```
