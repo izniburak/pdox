@@ -1,9 +1,9 @@
 ## PDOx
-Useful PHP PDO Class
+Hızlı, düzenli ve kullanışlı PDO Sınıfı #PHP
 
 
 
-## Function Lists
+## Metot Listesi
 ```php
 select
 from
@@ -31,7 +31,7 @@ query
 escape
 ```
 
-## Example
+## Örnek
 ```php
 
 include('pdox.class.php');
@@ -62,9 +62,13 @@ foreach($records as $record) {
 
 }
 ```
+## Kullanım 
+PDOx kullanımı ile ilgili döküman sayfasına [buradan][doc-url] ulaşabilirsiniz.
+
 ## Lisans
 Açık kaynaklı olan bu proje [MIT lisansı][mit-url] ile lisanslanmıştır.
 
 [paypal-donate-img]: http://img.shields.io/badge/PayPal-donate-brightgreen.svg
 [paypal-donate-url]: http://burakdemirtas.org
 [mit-url]: http://opensource.org/licenses/MIT
+[doc-url]: http://burakdemirtas.org/59/pdox-useful-pdo-class-php/
