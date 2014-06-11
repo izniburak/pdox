@@ -1,6 +1,7 @@
+[![PDOx][pdox-img]][doc-url]
+
 ## PDOx
 Hızlı, düzenli ve kullanışlı PDO Sınıfı #PHP
-
 
 
 ## Metot Listesi
@@ -68,7 +69,7 @@ PDOx kullanımı ile ilgili döküman sayfasına [buradan][doc-url] ulaşabilirs
 ## Lisans
 Açık kaynaklı olan bu proje [MIT lisansı][mit-url] ile lisanslanmıştır.
 
-[paypal-donate-img]: http://img.shields.io/badge/PayPal-donate-brightgreen.svg
+[pdox-img]: http://burakdemirtas.org/uploads/thumbs/20140610210255_pdox_pdo_class_for_php.jpg
 [paypal-donate-url]: http://burakdemirtas.org
 [mit-url]: http://opensource.org/licenses/MIT
 [doc-url]: http://burakdemirtas.org/59/pdox-useful-pdo-class-php/
