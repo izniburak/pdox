@@ -7,7 +7,7 @@
 *
 * @ Web: http://burakdemirtas.org
 *
-* @ Docs: http://burakdemirtas.org/58/pdox-useful-pdo-class-php/
+* @ Docs: http://burakdemirtas.org/59/pdox-useful-pdo-class-php/
 *
 * @ Licence: The MIT License (MIT) - Copyright (c) 2014 - http://opensource.org/licenses/MIT
 *
