@@ -18,17 +18,17 @@ class PDOx {
 	public $pdo = null;
 	
 	private $select = '*';
-    private $from = null;
-    private $where = null;
-    private $limit = null;
-    private $join = null;
-    private $order_by = null;
-    private $group_by = null;
+	private $from = null;
+	private $where = null;
+	private $limit = null;
+	private $join = null;
+	private $order_by = null;
+	private $group_by = null;
 	private $having = null;
-    private $num_rows = 0;
+	private $num_rows = 0;
 	private $insert_id = null;
 	private $query = null;
-    private $error = null;
+	private $error = null;
 	private $result = array();
 
 	public function __construct($config) {
@@ -562,15 +562,15 @@ class PDOx {
     }
 	
 	private function reset() {
-	
-        $this->select = '*';
-        $this->from = null;
-        $this->where = null;
-        $this->limit = null;
-        $this->order_by = null;
-        $this->group_by = null;
+		
+		$this->select = '*';
+		$this->from = null;
+		$this->where = null;
+		$this->limit = null;
+		$this->order_by = null;
+		$this->group_by = null;
 		$this->having = null;
-        $this->join = null;
+		$this->join = null;
 		$this->num_rows = 0;
 		$this->insert_id = null;
 		$this->query = null;
