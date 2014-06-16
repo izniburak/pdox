@@ -14,6 +14,7 @@ whereIn
 whereNotIn
 join
 leftJoin
+rightJoin
 like
 orLike
 orderBy

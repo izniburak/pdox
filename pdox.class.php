@@ -111,6 +111,14 @@ class PDOx {
         return $this;
 		
     }
+	
+	public function rightJoin($table, $field1, $op = '', $field2 = '') {
+	
+		$this->join($table, $field1, $op, $field2, 'RIGHT');
+		
+        return $this;
+		
+    }
 
     public function where($where, $op = null, $val = null, $ao = 'AND') {
 	
