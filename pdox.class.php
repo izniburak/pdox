@@ -291,18 +291,18 @@ class PDOx {
 		
     }
 	
-	public function having($field, $op = null, $val = null) {
+    public function having($field, $op = null, $val = null) {
 	
-		$x = array('=','!=','<','>','<=','>=','<>');
-		if (!in_array($op, $x)) {
+	$x = array('=','!=','<','>','<=','>=','<>');
+	if (!in_array($op, $x)) {
+
+		$this->having = $field . ' > ' . $this->escape($op);
 	
-			$this->having = $field . ' > ' . $this->escape($op);
+	} else {
+	
+		$this->having = $field . ' ' . $op . ' ' . $this->escape($val);
 		
-		} else {
-		
-			$this->having = $field . ' ' . $op . ' ' . $this->escape($val);
-			
-		}
+	}
 		
         return $this;
 		
@@ -314,7 +314,7 @@ class PDOx {
 		
     }
 	
-	public function insertId() {
+    public function insertId() {
 	
         return $this->insert_id;
 		
@@ -422,9 +422,9 @@ class PDOx {
         $query = $this->query($query);
 		
         if ($query) {
-			$this->insert_id = $this->pdo->lastInsertId();
-			return $this->insert_id();
-		}
+		$this->insert_id = $this->pdo->lastInsertId();
+		return $this->insertId();
+	}
 		
     }
 
