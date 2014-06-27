@@ -30,6 +30,7 @@ class PDOx {
 	private $query = null;
 	private $error = null;
 	private $result = array();
+	private $op = array('=','!=','<','>','<=','>=','<>');
 
 	public function __construct($config) {
 		
@@ -71,73 +72,71 @@ class PDOx {
 	
 	public function select($select) {
 	
-        $this->select = $select;
+		$this->select = $select;
 		
-        return $this;
+		return $this;
 		
-    }
+    	}
 
-    public function from($from) {
+	public function from($from) {
 	
-        $this->from = $from;
+		$this->from = $from;
 		
-        return $this;
+		return $this;
 		
-    }
+	}
 	
-    public function join($table, $field1, $op = '', $field2 = '', $join = 'INNER') {
+	public function join($table, $field1, $op = '', $field2 = '', $join = 'INNER') {
 	
-		$x = array('=','!=','<','>','<=','>=','<>');
-		$where = (!in_array($op, $x) ? $field1 . ' = ' . $op : $field1 . ' ' . $op . ' ' . $field2);
+		$where = (!in_array($op, $this->op) ? $field1 . ' = ' . $op : $field1 . ' ' . $op . ' ' . $field2);
 	
-        if (is_null($this->join)) {
+		if (is_null($this->join)) {
 		
-            $this->join = " " . $join . " JOIN" . " " . $table . " ON " . $where;
+			$this->join = " " . $join . " JOIN" . " " . $table . " ON " . $where;
 			
-        } else {
+		} else {
 		
-            $this->join = $this->join . " " . $join . " JOIN" . " " . $table . " ON " . $where;
+			$this->join = $this->join . " " . $join . " JOIN" . " " . $table . " ON " . $where;
 			
-        }
+		}
 		
-        return $this;
+		return $this;
 		
-    }
+	}
 	
 	public function leftJoin($table, $field1, $op = '', $field2 = '') {
 	
 		$this->join($table, $field1, $op, $field2, 'LEFT');
 		
-        return $this;
+		return $this;
 		
-    }
+	}
 	
 	public function rightJoin($table, $field1, $op = '', $field2 = '') {
 	
 		$this->join($table, $field1, $op, $field2, 'RIGHT');
 		
-        return $this;
+		return $this;
 		
-    }
+	}
 
-    public function where($where, $op = null, $val = null, $ao = 'AND') {
+	public function where($where, $op = null, $val = null, $ao = 'AND') {
 	
-        if (is_array($where)) {
+		if (is_array($where)) {
 		
-            $_where = array();
+			$_where = array();
 			
-            foreach ($where as $column => $data) {
+			foreach ($where as $column => $data) {
 			
-                $_where[] = $column . '=' . $this->escape($data);
+				$_where[] = $column . '=' . $this->escape($data);
 				
-            }
+			}
 			
-            $where = implode(' '.$ao.' ', $_where);
+			$where = implode(' '.$ao.' ', $_where);
         
 		} else {
 		
-			$x = array('=','!=','<','>','<=','>=','<>');
-			if (!in_array($op, $x)) {
+			if (!in_array($op, $this->op)) {
 		
 				$where = $where . ' = ' . $this->escape($op);
 			
@@ -149,27 +148,27 @@ class PDOx {
 		
 		}
 		
-        if (is_null($this->where)) {
+		if (is_null($this->where)) {
 		
-            $this->where = $where;
+			$this->where = $where;
 			
-        } else {
+		} else {
 		
-            $this->where = $this->where . ' '.$ao.' ' . $where;
+			$this->where = $this->where . ' '.$ao.' ' . $where;
 			
-        }
+		}
 		
-        return $this;
+		return $this;
 		
-    }
+	}
 
-    public function orWhere($where, $op=null, $val=null) {
+	public function orWhere($where, $op=null, $val=null) {
 	
-       $this->where($where, $op, $val, 'OR');
+		$this->where($where, $op, $val, 'OR');
 		
-        return $this;
+		return $this;
 		
-    }
+	}
 	
 	public function whereIn($field, $keys, $ao = '') {
 	
@@ -177,17 +176,17 @@ class PDOx {
 		
 			$_keys = array();
 			
-            foreach ($keys as $k => $v) {
+			foreach ($keys as $k => $v) {
 			
 				$_keys[] = (is_numeric($v) ? $v : $this->escape($v));
 				
-            }
+			}
 			
-            $keys = implode(', ', $_keys);
+			$keys = implode(', ', $_keys);
 			
 			if (is_null($this->where)) {
 		
-            $this->where = $field . ' IN (' . $keys . ')';
+				$this->where = $field . ' IN (' . $keys . ')';
 			
 			} else {
 			
@@ -195,7 +194,7 @@ class PDOx {
 				
 			}
 			
-        }
+		}
 		
 		return $this;
 		
@@ -223,13 +222,13 @@ class PDOx {
 		
 		if (is_null($this->where)) {
 		
-            $this->where = $field . ' LIKE ' . $like;
+			$this->where = $field . ' LIKE ' . $like;
 			
-        } else {
+		} else {
 		
-            $this->where = $this->where . ' '.$ao.' ' . $field . ' LIKE ' . $like;
+			$this->where = $this->where . ' '.$ao.' ' . $field . ' LIKE ' . $like;
 			
-        }
+		}
 		
 		return $this;
 		
@@ -243,29 +242,29 @@ class PDOx {
 		
 	}
 
-    public function limit($limit, $limitEnd = null) {
+	public function limit($limit, $limitEnd = null) {
 	
-        if (!is_null($limitEnd)) {
+		if (!is_null($limitEnd)) {
 		
-            $this->limit = $limit . ', ' . $limitEnd;
+			$this->limit = $limit . ', ' . $limitEnd;
 			
-        } else {
+		} else {
 		
-            $this->limit = $limit;
+			$this->limit = $limit;
 			
-        }
+		}
 		
-        return $this;
+		return $this;
 		
-    }
+	}
 
-    public function orderBy($order_by, $order_dir = null) {
+	public function orderBy($order_by, $order_dir = null) {
 	
-        if (!is_null($order_dir)) {
+		if (!is_null($order_dir)) {
 		
-            $this->order_by = $order_by . ' ' . $order_dir;
+			$this->order_by = $order_by . ' ' . $order_dir;
 			
-        } else {
+		} else {
 		
 			if(stristr($order_by, ' ') || $order_by == 'rand()') {
 			
@@ -277,139 +276,138 @@ class PDOx {
 				
 			}
 			
-        }
+		}
 		
-        return $this;
-		
-    }
-
-    public function groupBy($group_by) {
-	
-        $this->group_by = $group_by;
-		
-        return $this;
-		
-    }
-	
-    public function having($field, $op = null, $val = null) {
-	
-	$x = array('=','!=','<','>','<=','>=','<>');
-	if (!in_array($op, $x)) {
-
-		$this->having = $field . ' > ' . $this->escape($op);
-	
-	} else {
-	
-		$this->having = $field . ' ' . $op . ' ' . $this->escape($val);
+		return $this;
 		
 	}
-		
-        return $this;
-		
-    }
 
-    public function count() {
+	public function groupBy($group_by) {
 	
-        return $this->num_rows;
+		$this->group_by = $group_by;
 		
-    }
-	
-    public function insertId() {
-	
-        return $this->insert_id;
+		return $this;
 		
-    }
+	}
+	
+	public function having($field, $op = null, $val = null) {
+	
+		if (!in_array($op, $this->op)) {
 
-    public function error() {
+			$this->having = $field . ' > ' . $this->escape($op);
 	
-        $msg = '<h1>Database Error</h1>';
+		} else {
+	
+			$this->having = $field . ' ' . $op . ' ' . $this->escape($val);
+		
+		}
+		
+		return $this;
+		
+	}
+
+	public function count() {
+	
+		return $this->num_rows;
+		
+	}
+	
+	public function insertId() {
+	
+		return $this->insert_id;
+		
+	}
+
+	public function error() {
+	
+		$msg = '<h1>Database Error</h1>';
 		$msg .= '<h4>Query: <em style="font-weight:normal;">"'.$this->query.'"</em></h4>';
 		$msg .= '<h4>Error: <em style="font-weight:normal;">'.$this->error.'</em></h4>';
 		die($msg);
 		
-    }
+	}
 	
 	public function get($array = false) {
 	
-        $query = "SELECT " . $this->select . " FROM " . $this->from;
+		$query = "SELECT " . $this->select . " FROM " . $this->from;
 		
-        if (!is_null($this->join)) {
+		if (!is_null($this->join)) {
 		
-            $query = $query . $this->join;
+			$query = $query . $this->join;
 			
-        }
+		}
 		
-        if (!is_null($this->where)) {
+		if (!is_null($this->where)) {
 		
-            $query = $query . ' WHERE ' . $this->where;
+			$query = $query . ' WHERE ' . $this->where;
 			
-        }
-		
-        if (!is_null($this->group_by)) {
-		
-            $query = $query . " GROUP BY " . $this->group_by;
-			
-        }
-		
-		if (!is_null($this->having)) {
-		
-            $query = $query . " HAVING " . $this->having;
-			
-        }
-		
-        if (!is_null($this->order_by)) {
-		
-            $query = $query . " ORDER BY " . $this->order_by;
-			
-        }
-		
-		$query  = $query . ' LIMIT 1';
-		
-        return $this->query($query, $array, false);
-		
-    }
-
-    public function getAll($array = false) {
-	
-        $query = "SELECT " . $this->select . " FROM " . $this->from;
-		
-        if (!is_null($this->join)) {
-		
-            $query = $query . $this->join;
-			
-        }
-		
-        if (!is_null($this->where)) {
-		
-            $query = $query . ' WHERE ' . $this->where;
-			
-        }
+		}
 		
 		if (!is_null($this->group_by)) {
 		
-            $query = $query . " GROUP BY " . $this->group_by;
+			$query = $query . " GROUP BY " . $this->group_by;
 			
-        }
+		}
 		
 		if (!is_null($this->having)) {
 		
-            $query = $query . " HAVING " . $this->having;
+			$query = $query . " HAVING " . $this->having;
 			
-        }
+		}
 		
 		if (!is_null($this->order_by)) {
 		
-            $query = $query . " ORDER BY " . $this->order_by;
+			$query = $query . " ORDER BY " . $this->order_by;
 			
-        }
+		}
 		
-        $query = (!is_null($this->limit)) ? $query . "  LIMIT " . $this->limit : $query;
+		$query  = $query . ' LIMIT 1';
 		
-        return $this->query($query, $array);
+		return $this->query($query, $array, false);
 		
-    }
+	}
 
-    public function insert($data) {
+	public function getAll($array = false) {
+	
+		$query = "SELECT " . $this->select . " FROM " . $this->from;
+		
+		if (!is_null($this->join)) {
+		
+			$query = $query . $this->join;
+			
+		}
+		
+		if (!is_null($this->where)) {
+		
+			$query = $query . ' WHERE ' . $this->where;
+			
+		}
+		
+		if (!is_null($this->group_by)) {
+		
+			$query = $query . " GROUP BY " . $this->group_by;
+			
+		}
+		
+		if (!is_null($this->having)) {
+		
+			$query = $query . " HAVING " . $this->having;
+			
+		}
+		
+		if (!is_null($this->order_by)) {
+		
+			$query = $query . " ORDER BY " . $this->order_by;
+			
+		}
+		
+		$query = (!is_null($this->limit)) ? $query . "  LIMIT " . $this->limit : $query;
+		
+		return $this->query($query, $array);
+		
+	}
+
+	public function insert($data) {
 		
 		$columns = array_keys($data);
 		
@@ -417,20 +415,23 @@ class PDOx {
 		
 		$val = "" . implode(", ", array_map(array($this, 'escape'), $data)) . "";
 		
-        $query = 'INSERT INTO ' . $this->from . ' (' . $column . ') VALUES (' . $val . ')';
+		$query = 'INSERT INTO ' . $this->from . ' (' . $column . ') VALUES (' . $val . ')';
 		
-        $query = $this->query($query);
+		$query = $this->query($query);
 		
-        if ($query) {
-		$this->insert_id = $this->pdo->lastInsertId();
-		return $this->insertId();
+		if ($query) {
+			
+			$this->insert_id = $this->pdo->lastInsertId();
+			
+			return $this->insertId();
+			
+		}
+		
 	}
-		
-    }
 
-    public function update($data) {
+	public function update($data) {
 	
-        $query = "UPDATE " . $this->from . " SET ";
+		$query = "UPDATE " . $this->from . " SET ";
 		
 		$values = array();
 		
@@ -443,31 +444,31 @@ class PDOx {
 		$query = $query . (is_array($data) ? implode(',', $values) : $data);
 		
 		
-        if (!is_null($this->where)) {
+		if (!is_null($this->where)) {
 		
-            $query = $query . ' WHERE ' . $this->where;
+			$query = $query . ' WHERE ' . $this->where;
 			
-        }
+		}
 		
 		if (!is_null($this->order_by)) {
 		
-            $query = $query . " ORDER BY " . $this->order_by;
+			$query = $query . " ORDER BY " . $this->order_by;
 			
-        }
+		}
 		
-        $query = (!is_null($this->limit)) ? $query . "  LIMIT " . $this->limit : $query;
+		$query = (!is_null($this->limit)) ? $query . "  LIMIT " . $this->limit : $query;
 		
-        return $this->query($query);
+		return $this->query($query);
 		
-    }
+	}
 
-    public function delete() {
+	public function delete() {
 	
-        $query = "DELETE FROM " . $this->from;
+		$query = "DELETE FROM " . $this->from;
 		
-        if (!is_null($this->where)) {
+		if (!is_null($this->where)) {
 		
-            $query = $query . ' WHERE ' . $this->where;
+			$query = $query . ' WHERE ' . $this->where;
 			
 			if (!is_null($this->order_by)) {
 			
@@ -477,23 +478,23 @@ class PDOx {
 			
 			$query = (!is_null($this->limit)) ? $query . "  LIMIT " . $this->limit : $query;
 			
-        } else {
+		} else {
 		
-            $query = 'TRUNCATE TABLE ' . $this->from;
+			$query = 'TRUNCATE TABLE ' . $this->from;
 			
-        }
+		}
 		
-        return $this->query($query);
+		return $this->query($query);
 		
-    }
+	}
 	
-    public function query($query, $array = false, $all = true) {
+	public function query($query, $array = false, $all = true) {
 	
 		$this->reset();	
 		
-        $this->query = preg_replace('/\s\s+|\t\t+/', ' ', trim($query));
+		$this->query = preg_replace('/\s\s+|\t\t+/', ' ', trim($query));
 		
-        $str = stristr($this->query, 'SELECT');
+		$str = stristr($this->query, 'SELECT');
 		
 		if ($str) {
 		
@@ -553,13 +554,13 @@ class PDOx {
 		
 		return $this->result;
 		
-    }
+	}
 	
-    public function escape($data) {
+	public function escape($data) {
 		
 		return $this->pdo->quote(trim($data));
 		
-    }
+	}
 	
 	private function reset() {
 		
@@ -576,9 +577,10 @@ class PDOx {
 		$this->query = null;
 		$this->error = null;
 		$this->result = array();
-        return;
 		
-    }
+        	return;
+		
+	}
 	
 	function __destruct() {
 	
