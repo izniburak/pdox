@@ -36,7 +36,7 @@ class PDOx {
 		
 		$config['type'] 	= ((@$config['type']) ? $config['type'] : 'mysql');
 		$config['host'] 	= ((@$config['host']) ? $config['host'] : 'localhost');
-		$config['charset'] 	= ((@$config['charset']) ? $config['charset'] : 'localhost');
+		$config['charset'] 	= ((@$config['charset']) ? $config['charset'] : 'utf8');
 	
 		$dsn = '';
 	
