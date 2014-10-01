@@ -46,7 +46,7 @@ class PDOx {
 			
 		} elseif ($config['type'] == 'sqlite') {
 		
-			$dsn = 'pgsql:' . $config['dbname'];
+			$dsn = 'sqlite:' . $config['dbname'] . '.sqlite';
 		
 		}
 		
