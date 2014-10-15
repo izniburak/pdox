@@ -294,7 +294,7 @@ class PDOx {
 	
 		if (!in_array($op, $this->op)) {
 
-			$this->having = $field . ' > ' . $this->escape($val);
+			$this->having = $field . ' > ' . $this->escape($op);
 	
 		} else {
 	
