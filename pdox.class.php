@@ -48,6 +48,10 @@ class PDOx {
 		
 			$dsn = 'sqlite:' . $config['dbname'] . '.sqlite';
 		
+		} elseif($config['type'] == 'oracle') {
+			
+			$dsn = 'oci:dbname=' . $config['host'] . '/' . $config['dbname'];
+			
 		}
 		
 		try {
