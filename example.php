@@ -51,7 +51,7 @@
 		
 		/* Database Driver Type (not required)
 		** default value: mysql
-		** values: mysql, pgsql, sqlite
+		** values: mysql, pgsql, sqlite, oracle
 		*/
 		
 		'type'		=> 'mysql',
