@@ -70,7 +70,7 @@ PDOx kullanımı ile ilgili döküman sayfasına [buradan][doc-url] ulaşabilirs
 ## Lisans
 Açık kaynaklı olan bu proje [MIT lisansı][mit-url] ile lisanslanmıştır.
 
-[pdox-img]: http://burakdemirtas.org/uploads/thumbs/20140610210255_pdox_pdo_class_for_php.jpg
+[pdox-img]: http://burakdemirtas.org/uploads/images/20140610210255_pdox_pdo_class_for_php.jpg
 [paypal-donate-url]: http://burakdemirtas.org
 [mit-url]: http://opensource.org/licenses/MIT
-[doc-url]: http://burakdemirtas.org/59/pdox-useful-pdo-class-php/
+[doc-url]: http://burakdemirtas.org/pdox-kullanisli-pdo-sinifi-php/
