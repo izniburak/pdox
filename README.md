@@ -44,7 +44,8 @@ $config = array(
 	'dbname'	=> 'test',
 	'host'		=> 'localhost',
 	'type'		=> 'mysql',
-	'charset'	=> 'utf8'
+	'charset'	=> 'utf8',
+	'prefix'	=> ''
 );
 
 
