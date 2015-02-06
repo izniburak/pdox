@@ -7,7 +7,7 @@
 *
 * @ Web: http://burakdemirtas.org
 *
-* @ Docs: http://burakdemirtas.org/59/pdox-useful-pdo-class-php/
+* @ Docs: http://burakdemirtas.org/pdox-kullanisli-pdo-sinifi-php/
 *
 * @ Licence: The MIT License (MIT) - Copyright (c) 2014 - http://opensource.org/licenses/MIT
 *
@@ -37,6 +37,8 @@ class PDOx {
 		$config['type'] 	= ((@$config['type']) ? $config['type'] : 'mysql');
 		$config['host'] 	= ((@$config['host']) ? $config['host'] : 'localhost');
 		$config['charset'] 	= ((@$config['charset']) ? $config['charset'] : 'utf8');
+		$config['prefix'] 	= ((@$config['prefix']) ? $config['prefix'] : '');
+			$config['dbname'] = $config['prefix'] . $config['dbname'];
 	
 		$dsn = '';
 	
@@ -45,9 +47,9 @@ class PDOx {
 			$dsn = $config['type'] . ':host=' . $config['host'] . ';dbname=' . $config['dbname'];
 			
 		} elseif ($config['type'] == 'sqlite') {
-		
-			$dsn = 'sqlite:' . $config['dbname'] . '.sqlite';
-		
+			
+			$dsn = 'sqlite:' . $config['dbname'] . ($config['dbname'] == ':memory:' ? '' : '.sqlite');
+				
 		} elseif($config['type'] == 'oracle') {
 			
 			$dsn = 'oci:dbname=' . $config['host'] . '/' . $config['dbname'];
