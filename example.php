@@ -60,7 +60,13 @@
 		** default value: utf8
 		*/
 		
-		'charset'	=> 'utf8'
+		'charset'	=> 'utf8',
+		
+		/* Database Name Prefix (not required)
+		** default value: 
+		*/
+		
+		'prefix'	=> ''
 		
 	);
 
