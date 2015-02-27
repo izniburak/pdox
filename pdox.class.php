@@ -30,6 +30,7 @@ class PDOx {
 	private $query = null;
 	private $error = null;
 	private $result = array();
+	private $prefix = null;
 	private $op = array('=','!=','<','>','<=','>=','<>');
 
 	public function __construct($config) {
@@ -38,7 +39,7 @@ class PDOx {
 		$config['host'] 	= ((@$config['host']) ? $config['host'] : 'localhost');
 		$config['charset'] 	= ((@$config['charset']) ? $config['charset'] : 'utf8');
 		$config['prefix'] 	= ((@$config['prefix']) ? $config['prefix'] : '');
-			$config['dbname'] = $config['prefix'] . $config['dbname'];
+		$this->prefix		= $config['prefix'];
 	
 		$dsn = '';
 	
@@ -86,7 +87,7 @@ class PDOx {
 
 	public function from($from) {
 	
-		$this->from = $from;
+		$this->from = $this->prefix . $from;
 		
 		return $this;
 		
@@ -95,6 +96,7 @@ class PDOx {
 	public function join($table, $field1, $op = '', $field2 = '', $join = 'INNER') {
 	
 		$where = (!in_array($op, $this->op) ? $field1 . ' = ' . $op : $field1 . ' ' . $op . ' ' . $field2);
+		$table = $this->prefix . $table;
 	
 		if (is_null($this->join)) {
 		
