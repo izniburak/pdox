@@ -73,6 +73,8 @@ foreach($records as $record)
 ## Kullanım 
 PDOx kullanımı ile ilgili döküman sayfasına [buradan][doc-url] ulaşabilirsiniz.
 
+Detaylı dökümantasyon yakında!
+
 ## Lisans
 Açık kaynaklı olan bu proje [MIT lisansı][mit-url] ile lisanslanmıştır.
 
