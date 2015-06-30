@@ -8,13 +8,19 @@ Hızlı, düzenli ve kullanışlı PDO Sınıfı #PHP
 ```php
 select
 from
-where
-orWhere
-whereIn
-whereNotIn
 join
 leftJoin
 rightJoin
+where
+orWhere
+in
+notIn
+orIn
+orNotIn
+between
+notBetween
+orBetween
+orNotBetween
 like
 orLike
 orderBy
@@ -38,18 +44,18 @@ escape
 
 include('pdox.class.php');
 
-$config = array(
-	'user'		=> 'root',
-	'pass'		=> '',
-	'dbname'	=> 'test',
-	'host'		=> 'localhost',
-	'type'		=> 'mysql',
-	'charset'	=> 'utf8',
-	'prefix'	=> ''
-);
+$config = [
+	'host		=> 'localhost',
+	'driver'	=> 'mysql',
+	'database'	=> 'test',
+	'username'	=> 'root',
+	'password'	=> '',
+	'charset	=> 'utf8',
+	'collation'	=> 'utf8_general_ci',
+	'prefix'	 => ''
+];
 
-
-$db = new PDOx($config);
+$db = new \buki\PDOx($config);
 
 $records = $db->
 	select('id, name, surname, age')->
@@ -59,10 +65,9 @@ $records = $db->
 	limit(20)->
 	getAll();
 
-foreach($records as $record) {
-
+foreach($records as $record)
+{
 	echo $record->id . ' - ' . $record->name . ' / ' . $record->age . '<br />';
-
 }
 ```
 ## Kullanım 
