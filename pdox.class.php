@@ -59,14 +59,14 @@ class PDOx
 		{
 			$this->pdo = new \PDO($dsn, $config['username'], $config['password']);
 			
-			$charset = $config['charset'];
+			$charset	= $config['charset'];
+			$collation	= $config['collation']
 			
-			$this->pdo->exec("SET NAMES '".$charset."'");
+			$this->pdo->exec("SET NAMES '".$charset."' COLLATE '".$collation."'");
 			$this->pdo->exec("SET CHARACTER SET '".$charset."'");
-			$this->pdo->exec("SET COLLATION_CONNECTION '".$charset."'");
 			$this->pdo->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_OBJ);
-			
-		} catch (\PDOException $e)
+		} 
+		catch (\PDOException $e)
 		{
 			die('Cannot the connect to Database with PDO.<br /><br />'.$e->getMessage());
 		}
