@@ -88,10 +88,13 @@ class PDOx
 		return $this;
 	}
 	
-	public function join($table, $field1, $op = '', $field2 = '', $join = 'INNER')
+	public function join($table, $field1, $op = null, $field2 = null, $join = 'INNER')
 	{
-		$where = (!in_array($op, $this->op) ? $field1 . ' = ' . $op : $field1 . ' ' . $op . ' ' . $field2);
+		$where = $field1;
 		$table = $this->prefix . $table;
+		
+		if(!is_null($op)) 
+			$where = (!in_array($op, $this->op) ? $this->prefix . $field1 . ' = ' . $this->prefix . $op : $this->prefix . $field1 . ' ' . $op . ' ' . $this->prefix . $field2);
 	
 		if (is_null($this->join))
 			$this->join = " " . $join . " JOIN" . " " . $table . " ON " . $where;
