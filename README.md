@@ -1,10 +1,10 @@
 [![PDOx][pdox-img]][doc-url]
 
 ## PDOx
-Hızlı, düzenli ve kullanışlı PDO Sınıfı #PHP
+Fast, efficient and useful ORM and PDO Class for #PHP
 
 
-## Metot Listesi
+## Methods 
 ```php
 select
 from
@@ -39,7 +39,7 @@ query
 escape
 ```
 
-## Örnek
+## Example Usage
 ```php
 
 include('pdox.class.php');
@@ -57,26 +57,23 @@ $config = [
 
 $db = new \buki\PDOx($config);
 
-$records = $db->
-	select('id, name, surname, age')->
-	from('users')->
-	where('age', '>', 18)->
-	orderBy('id', 'desc')->
-	limit(20)->
-	getAll();
+$records = $db->select('id, name, surname, age')
+		->from('users')
+		->where('age', '>', 18)
+		->orderBy('id', 'desc')
+		->limit(20)
+		->getAll();
 
-foreach($records as $record)
-{
-	echo $record->id . ' - ' . $record->name . ' / ' . $record->age . '<br />';
-}
+var_dump($records);
+
 ```
-## Kullanım 
-PDOx kullanımı ile ilgili döküman sayfasına [buradan][doc-url] ulaşabilirsiniz.
+## Docs 
+Documentation page: [PDOx Docs][doc-url] 
 
-Detaylı dökümantasyon yakında!
+Detailed documentation coming soon!
 
-## Lisans
-Açık kaynaklı olan bu proje [MIT lisansı][mit-url] ile lisanslanmıştır.
+## Licence
+[MIT Licence][mit-url]
 
 [pdox-img]: http://burakdemirtas.org/uploads/images/20140610210255_pdox_pdo_class_for_php.jpg
 [paypal-donate-url]: http://burakdemirtas.org
