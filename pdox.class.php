@@ -60,7 +60,7 @@ class PDOx
 			$this->pdo = new \PDO($dsn, $config['username'], $config['password']);
 			
 			$charset	= $config['charset'];
-			$collation	= $config['collation']
+			$collation	= $config['collation'];
 			
 			$this->pdo->exec("SET NAMES '".$charset."' COLLATE '".$collation."'");
 			$this->pdo->exec("SET CHARACTER SET '".$charset."'");
