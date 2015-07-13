@@ -18,7 +18,7 @@ after run the install command.
 $ composer install
 ```
 
-OR
+OR run the following command directly.
 
 ```
 $ composer global require "izniburak/pdox-orm=dev-master"
