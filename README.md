@@ -4,8 +4,24 @@
 Fast, efficient and useful ORM and PDO Class for #PHP
 
 ## Install
+
+composer.json file:
+```json
+{
+    "require": {
+        "izniburak/pdox-orm": "dev-master"
+    }
+}
 ```
-composer global require "izniburak/pdox-orm=dev-master"
+after run the install command.
+```
+$ composer install
+```
+
+OR
+
+```
+$ composer global require "izniburak/pdox-orm=dev-master"
 ```
 
 ## Example Usage
