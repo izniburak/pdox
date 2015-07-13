@@ -13,10 +13,7 @@
 *
 */
 
-	header('content-type: text/html; charset=utf-8');
-
-	// include class
-	include('pdox.class.php');
+	require 'vendor/autoload.php';
 
 	$config = [
 		# Host name or IP Address (not required)
