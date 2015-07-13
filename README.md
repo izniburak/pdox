@@ -5,7 +5,7 @@ Fast, efficient and useful ORM and PDO Class for #PHP
 
 ## Install
 ```
-composer global require "smtaydemir/wpup=dev-master"
+composer global require "izniburak/pdox-orm=dev-master"
 ```
 
 ## Example Usage
