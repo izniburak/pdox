@@ -143,39 +143,58 @@ $db->where('status = ? AND age = ?', [1, 20]);
 $db->where('status = ? AND title = ?', [0, 'example title']);
 ```
 
-### in
+### in - notIn - orIn - orNotIn
 ```php
-
+$db->in('page', ['about', 'contact', 'products']);
+$db->orIn('id', [1, 2, 3]);
+$db->notIn('age', [20, 21, 22, 23]);
+$db->orNotIn('age', [30, 31, 32, 32]);
 ```
 
-### between
+### between - orBetween - notBetween - orNotBetween
 ```php
-
+$db->between('age', 10, 20);
+$db->orBetween('age', 20, 30);
+$db->notBetween('year', 2010, 2015);
+$db->orNotBetween('year', 2005, 2009);
 ```
 
-### like
+### like - orLike
 ```php
+$db->like('title', 'burak');		// " title LIKE '%burak%' "
+$db->like('title', 'izniburak', '-%');	// " title LIKE 'izniburak%' "
+$db->like('title', 'izniburak', '%-');	// " title LIKE '%izniburak' "
 
+$db->like('user', 'php')->orLike('user', 'web');
+$db->like('user', 'php')->orLike('user', 'web', '-%');
+$db->like('user', 'php')->orLike('user', 'web', '%-');
 ```
 
 ### groupBy
 ```php
-
+$db->groupBy('country');
+$db->groupBy('country, city');
 ```
 
 ### having
 ```php
-
+$db->having('AVG(price)', 2000);	// " AVG(price) > 2000 "
+$db->having('AVG(price)', '>=', 3000);	// " AVG(price) >= 3000 "
+$db->having('SUM(age) <= ?', [50]);	// " SUM(age) <= 50 "
 ```
 
 ### orderBy
 ```php
-
+$db->orderBy('id');	// " ORDER BY id ASC
+$db->orderBy('id DESC');
+$db->orderBy('id', 'desc');
+$db->orderBy('rand()');	// " ORDER BY rand() "
 ```
 
 ### limit
 ```php
-
+$db->limit(10);		// " LIMIT 10 "
+$db->limit(10, 20);	// " LIMIT 10, 20 "
 ```
 
 ### insert
