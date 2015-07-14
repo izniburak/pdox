@@ -1,5 +1,3 @@
-[![PDOx][pdox-img]][doc-url]
-
 ## PDOx
 Fast, efficient and useful ORM and PDO Class for #PHP
 
@@ -51,45 +49,13 @@ $records = $db->select('id, name, surname, age')
 var_dump($records);
 ```
 
-## Methods 
-```php
-select
-from
-join
-leftJoin
-rightJoin
-where
-orWhere
-in
-notIn
-orIn
-orNotIn
-between
-notBetween
-orBetween
-orNotBetween
-like
-orLike
-orderBy
-groupBy
-having
-limit
-count
-insertId
-error
-get
-getAll
-insert
-update
-delete
-query
-escape
-```
-
 ## Docs 
 Documentation page: [PDOx Docs][doc-url] 
 
-Detailed documentation coming soon!
+## Support 
+[izniburak's homepage][author-url]
+
+[izniburak's twitter][twitter-url]
 
 ## Licence
 [MIT Licence][mit-url]
@@ -97,4 +63,6 @@ Detailed documentation coming soon!
 [pdox-img]: http://burakdemirtas.org/uploads/images/20140610210255_pdox_pdo_class_for_php.jpg
 [paypal-donate-url]: http://burakdemirtas.org
 [mit-url]: http://opensource.org/licenses/MIT
-[doc-url]: http://burakdemirtas.org/pdox-kullanisli-pdo-sinifi-php/
+[doc-url]: https://github.com/izniburak/PDOx/blob/master/docs.md
+[author-url]: http://burakdemirtas.org
+[twitter-url]: https://twitter.com/izniburak
