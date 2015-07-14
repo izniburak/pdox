@@ -76,14 +76,26 @@ class PDOx
 	
 	public function select($select)
 	{
-		$this->select = $select;
+		if(is_array($select))
+			$this->select = implode(', ', $select);
+		else
+			$this->select = $select;
 		
 		return $this;
 	}
 
 	public function from($from)
 	{
-		$this->from = $this->prefix . $from;
+		if(is_array($from))
+		{
+			$f = '';
+			foreach($from as $key)
+				$f .= $this->prefix . $key . ', ';
+
+			$this->from = rtrim($f, ', ');
+		}
+		else
+			$this->from = $this->prefix . $from;
 		
 		return $this;
 	}
