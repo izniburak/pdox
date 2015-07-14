@@ -121,7 +121,24 @@ $db->select(['table1 AS t1', 'table2 AS t2']);
 
 ### where
 ```php
+# Usage 1: array parameter
+$where = [
+	'name' => 'Burak',
+	'age' => 23,
+	'status' => 1
+];
+$db->where($where);
 
+# Usage 2: 
+$db->where('status', 2);
+$db->where('status', 1)->where('name', 'burak');
+
+# Usage 3:
+$db->where('age', '>', '20');
+
+# Usage 4: 
+$db->where('status = ? AND age = ?', [1, 20]);
+$db->where('status = ? AND title = ?', [0, 'example title']);
 ```
 
 ### in
