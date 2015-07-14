@@ -7,7 +7,7 @@
 *
 * @ Web: http://burakdemirtas.org
 *
-* @ Docs: http://burakdemirtas.org/pdox-kullanisli-pdo-sinifi-php/
+* @ URL: https://github.com/izniburak/PDOx
 *
 * @ Licence: The MIT License (MIT) - Copyright (c) - http://opensource.org/licenses/MIT
 *
@@ -132,7 +132,17 @@ class PDOx
 		}
 		else
 		{
-			if (!in_array($op, $this->op))
+			if(is_array($op))
+			{
+				$x = explode('?', $where);
+				$w = '';
+				foreach($x as $k => $v)
+					if(!empty($v))
+						$w .= $v . (isset($op[$k]) ? $this->escape($op[$k]) : '');
+
+				$where = $w;
+			}
+			elseif (!in_array($op, $this->op))
 				$where = $where . ' = ' . $this->escape($op);
 			
 			else
@@ -297,9 +307,18 @@ class PDOx
 	
 	public function having($field, $op = null, $val = null)
 	{
-		if (!in_array($op, $this->op))
+		if(is_array($op))
+		{
+			$x = explode('?', $field);
+			$w = '';
+			foreach($x as $k => $v)
+				if(!empty($v))
+					$w .= $v . (isset($op[$k]) ? $this->escape($op[$k]) : '');
+
+			$this->having = $w;
+		}
+		elseif (!in_array($op, $this->op))
 			$this->having = $field . ' > ' . $this->escape($op);
-	
 		else
 			$this->having = $field . ' ' . $op . ' ' . $this->escape($val);
 
