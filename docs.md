@@ -119,7 +119,7 @@ $db->select(['table1 AS t1', 'table2 AS t2']);
 
 ```
 
-### where
+### where - orWhere
 ```php
 # Usage 1: array parameter
 $where = [
@@ -132,9 +132,11 @@ $db->where($where);
 # Usage 2: 
 $db->where('status', 2);
 $db->where('status', 1)->where('name', 'burak');
+$db->where('status', 1)->orWhere('status', 2);
 
 # Usage 3:
-$db->where('age', '>', '20');
+$db->where('age', '>', 20);
+$db->where('age', '>', 20)->orWhere('age', '<', 30);
 
 # Usage 4: 
 $db->where('status = ? AND age = ?', [1, 20]);
