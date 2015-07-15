@@ -111,7 +111,13 @@ $db->select(['table1 AS t1', 'table2 AS t2']);
 
 ### get AND getAll
 ```php
+# get(): return 1 record.
+# getAll(): return multiple records.
 
+$db->from('test')->getAll(); 	// " SELECT * FROM test "
+$db->select('username')->from('users')->where('status', 1)->getAll(); 	// " SELECT username FROM test WHERE status = '1' "
+
+$db->select('title')->from('pages')->where('id', 17)->get(); // " SELECT title FROM pages WHERE id = '17' LIMIT 1 "
 ```
 
 ### join
@@ -232,22 +238,33 @@ $db->from('users')->where('id', 5)->delete();
 
 ### query
 ```php
-
+$db->query('SELECT * FROM test WHERE id = ? AND status = ?', [10, 1]);
 ```
 
 ### insertId
 ```php
+$data = [
+	'title' => 'test',
+	'content' => 'Lorem ipsum dolor sit amet...',
+	'time' => time(),
+	'status' => 1
+];
 
+$db->from('pages')->insert($data);
+
+var_dump($db->insertId());
 ```
 
 ### count
 ```php
+$db->select('id, title')->from('test')->where('status', 1)->orWhere('status', 2)->getAll();
 
+var_dump($db->count());
 ```
 
 ### error
 ```php
-
+$db->error();
 ```
 
 ### escape
