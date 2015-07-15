@@ -199,17 +199,31 @@ $db->limit(10, 20);	// " LIMIT 10, 20 "
 
 ### insert
 ```php
+$data = [
+	'title' => 'test',
+	'content' => 'Lorem ipsum dolor sit amet...',
+	'time' => time(),
+	'status' => 1
+];
 
+$db->from('pages')->insert($data);
 ```
 
 ### update
 ```php
+$data = [
+	'username' => 'izniburak',
+	'password' => md5('demo-password'),
+	'activation' => 1,
+	'status' => 1
+];
 
+$db->from('users')->where('id', 10)->update($data);
 ```
 
 ### delete
 ```php
-
+$db->from('users')->where('id', 5)->delete();
 ```
 
 ### query
