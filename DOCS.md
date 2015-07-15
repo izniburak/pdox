@@ -115,7 +115,7 @@ $db->select(['table1 AS t1', 'table2 AS t2']);
 # getAll(): return multiple records.
 
 $db->from('test')->getAll(); 	// " SELECT * FROM test "
-$db->select('username')->from('users')->where('status', 1)->getAll(); 	// " SELECT username FROM test WHERE status = '1' "
+$db->select('username')->from('users')->where('status', 1)->getAll(); 	// " SELECT username FROM users WHERE status = '1' "
 
 $db->select('title')->from('pages')->where('id', 17)->get(); // " SELECT title FROM pages WHERE id = '17' LIMIT 1 "
 ```
