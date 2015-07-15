@@ -63,6 +63,6 @@ Documentation page: [PDOx Docs][doc-url]
 [pdox-img]: http://burakdemirtas.org/uploads/images/20140610210255_pdox_pdo_class_for_php.jpg
 [paypal-donate-url]: http://burakdemirtas.org
 [mit-url]: http://opensource.org/licenses/MIT
-[doc-url]: https://github.com/izniburak/PDOx/blob/master/docs.md
+[doc-url]: https://github.com/izniburak/PDOx/blob/master/DOCS.md
 [author-url]: http://burakdemirtas.org
 [twitter-url]: https://twitter.com/izniburak
