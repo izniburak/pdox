@@ -476,7 +476,7 @@ class PDOx
 			$q = '';
 			foreach($x as $k => $v)
 				if(!empty($v))
-					$q .= $v . (isset($all[$k]) ? self::escape($all[$k]) : '');
+					$q .= $v . (isset($all[$k]) ? $this->escape($all[$k]) : '');
 			$query = $q;
 		}
 		
