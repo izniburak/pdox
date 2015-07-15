@@ -1,14 +1,11 @@
 <?php
 /*
 *
-* PHP PDO Database Class for MySQL, PostgreSQL, SQLite and Oracle
+* @ Package: PDOx - Useful ORM & PDO Class
 *
 * @ Author: izni burak demirtas / @izniburak <info@burakdemirtas.org>
-*
 * @ Web: http://burakdemirtas.org
-*
 * @ URL: https://github.com/izniburak/PDOx
-*
 * @ Licence: The MIT License (MIT) - Copyright (c) - http://opensource.org/licenses/MIT
 *
 */
