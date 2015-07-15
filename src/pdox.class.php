@@ -312,8 +312,11 @@ class PDOx
 
 	public function groupBy($group_by)
 	{
-		$this->group_by = $group_by;
-		
+		if(is_array($group_by))
+			$this->group_by = implode(', ', $group_by);
+		else
+			$this->group_by = $group_by;
+
 		return $this;
 	}
 	
@@ -376,7 +379,7 @@ class PDOx
 
 		$query  = $query . ' LIMIT 1';
 		
-		return $this->query($query, $array, false);
+		return $this->query($query, false, $array);
 	}
 
 	public function getAll($array = false)
@@ -400,7 +403,7 @@ class PDOx
 		
 		$query = (!is_null($this->limit)) ? $query . "  LIMIT " . $this->limit : $query;
 		
-		return $this->query($query, $array);
+		return $this->query($query, true, $array);
 	}
 
 	public function insert($data)
@@ -463,9 +466,20 @@ class PDOx
 		return $this->query($query);
 	}
 	
-	public function query($query, $array = false, $all = true)
+	public function query($query, $all = true, $array = false)
 	{
 		$this->reset();	
+		
+		if(is_array($all))
+		{
+			$x = explode('?', $query);
+			$q = '';
+			foreach($x as $k => $v)
+				if(!empty($v))
+					$q .= $v . (isset($all[$k]) ? self::escape($all[$k]) : '');
+			$query = $q;
+		}
+		
 		$this->query = preg_replace('/\s\s+|\t\t+/', ' ', trim($query));
 		$str = stristr($this->query, 'SELECT');
 		
