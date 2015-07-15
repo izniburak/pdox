@@ -172,8 +172,12 @@ $db->like('user', 'php')->orLike('user', 'web', '%-');
 
 ### groupBy
 ```php
+# Usage 1: string parameter
 $db->groupBy('country');
 $db->groupBy('country, city');
+
+# Usage 2: array parameter
+$db->groupBy(['country', 'city']);
 ```
 
 ### having
