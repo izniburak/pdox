@@ -1,6 +1,11 @@
 ## PDOx
 Fast, efficient and useful ORM and PDO Class for #PHP
 
+[![Total Downloads](https://poser.pugx.org/izniburak/pdox-orm/d/total.svg)](https://packagist.org/packages/izniburak/pdox-orm)
+[![Latest Stable Version](https://poser.pugx.org/izniburak/pdox-orm/v/stable.svg)](https://packagist.org/packages/izniburak/pdox-orm)
+[![Latest Unstable Version](https://poser.pugx.org/izniburak/pdox-orm/v/unstable.svg)](https://packagist.org/packages/izniburak/pdox-orm)
+[![License](https://poser.pugx.org/izniburak/pdox-orm/license.svg)](https://packagist.org/packages/izniburak/pdox-orm)
+
 ## Install
 
 composer.json file:
