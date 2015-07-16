@@ -24,7 +24,7 @@ $ composer install
 OR run the following command directly.
 
 ```
-$ composer global require "izniburak/pdox-orm=dev-master"
+$ composer require izniburak/pdox-orm
 ```
 
 ## Example Usage
