@@ -100,9 +100,9 @@ $db->select(['title AS t', 'content AS c']);
 ### from
 ```php
 # Usage 1: string parameter
-$db->from('table');
-$db->from('table1, table2');
-$db->from('table1 AS t1, table2 AS t2');
+$db->table('table');
+$db->table('table1, table2');
+$db->table('table1 AS t1, table2 AS t2');
 
 # Usage2: array parameter
 $db->select(['table1', 'table2']);
@@ -114,15 +114,29 @@ $db->select(['table1 AS t1', 'table2 AS t2']);
 # get(): return 1 record.
 # getAll(): return multiple records.
 
-$db->from('test')->getAll(); 	// " SELECT * FROM test "
-$db->select('username')->from('users')->where('status', 1)->getAll(); 	// " SELECT username FROM users WHERE status = '1' "
+$db->table('test')->getAll(); 	// " SELECT * FROM test "
+$db->select('username')->table('users')->where('status', 1)->getAll(); 	// " SELECT username FROM users WHERE status = '1' "
 
-$db->select('title')->from('pages')->where('id', 17)->get(); // " SELECT title FROM pages WHERE id = '17' LIMIT 1 "
+$db->select('title')->table('pages')->where('id', 17)->get(); // " SELECT title FROM pages WHERE id = '17' LIMIT 1 "
 ```
 
 ### join
 ```php
+# Usage 1: 
+$db->table('foo')->join('bar', 'foo.field', 'bar.field')->getAll();
+$db->table('foo')->leftJoin('bar', 'foo.field', 'bar.field')->getAll();
+$db->table('foo')->rightJoin('bar', 'foo.field', 'bar.field')->get();
+$db->table('foo')->innerJoin('bar', 'foo.field', 'bar.field')->get();
 
+# Usage 2:
+$db->table('foo')->join('bar', 'foo.field', '=', 'bar.field')->getAll();
+$db->table('foo')->leftJoin('bar', 'foo.field', '=', 'bar.field')->getAll();
+$db->table('foo')->rightJoin('bar', 'foo.field', '=', 'bar.field')->get();
+$db->table('foo')->innerJoin('bar', 'foo.field', '=', 'bar.field')->get();
+
+# Usage 3:
+$db->table('foo')->join(['left outer', 'bar', 'foo.field = bar.field'])->getAll();
+$db->table('foo')->join(['right outer', 'bar', 'foo.field', 'bar.field'])->get();
 ```
 
 ### where - orWhere
@@ -216,7 +230,7 @@ $data = [
 	'status' => 1
 ];
 
-$db->from('pages')->insert($data);
+$db->table('pages')->insert($data);
 ```
 
 ### update
@@ -228,12 +242,12 @@ $data = [
 	'status' => 1
 ];
 
-$db->from('users')->where('id', 10)->update($data);
+$db->table('users')->where('id', 10)->update($data);
 ```
 
 ### delete
 ```php
-$db->from('users')->where('id', 5)->delete();
+$db->table('users')->where('id', 5)->delete();
 ```
 
 ### query
@@ -250,14 +264,14 @@ $data = [
 	'status' => 1
 ];
 
-$db->from('pages')->insert($data);
+$db->table('pages')->insert($data);
 
 var_dump($db->insertId());
 ```
 
 ### count
 ```php
-$db->select('id, title')->from('test')->where('status', 1)->orWhere('status', 2)->getAll();
+$db->select('id, title')->table('test')->where('status', 1)->orWhere('status', 2)->getAll();
 
 var_dump($db->count());
 ```
