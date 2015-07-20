@@ -44,8 +44,8 @@ $config = [
 
 $db = new \buki\PDOx($config);
 
-$records = $db->select('id, name, surname, age')
-		->from('users')
+$records = $db->table('users')
+		->select('id, name, surname, age')
 		->where('age', '>', 18)
 		->orderBy('id', 'desc')
 		->limit(20)
