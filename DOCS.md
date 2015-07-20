@@ -97,7 +97,7 @@ $db->select(['title', 'content']);
 $db->select(['title AS t', 'content AS c']);
 ```
 
-### from
+### table
 ```php
 # Usage 1: string parameter
 $db->table('table');
