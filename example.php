@@ -50,12 +50,12 @@ $db = new \buki\PDOx($config);
 
 
 // Example
-$records = $db->select('id, name, surname, age')
-			->from('users')
-			->where('age', '>', 18)
-			->orderBy('id', 'desc')
-			->limit(20)
-			->getAll();
+$records = $db->from('users')
+		->select('id, name, surname, age')
+		->where('age', '>', 18)
+		->orderBy('id', 'desc')
+		->limit(20)
+		->getAll();
 
 foreach($records as $record)
 {
