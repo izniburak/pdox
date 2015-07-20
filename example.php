@@ -50,7 +50,7 @@ $db = new \buki\PDOx($config);
 
 
 // Example
-$records = $db->from('users')
+$records = $db->table('users')
 		->select('id, name, surname, age')
 		->where('age', '>', 18)
 		->orderBy('id', 'desc')
