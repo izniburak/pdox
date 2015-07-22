@@ -12,12 +12,12 @@
             "homepage": "http://burakdemirtas.org"
         }
     ],
+    "minimum-stability": "dev"
     "require": {
         "php": ">=5.3.0",
         "ext-pdo": "*"
     },
     "autoload": {
         "classmap": ["src/pdox.class.php"]
-    },
-    "minimum-stability": "dev"
+    }
 }
