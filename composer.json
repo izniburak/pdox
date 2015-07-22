@@ -18,5 +18,6 @@
     },
     "autoload": {
         "classmap": ["src/pdox.class.php"]
-    }
+    },
+    "minimum-stability": "dev"
 }
