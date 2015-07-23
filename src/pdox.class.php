@@ -317,7 +317,7 @@ class PDOx
 	public function orderBy($order_by, $order_dir = null)
 	{
 		if (!is_null($order_dir))
-			$this->order_by = $order_by . ' ' . $order_dir;
+			$this->order_by = $order_by . ' ' . strtoupper($order_dir);
 			
 		else
 		{
@@ -384,21 +384,21 @@ class PDOx
 		$query = "SELECT " . $this->select . " FROM " . $this->from;
 		
 		if (!is_null($this->join))
-			$query = $query . $this->join;
+			$query .= $this->join;
 
 		if (!is_null($this->where)) 
-			$query = $query . ' WHERE ' . $this->where;
+			$query .= ' WHERE ' . $this->where;
 			
 		if (!is_null($this->group_by))
-			$query = $query . " GROUP BY " . $this->group_by;
+			$query .= ' GROUP BY ' . $this->group_by;
 
 		if (!is_null($this->having)) 
-			$query = $query . " HAVING " . $this->having;
+			$query .= ' HAVING ' . $this->having;
 
 		if (!is_null($this->order_by))
-			$query = $query . " ORDER BY " . $this->order_by;
+			$query .= ' ORDER BY ' . $this->order_by;
 
-		$query  = $query . ' LIMIT 1';
+		$query  .= ' LIMIT 1';
 		
 		return $this->query($query, false, $array);
 	}
@@ -408,21 +408,22 @@ class PDOx
 		$query = "SELECT " . $this->select . " FROM " . $this->from;
 		
 		if (!is_null($this->join))
-			$query = $query . $this->join;
+			$query .= $this->join;
 		
 		if (!is_null($this->where))
-			$query = $query . ' WHERE ' . $this->where;
+			$query .= ' WHERE ' . $this->where;
 		
 		if (!is_null($this->group_by))
-			$query = $query . " GROUP BY " . $this->group_by;
+			$query .= ' GROUP BY ' . $this->group_by;
 		
 		if (!is_null($this->having)) 
-			$query = $query . " HAVING " . $this->having;
+			$query .= ' HAVING ' . $this->having;
 		
 		if (!is_null($this->order_by)) 
-			$query = $query . " ORDER BY " . $this->order_by;
+			$query .= ' ORDER BY ' . $this->order_by;
 		
-		$query = (!is_null($this->limit)) ? $query . "  LIMIT " . $this->limit : $query;
+		if (!is_null($this->limit)) 
+			$query .= ' LIMIT ' . $this->limit;
 		
 		return $this->query($query, true, $array);
 	}
@@ -455,15 +456,16 @@ class PDOx
 		foreach ($data as $column => $val)
 			$values[] = $column . "=" . $this->escape($val) . "";
 
-		$query = $query . (is_array($data) ? implode(',', $values) : $data);
+		$query .= (is_array($data) ? implode(',', $values) : $data);
 		
 		if (!is_null($this->where)) 
-			$query = $query . ' WHERE ' . $this->where;
+			$query .= ' WHERE ' . $this->where;
 		
 		if (!is_null($this->order_by))
-			$query = $query . " ORDER BY " . $this->order_by;
-
-		$query = (!is_null($this->limit)) ? $query . "  LIMIT " . $this->limit : $query;
+			$query .= ' ORDER BY ' . $this->order_by;
+			
+		if (!is_null($this->limit))
+			$query .= ' LIMIT ' . $this->limit;
 		
 		return $this->query($query);
 	}
@@ -474,12 +476,13 @@ class PDOx
 		
 		if (!is_null($this->where))
 		{
-			$query = $query . ' WHERE ' . $this->where;
+			$query .= ' WHERE ' . $this->where;
 			
 			if (!is_null($this->order_by))
-				$query = $query . " ORDER BY " . $this->order_by;
-			
-			$query = (!is_null($this->limit)) ? $query . "  LIMIT " . $this->limit : $query;
+				$query .= ' ORDER BY ' . $this->order_by;
+				
+			if (!is_null($this->limit))
+				$query .= ' LIMIT ' . $this->limit;
 		}
 		else
 			$query = 'TRUNCATE TABLE ' . $this->from;
