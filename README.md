@@ -24,7 +24,7 @@ $ composer install
 OR run the following command directly.
 
 ```
-$ composer require izniburak/pdox-orm
+$ composer require izniburak/pdox-orm:dev-master
 ```
 
 ## Example Usage
