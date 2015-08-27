@@ -105,8 +105,8 @@ $db->table('table1, table2');
 $db->table('table1 AS t1, table2 AS t2');
 
 # Usage2: array parameter
-$db->select(['table1', 'table2']);
-$db->select(['table1 AS t1', 'table2 AS t2']);
+$db->table(['table1', 'table2']);
+$db->table(['table1 AS t1', 'table2 AS t2']);
 ```
 
 ### get AND getAll
