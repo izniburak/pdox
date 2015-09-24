@@ -47,7 +47,7 @@ class PDOx
 			$dsn = $config['driver'] . ':host=' . $config['host'] . ';dbname=' . $config['database'];
 			
 		elseif ($config['driver'] == 'sqlite')
-			$dsn = 'sqlite:' . $config['database'] . ($config['database'] == ':memory:' ? '' : '.sqlite');
+			$dsn = 'sqlite:' . $config['database'];
 				
 		elseif($config['driver'] == 'oracle') 
 			$dsn = 'oci:dbname=' . $config['host'] . '/' . $config['database'];
