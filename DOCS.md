@@ -281,6 +281,11 @@ var_dump($db->count());
 $db->error();
 ```
 
+### cache
+```php
+coming soon...
+```
+
 ### escape
 ```php
 
