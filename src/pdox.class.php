@@ -519,12 +519,12 @@ class PDOx
 				{
 					if ($all)
 					{
+						$q = [];
 						while ($result = ($array == false) ? $sql->fetchAll(\PDO::FETCH_OBJ) : $sql->fetchAll(\PDO::FETCH_ASSOC))
 							$q[] = $result;
 						
 						$this->result = $q[0];
 					}
-					
 					else
 					{
 						$q = ($array == false) ? $sql->fetch(\PDO::FETCH_OBJ) : $sql->fetch(\PDO::FETCH_ASSOC);
