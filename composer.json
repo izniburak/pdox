@@ -1,8 +1,8 @@
 {
     "name": "izniburak/pdox-orm",
     "type": "library",
-    "description": "Useful ORM, PDO Class for PHP. A simple access to your SQL records.",
-    "keywords": ["php","pdo","orm","sql"],
+    "description": "Useful Query Builder, PDO Class for PHP. A simple access to your SQL records.",
+    "keywords": ["php","pdo","orm","sql","query"],
     "homepage": "https://github.com/izniburak/PDOx",
     "license": "MIT",
     "authors": [
