@@ -1,7 +1,7 @@
 <?php
 /*
 *
-* @ Package: PDOx - Useful ORM & PDO Class
+* @ Package: PDOx - Useful Query Builder & PDO Class
 *
 * @ Author: izni burak demirtas / @izniburak <info@burakdemirtas.org>
 * @ Web: http://burakdemirtas.org
@@ -34,11 +34,11 @@ class PDOx
 
 	public function __construct($config)
 	{
-		$config['driver'] 	= ((@$config['driver']) ? $config['driver'] : 'mysql');
-		$config['host'] 	= ((@$config['host']) ? $config['host'] : 'localhost');
-		$config['charset'] 	= ((@$config['charset']) ? $config['charset'] : 'utf8');
+		$config['driver']	= ((@$config['driver']) ? $config['driver'] : 'mysql');
+		$config['host']		= ((@$config['host']) ? $config['host'] : 'localhost');
+		$config['charset']	= ((@$config['charset']) ? $config['charset'] : 'utf8');
 		$config['collation']	= ((@$config['collation']) ? $config['collation'] : 'utf8_general_ci');
-		$config['prefix'] 	= ((@$config['prefix']) ? $config['prefix'] : '');
+		$config['prefix']	= ((@$config['prefix']) ? $config['prefix'] : '');
 		$this->prefix		= $config['prefix'];
 	
 		$dsn = '';
@@ -108,10 +108,10 @@ class PDOx
 				$q .= strtoupper($table[0]) . ' JOIN ' . $table[1] . ' ON ' . $table[2];
 
 			if (is_null($this->join))
-				$this->join = " " . $q;
+				$this->join = ' ' . $q;
 
 			else
-				$this->join = $this->join . " " . $q;
+				$this->join = $this->join . ' ' . $q;
 		}
 		else
 		{
@@ -122,10 +122,10 @@ class PDOx
 				$where = (!in_array($op, $this->op) ? $this->prefix . $field1 . ' = ' . $this->prefix . $op : $this->prefix . $field1 . ' ' . $op . ' ' . $this->prefix . $field2);
 		
 			if (is_null($this->join))
-				$this->join = " " . $join . "JOIN" . " " . $table . " ON " . $where;
+				$this->join = ' ' . $join . 'JOIN' . ' ' . $table . ' ON ' . $where;
 				
 			else
-				$this->join = $this->join . " " . $join . "JOIN" . " " . $table . " ON " . $where;
+				$this->join = $this->join . ' ' . $join . 'JOIN' . ' ' . $table . ' ON ' . $where;
 		}
 		
 		return $this;
@@ -381,7 +381,7 @@ class PDOx
 	
 	public function get($array = false)
 	{
-		$query = "SELECT " . $this->select . " FROM " . $this->from;
+		$query = 'SELECT ' . $this->select . ' FROM ' . $this->from;
 		
 		if (!is_null($this->join))
 			$query .= $this->join;
@@ -405,7 +405,7 @@ class PDOx
 
 	public function getAll($array = false)
 	{
-		$query = "SELECT " . $this->select . " FROM " . $this->from;
+		$query = 'SELECT ' . $this->select . ' FROM ' . $this->from;
 		
 		if (!is_null($this->join))
 			$query .= $this->join;
@@ -432,7 +432,7 @@ class PDOx
 	{
 		$columns = array_keys($data);
 		$column = implode(',', $columns);
-		$val = "" . implode(", ", array_map([$this, 'escape'], $data)) . "";
+		$val = implode(', ', array_map([$this, 'escape'], $data));
 		
 		$query = 'INSERT INTO ' . $this->from . ' (' . $column . ') VALUES (' . $val . ')';
 		$query = $this->query($query);
@@ -449,12 +449,12 @@ class PDOx
 
 	public function update($data)
 	{
-		$query = "UPDATE " . $this->from . " SET ";
+		$query = 'UPDATE ' . $this->from . ' SET ';
 		
 		$values = [];
 		
 		foreach ($data as $column => $val)
-			$values[] = $column . "=" . $this->escape($val) . "";
+			$values[] = $column . '=' . $this->escape($val);
 
 		$query .= (is_array($data) ? implode(',', $values) : $data);
 		
@@ -472,7 +472,7 @@ class PDOx
 
 	public function delete()
 	{
-		$query = "DELETE FROM " . $this->from;
+		$query = 'DELETE FROM ' . $this->from;
 		
 		if (!is_null($this->where))
 		{
