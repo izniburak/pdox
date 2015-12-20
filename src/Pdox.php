@@ -2,7 +2,7 @@
 /*
 *
 * @ Package: PDOx - Useful Query Builder & PDO Class
-*
+* @ Class: Pdox
 * @ Author: izni burak demirtas / @izniburak <info@burakdemirtas.org>
 * @ Web: http://burakdemirtas.org
 * @ URL: https://github.com/izniburak/PDOx
@@ -10,36 +10,43 @@
 *
 */
 
-namespace buki;
+namespace Buki;
 
-class PDOx
+use Buki\Cache;
+
+class Pdox
 {
-	public $pdo = null;
+	public $pdo 		= null;
 	
-	private $select = '*';
-	private $from = null;
-	private $where = null;
-	private $limit = null;
-	private $join = null;
-	private $order_by = null;
-	private $group_by = null;
-	private $having = null;
-	private $num_rows = 0;
-	private $insert_id = null;
-	private $query = null;
-	private $error = null;
-	private $result = [];
-	private $prefix = null;
-	private $op = ['=','!=','<','>','<=','>=','<>'];
+	private $select 	= '*';
+	private $from 		= null;
+	private $where 		= null;
+	private $limit 		= null;
+	private $join 		= null;
+	private $orderBy 	= null;
+	private $groupBy 	= null;
+	private $having 	= null;
+	private $grouped 	= false;
+	private $numRows 	= 0;
+	private $insertId 	= null;
+	private $query 		= null;
+	private $error 		= null;
+	private $result 	= [];
+	private $prefix 	= null;
+	private $op 		= ['=','!=','<','>','<=','>=','<>'];
+	private $cache 		= null;
+	private $cacheDi	= null;
+	private $queryCoun	= 0;
 
-	public function __construct($config)
-	{
+	public function __construct(Array $config)
+	{	
 		$config['driver']	= ((@$config['driver']) ? $config['driver'] : 'mysql');
 		$config['host']		= ((@$config['host']) ? $config['host'] : 'localhost');
 		$config['charset']	= ((@$config['charset']) ? $config['charset'] : 'utf8');
 		$config['collation']	= ((@$config['collation']) ? $config['collation'] : 'utf8_general_ci');
 		$config['prefix']	= ((@$config['prefix']) ? $config['prefix'] : '');
 		$this->prefix		= $config['prefix'];
+		$this->cacheDir		= ((@$config['cachedir']) ? $config['cachedir'] : __DIR__ . '/cache/');
 	
 		$dsn = '';
 	
@@ -55,12 +62,8 @@ class PDOx
 		try
 		{
 			$this->pdo = new \PDO($dsn, $config['username'], $config['password']);
-			
-			$charset	= $config['charset'];
-			$collation	= $config['collation'];
-			
-			$this->pdo->exec("SET NAMES '".$charset."' COLLATE '".$collation."'");
-			$this->pdo->exec("SET CHARACTER SET '".$charset."'");
+			$this->pdo->exec("SET NAMES '".$config['charset']."' COLLATE '".$config['collation']."'");
+			$this->pdo->exec("SET CHARACTER SET '".$config['charset']."'");
 			$this->pdo->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_OBJ);
 		} 
 		catch (\PDOException $e)
@@ -75,6 +78,7 @@ class PDOx
 	{
 		if(is_array($select))
 			$this->select = implode(', ', $select);
+		
 		else
 			$this->select = $select;
 		
@@ -102,6 +106,7 @@ class PDOx
 		if(is_array($table))
 		{
 			$q = '';
+			
 			if(count($table) > 3)
 				$q .= strtoupper($table[0]) . ' JOIN ' . $table[1] . ' ON ' . $table[2] . ' = ' . $table[3];
 			else
@@ -169,6 +174,7 @@ class PDOx
 			{
 				$x = explode('?', $where);
 				$w = '';
+				
 				foreach($x as $k => $v)
 					if(!empty($v))
 						$w .= $v . (isset($op[$k]) ? $this->escape($op[$k]) : '');
@@ -180,6 +186,12 @@ class PDOx
 			
 			else
 				$where = $where . ' ' . $op . ' ' . $this->escape($val);
+		}
+		
+		if($this->grouped)
+		{
+			$where = '(' . $where;
+			$this->grouped = false;
 		}
 		
 		if (is_null($this->where))
@@ -198,7 +210,16 @@ class PDOx
 		return $this;
 	}
 	
-	public function in($field, $keys, $not = '', $ao = 'AND')
+	public function grouped(\Closure $obj)
+	{
+		$this->grouped = true;
+		call_user_func($obj);
+		$this->where .= ')';
+		
+		return $this;
+	}
+	
+	public function in($field, Array $keys, $not = '', $ao = 'AND')
 	{
 		if (is_array($keys))
 		{
@@ -219,21 +240,21 @@ class PDOx
 		return $this;
 	}
 	
-	public function notIn($field, $keys)
+	public function notIn($field, Array $keys)
 	{
 		$this->in($field, $keys, 'NOT ', 'AND');
 		
 		return $this;
 	}
 
-	public function orIn($field, $keys)
+	public function orIn($field, Array $keys)
 	{
 		$this->in($field, $keys, '', 'OR');
 		
 		return $this;
 	}
 
-	public function orNotIn($field, $keys)
+	public function orNotIn($field, Array $keys)
 	{
 		$this->in($field, $keys, 'NOT ', 'OR');
 		
@@ -314,29 +335,30 @@ class PDOx
 		return $this;
 	}
 
-	public function orderBy($order_by, $order_dir = null)
+	public function orderBy($orderBy, $order_dir = null)
 	{
 		if (!is_null($order_dir))
-			$this->order_by = $order_by . ' ' . strtoupper($order_dir);
+			$this->orderBy = $orderBy . ' ' . strtoupper($order_dir);
 			
 		else
 		{
-			if(stristr($order_by, ' ') || $order_by == 'rand()')
-				$this->order_by = $order_by;
+			if(stristr($orderBy, ' ') || $orderBy == 'rand()')
+				$this->orderBy = $orderBy;
 				
 			else
-				$this->order_by = $order_by . ' ASC';
+				$this->orderBy = $orderBy . ' ASC';
 		}
 		
 		return $this;
 	}
 
-	public function groupBy($group_by)
+	public function groupBy($groupBy)
 	{
-		if(is_array($group_by))
-			$this->group_by = implode(', ', $group_by);
+		if(is_array($groupBy))
+			$this->groupBy = implode(', ', $groupBy);
+		
 		else
-			$this->group_by = $group_by;
+			$this->groupBy = $groupBy;
 
 		return $this;
 	}
@@ -347,14 +369,17 @@ class PDOx
 		{
 			$x = explode('?', $field);
 			$w = '';
+			
 			foreach($x as $k => $v)
 				if(!empty($v))
 					$w .= $v . (isset($op[$k]) ? $this->escape($op[$k]) : '');
 
 			$this->having = $w;
 		}
+		
 		elseif (!in_array($op, $this->op))
 			$this->having = $field . ' > ' . $this->escape($op);
+			
 		else
 			$this->having = $field . ' ' . $op . ' ' . $this->escape($val);
 
@@ -363,12 +388,12 @@ class PDOx
 
 	public function count()
 	{
-		return $this->num_rows;
+		return $this->numRows;
 	}
 	
 	public function insertId()
 	{
-		return $this->insert_id;
+		return $this->insertId;
 	}
 
 	public function error()
@@ -389,14 +414,14 @@ class PDOx
 		if (!is_null($this->where)) 
 			$query .= ' WHERE ' . $this->where;
 			
-		if (!is_null($this->group_by))
-			$query .= ' GROUP BY ' . $this->group_by;
+		if (!is_null($this->groupBy))
+			$query .= ' GROUP BY ' . $this->groupBy;
 
 		if (!is_null($this->having)) 
 			$query .= ' HAVING ' . $this->having;
 
-		if (!is_null($this->order_by))
-			$query .= ' ORDER BY ' . $this->order_by;
+		if (!is_null($this->orderBy))
+			$query .= ' ORDER BY ' . $this->orderBy;
 
 		$query  .= ' LIMIT 1';
 		
@@ -413,14 +438,14 @@ class PDOx
 		if (!is_null($this->where))
 			$query .= ' WHERE ' . $this->where;
 		
-		if (!is_null($this->group_by))
-			$query .= ' GROUP BY ' . $this->group_by;
+		if (!is_null($this->groupBy))
+			$query .= ' GROUP BY ' . $this->groupBy;
 		
 		if (!is_null($this->having)) 
 			$query .= ' HAVING ' . $this->having;
 		
-		if (!is_null($this->order_by)) 
-			$query .= ' ORDER BY ' . $this->order_by;
+		if (!is_null($this->orderBy)) 
+			$query .= ' ORDER BY ' . $this->orderBy;
 		
 		if (!is_null($this->limit)) 
 			$query .= ' LIMIT ' . $this->limit;
@@ -439,7 +464,7 @@ class PDOx
 		
 		if ($query)
 		{
-			$this->insert_id = $this->pdo->lastInsertId();
+			$this->insertId = $this->pdo->lastInsertId();
 			
 			return $this->insertId();
 		}
@@ -450,7 +475,6 @@ class PDOx
 	public function update($data)
 	{
 		$query = 'UPDATE ' . $this->from . ' SET ';
-		
 		$values = [];
 		
 		foreach ($data as $column => $val)
@@ -461,8 +485,8 @@ class PDOx
 		if (!is_null($this->where)) 
 			$query .= ' WHERE ' . $this->where;
 		
-		if (!is_null($this->order_by))
-			$query .= ' ORDER BY ' . $this->order_by;
+		if (!is_null($this->orderBy))
+			$query .= ' ORDER BY ' . $this->orderBy;
 			
 		if (!is_null($this->limit))
 			$query .= ' LIMIT ' . $this->limit;
@@ -478,8 +502,8 @@ class PDOx
 		{
 			$query .= ' WHERE ' . $this->where;
 			
-			if (!is_null($this->order_by))
-				$query .= ' ORDER BY ' . $this->order_by;
+			if (!is_null($this->orderBy))
+				$query .= ' ORDER BY ' . $this->orderBy;
 				
 			if (!is_null($this->limit))
 				$query .= ' LIMIT ' . $this->limit;
@@ -498,42 +522,71 @@ class PDOx
 		{
 			$x = explode('?', $query);
 			$q = '';
+			
 			foreach($x as $k => $v)
 				if(!empty($v))
 					$q .= $v . (isset($all[$k]) ? $this->escape($all[$k]) : '');
+				
 			$query = $q;
 		}
 		
 		$this->query = preg_replace('/\s\s+|\t\t+/', ' ', trim($query));
 		$str = stristr($this->query, 'SELECT');
 		
-		if ($str)
+		$cache = false;
+		
+		if (!is_null($this->cache))
+			$cache = $this->cache->getCache($this->query, $array);
+		
+		if (!$cache && $str)
 		{
 			$sql = $this->pdo->query($this->query);
 			
 			if ($sql)
 			{
-				$this->num_rows = $sql->rowCount();
+				$this->numRows = $sql->rowCount();
 				
-				if (($this->num_rows > 0))
+				if (($this->numRows > 0))
 				{
 					if ($all)
 					{
 						$q = [];
+						
 						while ($result = ($array == false) ? $sql->fetchAll(\PDO::FETCH_OBJ) : $sql->fetchAll(\PDO::FETCH_ASSOC))
 							$q[] = $result;
 						
 						$this->result = $q[0];
 					}
+					
 					else
 					{
 						$q = ($array == false) ? $sql->fetch(\PDO::FETCH_OBJ) : $sql->fetch(\PDO::FETCH_ASSOC);
 						$this->result = $q;
 					}
 				}
+				
+				if (!is_null($this->cache)) 
+					$this->cache->setCache($this->query, $this->result);
+				
+				$this->cache = null;
 			}
 			
 			else
+			{
+				$this->cache = null;
+				$this->error = $this->pdo->errorInfo();
+				$this->error = $this->error[2];
+				
+				return $this->error();
+			}
+		}
+		
+		elseif ((!$cache && !$str) || ($cache && !$str))
+		{
+			$this->cache = null;
+			$this->result = $this->pdo->query($this->query);
+			
+			if (!$this->result)
 			{
 				$this->error = $this->pdo->errorInfo();
 				$this->error = $this->error[2];
@@ -542,18 +595,13 @@ class PDOx
 			}
 		}
 		
-		elseif(!$str)
+		else
 		{
-			$this->result = $this->pdo->query($this->query);
-			
-			if(!$this->result)
-			{
-				$this->error = $this->pdo->errorInfo();
-				$this->error = $this->error[2];
-				
-				return $this->error();
-			}
+			$this->cache = null;
+			$this->result = $cache;
 		}
+		
+		$this->queryCount++;
 		
 		return $this->result;
 	}
@@ -563,21 +611,39 @@ class PDOx
 		return $this->pdo->quote(trim($data));
 	}
 	
+	public function cache($time)
+	{
+		$this->cache = new Cache($this->cacheDir, $time);
+		
+		return $this;
+	}
+	
+	public function queryCount()
+	{
+		return $this->queryCount;
+	}
+	
+	public function getQuery()
+	{
+		return $this->query;
+	}
+	
 	private function reset() 
 	{
-		$this->select = '*';
-		$this->from = null;
-		$this->where = null;
-		$this->limit = null;
-		$this->order_by = null;
-		$this->group_by = null;
-		$this->having = null;
-		$this->join = null;
-		$this->num_rows = 0;
-		$this->insert_id = null;
-		$this->query = null;
-		$this->error = null;
-		$this->result = [];
+		$this->select	= '*';
+		$this->from	= null;
+		$this->where	= null;
+		$this->limit	= null;
+		$this->orderBy	= null;
+		$this->groupBy	= null;
+		$this->having	= null;
+		$this->join	= null;
+		$this->grouped	= false;
+		$this->numRows	= 0;
+		$this->insertId	= null;
+		$this->query	= null;
+		$this->error	= null;
+		$this->result	= [];
 		
 		return;
 	}
