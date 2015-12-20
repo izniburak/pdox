@@ -43,7 +43,7 @@ $config = [
 	'prefix'	 => ''
 ];
 
-$db = new \buki\PDOx($config);
+$db = new \Buki\Pdox($config);
 
 $records = $db->table('users')
 		->select('id, name, surname, age')
