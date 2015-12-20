@@ -36,7 +36,7 @@ $config = [
 	'prefix'    => ''
 ];
 
-$db = new \buki\PDOx($config);
+$db = new \Buki\Pdox($config);
 ```
 
 
@@ -80,10 +80,14 @@ $config = [
 		
 	# Database Prefix (not required)
 	# default value: null
-	'prefix'     => ''
+	'prefix'     => '',
+	
+	# Cache Directory of the Sql Result
+	# default value: __DIR__ . '/cache/'
+	'cachedir'	=> __DIR__ . '/cache/sql/'
 ];
 
-$db = new \buki\PDOx($config);
+$db = new \Buki\Pdox($config);
 ```
 
 ### select
@@ -161,6 +165,16 @@ $db->where('age', '>', 20)->orWhere('age', '<', 30);
 # Usage 4: 
 $db->where('status = ? AND age = ?', [1, 20]);
 $db->where('status = ? AND title = ?', [0, 'example title']);
+```
+
+### grouped
+```php
+$db->table('users')
+	->grouped(function() use ($db) {
+		$db->where('country', 'TURKEY')->orWhere('country', 'ENGLAND');
+	})
+	->where('status', 1)
+	->getAll();
 ```
 
 ### in - notIn - orIn - orNotIn
@@ -283,7 +297,18 @@ $db->error();
 
 ### cache
 ```php
-coming soon...
+# Usage: ...->cache($time)->... 
+$db->table('pages')->where('slug', 'example-page.html')->cache(60)->get(); // cache time: 60 seconds
+```
+
+### queryCount
+```php
+$db->queryCount(); // The number of all SQL queries on the page until the end of the beginning.
+```
+
+### getQuery
+```php
+$db->getQuery(); // Last SQL Query.
 ```
 
 ### escape
