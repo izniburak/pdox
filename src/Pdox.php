@@ -35,7 +35,7 @@ class Pdox
 	private $prefix 	= null;
 	private $op 		= ['=','!=','<','>','<=','>=','<>'];
 	private $cache 		= null;
-	private $cacheDi	= null;
+	private $cacheDir	= null;
 	private $queryCoun	= 0;
 
 	public function __construct(Array $config)
