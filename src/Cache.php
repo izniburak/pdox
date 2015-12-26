@@ -14,9 +14,9 @@ namespace Buki;
 
 class Cache
 {
-  private $cacheDir	= null;
-  private $cache		= null;
-  private $finish		= null;
+	private $cacheDir		= null;
+	private $cache		= null;
+	private $finish		= null;
 	
 	function __construct($dir = null, $time = 0)
 	{
@@ -38,6 +38,8 @@ class Cache
 		
 		if($cacheFile)
 			fputs($cacheFile, json_encode(['data' => $result, 'finish' => $this->finish]));
+		
+		return;
 	}
 	
 	public function getCache($sql, $array = false)
