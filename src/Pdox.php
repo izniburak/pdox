@@ -43,7 +43,7 @@ class Pdox
 		$config['driver']	= ((@$config['driver']) ? $config['driver'] : 'mysql');
 		$config['host']		= ((@$config['host']) ? $config['host'] : 'localhost');
 		$config['charset']	= ((@$config['charset']) ? $config['charset'] : 'utf8');
-		$config['collation']	= ((@$config['collation']) ? $config['collation'] : 'utf8_general_ci');
+		$config['collation']= ((@$config['collation']) ? $config['collation'] : 'utf8_general_ci');
 		$config['prefix']	= ((@$config['prefix']) ? $config['prefix'] : '');
 		$this->prefix		= $config['prefix'];
 		$this->cacheDir		= ((@$config['cachedir']) ? $config['cachedir'] : __DIR__ . '/cache/');
@@ -95,6 +95,7 @@ class Pdox
 
 			$this->from = rtrim($f, ', ');
 		}
+		
 		else
 			$this->from = $this->prefix . $from;
 		
@@ -118,6 +119,7 @@ class Pdox
 			else
 				$this->join = $this->join . ' ' . $q;
 		}
+		
 		else
 		{
 			$where = $field1;
@@ -181,6 +183,7 @@ class Pdox
 
 				$where = $w;
 			}
+			
 			elseif (!in_array($op, $this->op))
 				$where = $where . ' = ' . $this->escape($op);
 			
