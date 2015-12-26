@@ -631,13 +631,13 @@ class Pdox
 	private function reset() 
 	{
 		$this->select	= '*';
-		$this->from	= null;
+		$this->from		= null;
 		$this->where	= null;
 		$this->limit	= null;
 		$this->orderBy	= null;
 		$this->groupBy	= null;
 		$this->having	= null;
-		$this->join	= null;
+		$this->join		= null;
 		$this->grouped	= false;
 		$this->numRows	= 0;
 		$this->insertId	= null;
