@@ -1,5 +1,5 @@
 <?php 
-	
+
 require 'vendor/autoload.php';
 
 $config = [
@@ -15,16 +15,19 @@ $config = [
 
 $db = new \Buki\Pdox($config);
 
-$records = $db->table('users')
-        ->select('name, surname, age')
-        ->where('age', '>', 18)
-        ->orderBy('id', 'desc')
-        ->limit(20)
-        ->getAll();
+$data = [
+	'name' => 'Burak',
+	'surname' => 'Demirtaş',
+	'age' => '24',
+	'country' => 'Turkey',
+	'city' => 'Ankara',
+	'status' => 1
+];
 
-foreach($records as $record)
+$query = $db->table('users')->insert($data);
+
+if($query)
 {
-	echo $record->name . '<br />' . 
-		 $record->surname . '<br />' . 
-		 $record->age;
+	echo 'Record added! <br />' . 
+		 'InsertID: ' . $db->insertId();
 }
