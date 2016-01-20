@@ -36,7 +36,7 @@ class Pdox
 	private $op 		= ['=','!=','<','>','<=','>=','<>'];
 	private $cache 		= null;
 	private $cacheDir	= null;
-	private $queryCoun	= 0;
+	private $queryCount	= 0;
 
 	public function __construct(Array $config)
 	{	
