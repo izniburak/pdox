@@ -14,7 +14,7 @@ namespace Buki;
 
 class Cache
 {
-	private $cacheDir		= null;
+	private $cacheDir	= null;
 	private $cache		= null;
 	private $finish		= null;
 	
@@ -58,7 +58,6 @@ class Cache
 				unlink($cacheFile);
 				return;
 			}
-			
 			else
 				return ($array ? $cache['data'] : $cache->data);
 		}

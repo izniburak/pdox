@@ -78,7 +78,6 @@ class Pdox
 	{
 		if(is_array($select))
 			$this->select = implode(', ', $select);
-		
 		else
 			$this->select = $select;
 		
@@ -95,7 +94,6 @@ class Pdox
 
 			$this->from = rtrim($f, ', ');
 		}
-		
 		else
 			$this->from = $this->prefix . $from;
 		
@@ -115,11 +113,9 @@ class Pdox
 
 			if (is_null($this->join))
 				$this->join = ' ' . $q;
-
 			else
 				$this->join = $this->join . ' ' . $q;
 		}
-		
 		else
 		{
 			$where = $field1;
@@ -130,7 +126,6 @@ class Pdox
 		
 			if (is_null($this->join))
 				$this->join = ' ' . $join . 'JOIN' . ' ' . $table . ' ON ' . $where;
-				
 			else
 				$this->join = $this->join . ' ' . $join . 'JOIN' . ' ' . $table . ' ON ' . $where;
 		}
@@ -183,10 +178,8 @@ class Pdox
 
 				$where = $w;
 			}
-			
 			elseif (!in_array($op, $this->op))
 				$where = $where . ' = ' . $this->escape($op);
-			
 			else
 				$where = $where . ' ' . $op . ' ' . $this->escape($val);
 		}
@@ -199,7 +192,6 @@ class Pdox
 		
 		if (is_null($this->where))
 			$this->where = $where;
-			
 		else
 			$this->where = $this->where . ' '.$ao.' ' . $where;
 
@@ -235,7 +227,6 @@ class Pdox
 			
 			if (is_null($this->where)) 
 				$this->where = $field . ' ' . $not . 'IN (' . $keys . ')';
-			
 			else 
 				$this->where = $this->where . ' ' . $ao . ' ' . $field . ' '.$not.'IN (' . $keys . ')';
 		}
@@ -268,7 +259,6 @@ class Pdox
 	{
 		if (is_null($this->where)) 
 			$this->where = $field . ' ' . $not . 'BETWEEN ' . $this->escape($value1) . ' AND ' . $this->escape($value2);
-		
 		else 
 			$this->where = $this->where . ' ' . $ao . ' ' . $field . ' ' . $not . 'BETWEEN ' . $this->escape($value1) . ' AND ' . $this->escape($value2);
 
@@ -302,10 +292,8 @@ class Pdox
 		
 		if($type == '-%')
 			$like = $data.'%';
-		
 		elseif($type == '%-')
 			$like = '%'.$data;
-		
 		else 
 			$like = '%'.$data.'%';
 	
@@ -313,7 +301,6 @@ class Pdox
 		
 		if (is_null($this->where))
 			$this->where = $field . ' LIKE ' . $like;
-			
 		else
 			$this->where = $this->where . ' '.$ao.' ' . $field . ' LIKE ' . $like;
 		
@@ -331,7 +318,6 @@ class Pdox
 	{
 		if (!is_null($limitEnd))
 			$this->limit = $limit . ', ' . $limitEnd;
-			
 		else
 			$this->limit = $limit;
 		
@@ -342,12 +328,10 @@ class Pdox
 	{
 		if (!is_null($order_dir))
 			$this->orderBy = $orderBy . ' ' . strtoupper($order_dir);
-			
 		else
 		{
 			if(stristr($orderBy, ' ') || $orderBy == 'rand()')
 				$this->orderBy = $orderBy;
-				
 			else
 				$this->orderBy = $orderBy . ' ASC';
 		}
@@ -359,7 +343,6 @@ class Pdox
 	{
 		if(is_array($groupBy))
 			$this->groupBy = implode(', ', $groupBy);
-		
 		else
 			$this->groupBy = $groupBy;
 
@@ -382,7 +365,6 @@ class Pdox
 		
 		elseif (!in_array($op, $this->op))
 			$this->having = $field . ' > ' . $this->escape($op);
-			
 		else
 			$this->having = $field . ' ' . $op . ' ' . $this->escape($val);
 
@@ -560,7 +542,6 @@ class Pdox
 						
 						$this->result = $q[0];
 					}
-					
 					else
 					{
 						$q = ($array == false) ? $sql->fetch(\PDO::FETCH_OBJ) : $sql->fetch(\PDO::FETCH_ASSOC);
@@ -597,7 +578,6 @@ class Pdox
 				return $this->error();
 			}
 		}
-		
 		else
 		{
 			$this->cache = null;
