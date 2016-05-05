@@ -178,7 +178,7 @@ class Pdox
 
 				$where = $w;
 			}
-			elseif (!in_array($op, $this->op))
+			elseif (!in_array($op, $this->op) || $op == false)
 				$where = $where . ' = ' . $this->escape($op);
 			else
 				$where = $where . ' ' . $op . ' ' . $this->escape($val);
