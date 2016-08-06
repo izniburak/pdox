@@ -12,7 +12,7 @@ composer.json file:
 ```json
 {
     "require": {
-        "izniburak/pdox-orm": "dev-master"
+        "izniburak/pdox": "dev-master"
     }
 }
 ```
@@ -24,7 +24,7 @@ $ composer install
 OR run the following command directly.
 
 ```
-$ composer require izniburak/pdox-orm:dev-master
+$ composer require izniburak/pdox:dev-master
 ```
 
 ## Example Usage
