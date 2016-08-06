@@ -1,6 +1,5 @@
 ## PDOx
 Fast, efficient and useful Query Builder and PDO Class for #PHP
-(ORM coming soon...)
 
 [![Total Downloads](https://poser.pugx.org/izniburak/pdox-orm/d/total.svg)](https://packagist.org/packages/izniburak/pdox-orm)
 [![Latest Stable Version](https://poser.pugx.org/izniburak/pdox-orm/v/stable.svg)](https://packagist.org/packages/izniburak/pdox-orm)

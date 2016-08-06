@@ -153,6 +153,27 @@ class Pdox
 		
 		return $this;
 	}
+	
+	public function fullOuterJoin($table, $field1, $op = '', $field2 = '')
+	{
+		$this->join($table, $field1, $op, $field2, 'FULL OUTER ');
+		
+		return $this;
+	}
+	
+	public function leftOuterJoin($table, $field1, $op = '', $field2 = '')
+	{
+		$this->join($table, $field1, $op, $field2, 'LEFT OUTER ');
+		
+		return $this;
+	}
+	
+	public function rightOuterJoin($table, $field1, $op = '', $field2 = '')
+	{
+		$this->join($table, $field1, $op, $field2, 'RIGHT OUTER ');
+		
+		return $this;
+	}
 
 	public function where($where, $op = null, $val = null, $ao = 'AND')
 	{
