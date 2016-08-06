@@ -1,5 +1,5 @@
 {
-    "name": "izniburak/pdox-orm",
+    "name": "izniburak/pdox",
     "type": "library",
     "description": "Useful Query Builder, PDO Class for PHP. A simple access to your SQL records.",
     "keywords": ["php","pdo","orm","sql","query","builder"],
