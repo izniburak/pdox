@@ -43,7 +43,7 @@ class Pdox
 		$config['driver']	= ((@$config['driver']) ? $config['driver'] : 'mysql');
 		$config['host']		= ((@$config['host']) ? $config['host'] : 'localhost');
 		$config['charset']	= ((@$config['charset']) ? $config['charset'] : 'utf8');
-		$config['collation']= ((@$config['collation']) ? $config['collation'] : 'utf8_general_ci');
+		$config['collation']	= ((@$config['collation']) ? $config['collation'] : 'utf8_general_ci');
 		$config['prefix']	= ((@$config['prefix']) ? $config['prefix'] : '');
 		$this->prefix		= $config['prefix'];
 		$this->cacheDir		= ((@$config['cachedir']) ? $config['cachedir'] : __DIR__ . '/cache/');
@@ -309,14 +309,12 @@ class Pdox
 	
 	public function like($field, $data, $type = '%-%', $ao = 'AND')
 	{
-		$like = '';
+		$like = '%'.$data.'%';
 		
 		if($type == '-%')
 			$like = $data.'%';
 		elseif($type == '%-')
 			$like = '%'.$data;
-		else 
-			$like = '%'.$data.'%';
 	
 		$like = $this->escape($like);
 		
