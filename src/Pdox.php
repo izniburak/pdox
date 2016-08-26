@@ -408,31 +408,18 @@ class Pdox
 		die($msg);
 	}
 	
-	public function get($array = false)
+	public function get($type = false)
 	{
-		$query = 'SELECT ' . $this->select . ' FROM ' . $this->from;
+		$this->limit = 1;
+		$query = $this->getAll(true);
 		
-		if (!is_null($this->join))
-			$query .= $this->join;
-
-		if (!is_null($this->where)) 
-			$query .= ' WHERE ' . $this->where;
-			
-		if (!is_null($this->groupBy))
-			$query .= ' GROUP BY ' . $this->groupBy;
-
-		if (!is_null($this->having)) 
-			$query .= ' HAVING ' . $this->having;
-
-		if (!is_null($this->orderBy))
-			$query .= ' ORDER BY ' . $this->orderBy;
-
-		$query  .= ' LIMIT 1';
-		
-		return $this->query($query, false, $array);
+		if($type == true)
+			return $query;
+		else
+			return $this->query( $query, false, (($type == 'array') ? true : false) );
 	}
 
-	public function getAll($array = false)
+	public function getAll($type = false)
 	{
 		$query = 'SELECT ' . $this->select . ' FROM ' . $this->from;
 		
@@ -454,7 +441,10 @@ class Pdox
 		if (!is_null($this->limit)) 
 			$query .= ' LIMIT ' . $this->limit;
 		
-		return $this->query($query, true, $array);
+		if($type == true)
+			return $query;
+		else
+			return $this->query( $query, true, (($type == 'array') ? true : false) );
 	}
 
 	public function insert($data)
