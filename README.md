@@ -1,10 +1,10 @@
 ## PDOx
 Fast, efficient and useful Query Builder and PDO Class for #PHP
 
-[![Total Downloads](https://poser.pugx.org/izniburak/pdox-orm/d/total.svg)](https://packagist.org/packages/izniburak/pdox-orm)
-[![Latest Stable Version](https://poser.pugx.org/izniburak/pdox-orm/v/stable.svg)](https://packagist.org/packages/izniburak/pdox-orm)
-[![Latest Unstable Version](https://poser.pugx.org/izniburak/pdox-orm/v/unstable.svg)](https://packagist.org/packages/izniburak/pdox-orm)
-[![License](https://poser.pugx.org/izniburak/pdox-orm/license.svg)](https://packagist.org/packages/izniburak/pdox-orm)
+[![Total Downloads](https://poser.pugx.org/izniburak/pdox/d/total.svg)](https://packagist.org/packages/izniburak/pdox)
+[![Latest Stable Version](https://poser.pugx.org/izniburak/pdox/v/stable.svg)](https://packagist.org/packages/izniburak/pdox)
+[![Latest Unstable Version](https://poser.pugx.org/izniburak/pdox/v/unstable.svg)](https://packagist.org/packages/izniburak/pdox)
+[![License](https://poser.pugx.org/izniburak/pdox/license.svg)](https://packagist.org/packages/izniburak/pdox)
 
 ## Install
 
