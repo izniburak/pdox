@@ -175,16 +175,16 @@ class Pdox
 		return $this;
 	}
 
-	public function where($where, $op = null, $val = null, $ao = 'AND')
+	public function where($where, $op = null, $val = null, $type = '', $and_or = 'AND')
 	{
 		if (is_array($where))
 		{
 			$_where = [];
 			
 			foreach ($where as $column => $data) 
-				$_where[] = $column . '=' . $this->escape($data);
+				$_where[] = $type . $column . '=' . $this->escape($data);
 				
-			$where = implode(' '.$ao.' ', $_where);
+			$where = implode(' '.$and_or.' ', $_where);
 		}
 		else
 		{
@@ -195,14 +195,14 @@ class Pdox
 				
 				foreach($x as $k => $v)
 					if(!empty($v))
-						$w .= $v . (isset($op[$k]) ? $this->escape($op[$k]) : '');
+						$w .= $type . $v . (isset($op[$k]) ? $this->escape($op[$k]) : '');
 
 				$where = $w;
 			}
 			elseif (!in_array($op, $this->op) || $op == false)
-				$where = $where . ' = ' . $this->escape($op);
+				$where = $type . $where . ' = ' . $this->escape($op);
 			else
-				$where = $where . ' ' . $op . ' ' . $this->escape($val);
+				$where = $type . $where . ' ' . $op . ' ' . $this->escape($val);
 		}
 		
 		if($this->grouped)
@@ -214,14 +214,28 @@ class Pdox
 		if (is_null($this->where))
 			$this->where = $where;
 		else
-			$this->where = $this->where . ' '.$ao.' ' . $where;
+			$this->where = $this->where . ' '.$and_or.' ' . $where;
 
 		return $this;
 	}
 
-	public function orWhere($where, $op=null, $val=null)
+	public function orWhere($where, $op = null, $val = null)
 	{
-		$this->where($where, $op, $val, 'OR');
+		$this->where($where, $op, $val, '', 'OR');
+		
+		return $this;
+	}
+
+	public function notWhere($where, $op = null, $val = null)
+	{
+		$this->where($where, $op, $val, 'NOT ', 'AND');
+		
+		return $this;
+	}
+
+	public function orNotWhere($where, $op = null, $val = null)
+	{
+		$this->where($where, $op, $val, 'NOT ', 'OR');
 		
 		return $this;
 	}
@@ -235,7 +249,7 @@ class Pdox
 		return $this;
 	}
 	
-	public function in($field, Array $keys, $not = '', $ao = 'AND')
+	public function in($field, Array $keys, $type = '', $and_or = 'AND')
 	{
 		if (is_array($keys))
 		{
@@ -247,9 +261,9 @@ class Pdox
 			$keys = implode(', ', $_keys);
 			
 			if (is_null($this->where)) 
-				$this->where = $field . ' ' . $not . 'IN (' . $keys . ')';
+				$this->where = $field . ' ' . $type . 'IN (' . $keys . ')';
 			else 
-				$this->where = $this->where . ' ' . $ao . ' ' . $field . ' '.$not.'IN (' . $keys . ')';
+				$this->where = $this->where . ' ' . $and_or . ' ' . $field . ' '.$type.'IN (' . $keys . ')';
 		}
 		
 		return $this;
@@ -276,12 +290,12 @@ class Pdox
 		return $this;
 	}
 	
-	public function between($field, $value1, $value2, $not = '', $ao = 'AND')
+	public function between($field, $value1, $value2, $type = '', $and_or = 'AND')
 	{
 		if (is_null($this->where)) 
-			$this->where = $field . ' ' . $not . 'BETWEEN ' . $this->escape($value1) . ' AND ' . $this->escape($value2);
+			$this->where = $field . ' ' . $type . 'BETWEEN ' . $this->escape($value1) . ' AND ' . $this->escape($value2);
 		else 
-			$this->where = $this->where . ' ' . $ao . ' ' . $field . ' ' . $not . 'BETWEEN ' . $this->escape($value1) . ' AND ' . $this->escape($value2);
+			$this->where = $this->where . ' ' . $and_or . ' ' . $field . ' ' . $type . 'BETWEEN ' . $this->escape($value1) . ' AND ' . $this->escape($value2);
 
 		return $this;
 	}
@@ -307,7 +321,7 @@ class Pdox
 		return $this;
 	}
 	
-	public function like($field, $data, $type = '%-%', $ao = 'AND')
+	public function like($field, $data, $type = '%-%', $and_or = 'AND')
 	{
 		$like = '%'.$data.'%';
 		
@@ -321,7 +335,7 @@ class Pdox
 		if (is_null($this->where))
 			$this->where = $field . ' LIKE ' . $like;
 		else
-			$this->where = $this->where . ' '.$ao.' ' . $field . ' LIKE ' . $like;
+			$this->where = $this->where . ' '.$and_or.' ' . $field . ' LIKE ' . $like;
 		
 		return $this;
 	}
