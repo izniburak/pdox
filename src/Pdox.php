@@ -333,9 +333,9 @@ class Pdox
 		$like = $this->escape($like);
 		
 		if (is_null($this->where))
-			$this->where = $field . ' LIKE ' . $like;
+			$this->where = $field . ' ' . $type . 'LIKE ' . $like;
 		else
-			$this->where = $this->where . ' '.$and_or.' ' . $field . ' LIKE ' . $like;
+			$this->where = $this->where . ' '.$and_or.' ' . $field . ' ' . $type . 'LIKE ' . $like;
 		
 		return $this;
 	}
