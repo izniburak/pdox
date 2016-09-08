@@ -195,13 +195,13 @@ $db->orNotBetween('year', 2005, 2009);
 
 ### like - orLike
 ```php
-$db->like('title', 'burak');		// " title LIKE '%burak%' "
-$db->like('title', 'izniburak', '-%');	// " title LIKE 'izniburak%' "
-$db->like('title', 'izniburak', '%-');	// " title LIKE '%izniburak' "
+$db->like('title', '%burak%');		// " title LIKE '%burak%' "
+$db->like('title', 'izniburak%');	// " title LIKE 'izniburak%' "
+$db->like('title', '%izniburak');	// " title LIKE '%izniburak' "
 
-$db->like('user', 'php')->orLike('user', 'web');
-$db->like('user', 'php')->orLike('user', 'web', '-%');
-$db->like('user', 'php')->orLike('user', 'web', '%-');
+$db->like('tag', '%php%')->orLike('tag', '%web%');
+$db->like('tag', '%php%')->orLike('tag', 'web%');
+$db->like('tag', '%php%')->orLike('tag', '%web');
 ```
 
 ### groupBy

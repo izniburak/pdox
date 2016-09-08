@@ -321,16 +321,9 @@ class Pdox
 		return $this;
 	}
 	
-	public function like($field, $data, $option = '%-%', $type = '', $and_or = 'AND')
+	public function like($field, $data, $type = '', $and_or = 'AND')
 	{
-		$like = '%'.$data.'%';
-		
-		if($option == '-%')
-			$like = $data.'%';
-		elseif($option == '%-')
-			$like = '%'.$data;
-	
-		$like = $this->escape($like);
+		$like = $this->escape($data);
 		
 		if (is_null($this->where))
 			$this->where = $field . ' ' . $type . 'LIKE ' . $like;
@@ -340,23 +333,23 @@ class Pdox
 		return $this;
 	}
 	
-	public function orLike($field, $data, $option = '%-%')
+	public function orLike($field, $data)
 	{
-		$this->like($field, $data, $option, '', 'OR');
+		$this->like($field, $data, '', 'OR');
 		
 		return $this;
 	}
 
-	public function notLike($field, $data, $option = '%-%')
+	public function notLike($field, $data)
 	{
-		$this->like($field, $data, $option, 'NOT ', 'AND');
+		$this->like($field, $data, 'NOT ', 'AND');
 		
 		return $this;
 	}
 
-	public function orNotLike($field, $data, $option = '%-%')
+	public function orNotLike($field, $data)
 	{
-		$this->like($field, $data, $option, 'NOT ', 'OR');
+		$this->like($field, $data, 'NOT ', 'OR');
 		
 		return $this;
 	}
