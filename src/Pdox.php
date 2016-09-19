@@ -100,9 +100,7 @@ class Pdox
 
 	public function max($field, $name = null)
 	{
-		$func = "MAX(" . $field . ")";
-		$func += (!is_null($name) ? " AS " . $name : "");
-
+		$func = "MAX(" . $field . ")" . (!is_null($name) ? " AS " . $name : "");
 		$this->select = ($this->select == '*' ? $func : $this->select . ", " . $func);
 
 		return $this;
@@ -110,9 +108,7 @@ class Pdox
 
 	public function min($field, $name = null)
 	{
-		$func = "MIN(" . $field . ")";
-		$func += (!is_null($name) ? " AS " . $name : "");
-
+		$func = "MIN(" . $field . ")" . (!is_null($name) ? " AS " . $name : "");
 		$this->select = ($this->select == '*' ? $func : $this->select . ", " . $func);
 
 		return $this;
@@ -120,9 +116,7 @@ class Pdox
 
 	public function sum($field, $name = null)
 	{
-		$func = "SUM(" . $field . ")";
-		$func += (!is_null($name) ? " AS " . $name : "");
-
+		$func = "SUM(" . $field . ")" . (!is_null($name) ? " AS " . $name : "");
 		$this->select = ($this->select == '*' ? $func : $this->select . ", " . $func);
 
 		return $this;
@@ -130,9 +124,7 @@ class Pdox
 
 	public function count($field, $name = null)
 	{
-		$func = "COUNT(" . $field . ")";
-		$func += (!is_null($name) ? " AS " . $name : "");
-
+		$func = "COUNT(" . $field . ")" . (!is_null($name) ? " AS " . $name : "");
 		$this->select = ($this->select == '*' ? $func : $this->select . ", " . $func);
 
 		return $this;
@@ -140,9 +132,7 @@ class Pdox
 
 	public function avg($field, $name = null)
 	{
-		$func = "AVG(" . $field . ")";
-		$func += (!is_null($name) ? " AS " . $name : "");
-
+		$func = "AVG(" . $field . ")" . (!is_null($name) ? " AS " . $name : "");
 		$this->select = ($this->select == '*' ? $func : $this->select . ", " . $func);
 
 		return $this;
