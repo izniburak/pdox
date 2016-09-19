@@ -283,11 +283,11 @@ $db->table('pages')->insert($data);
 var_dump($db->insertId());
 ```
 
-### count
+### numRows
 ```php
 $db->select('id, title')->table('test')->where('status', 1)->orWhere('status', 2)->getAll();
 
-var_dump($db->count());
+var_dump($db->numRows());
 ```
 
 ### error
