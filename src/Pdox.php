@@ -459,7 +459,7 @@ class Pdox
 		return $this;
 	}
 
-	public function count()
+	public function numRows()
 	{
 		return $this->numRows;
 	}
