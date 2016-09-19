@@ -73,16 +73,6 @@ class Pdox
 
 		return $this->pdo;
 	}
-	
-	public function select($select)
-	{
-		if(is_array($select))
-			$this->select = implode(', ', $select);
-		else
-			$this->select = $select;
-		
-		return $this;
-	}
 
 	public function table($from)
 	{
@@ -97,6 +87,64 @@ class Pdox
 		else
 			$this->from = $this->prefix . $from;
 		
+		return $this;
+	}
+	
+	public function select($fields)
+	{
+		$select = (is_array($fields) ? implode(", ", $fields) : $fields);
+		$this->select = ($this->select == '*' ? $select : $this->select . ", " . $select);
+		
+		return $this;
+	}
+
+	public function max($field, $name = null)
+	{
+		$func = "MAX(" . $field . ")";
+		$func += (!is_null($name) ? " AS " . $name : "");
+
+		$this->select = ($this->select == '*' ? $func : $this->select . ", " . $func);
+
+		return $this;
+	}
+
+	public function min($field, $name = null)
+	{
+		$func = "MIN(" . $field . ")";
+		$func += (!is_null($name) ? " AS " . $name : "");
+
+		$this->select = ($this->select == '*' ? $func : $this->select . ", " . $func);
+
+		return $this;
+	}
+
+	public function sum($field, $name = null)
+	{
+		$func = "SUM(" . $field . ")";
+		$func += (!is_null($name) ? " AS " . $name : "");
+
+		$this->select = ($this->select == '*' ? $func : $this->select . ", " . $func);
+
+		return $this;
+	}
+
+	public function count($field, $name = null)
+	{
+		$func = "COUNT(" . $field . ")";
+		$func += (!is_null($name) ? " AS " . $name : "");
+
+		$this->select = ($this->select == '*' ? $func : $this->select . ", " . $func);
+
+		return $this;
+	}
+
+	public function avg($field, $name = null)
+	{
+		$func = "AVG(" . $field . ")";
+		$func += (!is_null($name) ? " AS " . $name : "");
+
+		$this->select = ($this->select == '*' ? $func : $this->select . ", " . $func);
+
 		return $this;
 	}
 	
