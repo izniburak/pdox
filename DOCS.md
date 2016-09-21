@@ -33,8 +33,7 @@ $config = [
 	'password'  => '',
 	'charset'   => 'utf8',
 	'collation' => 'utf8_general_ci',
-	'prefix'    => '',
-	'cachedir'  => __DIR__ . '/cache/sql/'
+	'prefix'    => ''
 ];
 
 $db = new \Buki\Pdox($config);
