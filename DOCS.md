@@ -1,7 +1,7 @@
 # PDOx Documentation
 
 ## Install
-composer.json file:
+`composer.json` file:
 ```json
 {
     "require": {
@@ -52,11 +52,11 @@ If you have a problem, you can [contact me][support-url].
 ## config 
 ```php
 $config = [
-	# Host name or IP Address (not required)
+	# Host name or IP Address (optional)
 	# default value: localhost
 	'host'      => 'localhost',
 		
-	# Database Driver Type (not required)
+	# Database Driver Type (optional)
 	# default value: mysql
 	# values: mysql, pgsql, sqlite, oracle
 	'driver'    => 'mysql',
@@ -70,19 +70,19 @@ $config = [
 	# Database User Password (required)
 	'password'  => '',
 		
-	# Database Charset (not required)
+	# Database Charset (optional)
 	# default value: utf8
 	'charset'   => 'utf8',
 		
-	# Database Charset Collation (not required)
+	# Database Charset Collation (optional)
 	# default value: utf8_general_ci
 	'collation' => 'utf8_general_ci',
 		
-	# Database Prefix (not required)
+	# Database Prefix (optional)
 	# default value: null
 	'prefix'     => '',
 	
-	# Cache Directory of the Sql Result
+	# Cache Directory of the Sql Result (optional)
 	# default value: __DIR__ . '/cache/'
 	'cachedir'	=> __DIR__ . '/cache/sql/'
 ];
