@@ -661,6 +661,9 @@ class Pdox
   
   public function escape($data)
   {
+	if(is_null($data))
+	  return null;
+  
     return $this->pdo->quote(trim($data));
   }
   
