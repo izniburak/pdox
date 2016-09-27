@@ -137,10 +137,6 @@ $db->table('foo')->join('bar', 'foo.field', '=', 'bar.field')->getAll();
 $db->table('foo')->leftJoin('bar', 'foo.field', '=', 'bar.field')->getAll();
 $db->table('foo')->rightJoin('bar', 'foo.field', '=', 'bar.field')->get();
 $db->table('foo')->innerJoin('bar', 'foo.field', '=', 'bar.field')->get();
-
-# Usage 3:
-$db->table('foo')->join(['left outer', 'bar', 'foo.field = bar.field'])->getAll();
-$db->table('foo')->join(['right outer', 'bar', 'foo.field', 'bar.field'])->get();
 ```
 
 ### where - orWhere
