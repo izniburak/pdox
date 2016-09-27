@@ -141,35 +141,18 @@ class Pdox
     return $this;
   }
   
-  public function join($table, $field1, $op = null, $field2 = null, $join = '')
+  public function join($table, $field1 = null, $op = null, $field2 = null, $type = '')
   {
-    if(is_array($table))
-    {
-      $q = '';
-      
-      if(count($table) > 3)
-        $q .= strtoupper($table[0]) . ' JOIN ' . $table[1] . ' ON ' . $table[2] . ' = ' . $table[3];
-      else
-        $q .= strtoupper($table[0]) . ' JOIN ' . $table[1] . ' ON ' . $table[2];
-
-      if (is_null($this->join))
-        $this->join = ' ' . $q;
-      else
-        $this->join = $this->join . ' ' . $q;
-    }
-    else
-    {
-      $where = $field1;
-      $table = $this->prefix . $table;
-      
-      if(!is_null($op)) 
-        $where = (!in_array($op, $this->op) ? $this->prefix . $field1 . ' = ' . $this->prefix . $op : $this->prefix . $field1 . ' ' . $op . ' ' . $this->prefix . $field2);
+    $on = $field1;
+    $table = $this->prefix . $table;
     
-      if (is_null($this->join))
-        $this->join = ' ' . $join . 'JOIN' . ' ' . $table . ' ON ' . $where;
-      else
-        $this->join = $this->join . ' ' . $join . 'JOIN' . ' ' . $table . ' ON ' . $where;
-    }
+    if(!is_null($op)) 
+      $on = (!in_array($op, $this->op) ? $this->prefix . $field1 . ' = ' . $this->prefix . $op : $this->prefix . $field1 . ' ' . $op . ' ' . $this->prefix . $field2);
+    
+    if (is_null($this->join))
+      $this->join = ' ' . $type . 'JOIN' . ' ' . $table . ' ON ' . $on;
+    else
+      $this->join = $this->join . ' ' . $type . 'JOIN' . ' ' . $table . ' ON ' . $on;
     
     return $this;
   }
@@ -661,8 +644,8 @@ class Pdox
   
   public function escape($data)
   {
-	if(is_null($data))
-	  return null;
+    if(is_null($data))
+      return null;
   
     return $this->pdo->quote(trim($data));
   }
