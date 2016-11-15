@@ -1,4 +1,4 @@
-<?php 
+<?php
 /*
 *
 * @ Package: PDOx - Useful Query Builder & PDO Class
@@ -26,12 +26,11 @@ $config = [
 // start PDOx
 $db = new \Buki\Pdox($config);
 
-
 // Select Records
 $records = $db->table('pages')
 		->where('age', '>', 18)
 		->orderBy('id', 'desc')
 		->limit(10)
 		->getAll();
-		
+
 var_dump($records);
