@@ -20,7 +20,7 @@ use Closure;
 class Pdox
 {
   public $pdo = null;
-  
+
   private $select     = '*';
   private $from       = null;
   private $where      = null;
@@ -42,24 +42,27 @@ class Pdox
   private $queryCount = 0;
 
   public function __construct(Array $config)
-  {  
+  {
     $config['driver']    = ((@$config['driver']) ? $config['driver'] : 'mysql');
     $config['host']      = ((@$config['host']) ? $config['host'] : 'localhost');
     $config['charset']   = ((@$config['charset']) ? $config['charset'] : 'utf8');
     $config['collation'] = ((@$config['collation']) ? $config['collation'] : 'utf8_general_ci');
     $config['prefix']    = ((@$config['prefix']) ? $config['prefix'] : '');
     $this->prefix        = $config['prefix'];
-    $this->cacheDir      = ((@$config['cachedir']) ? $config['cachedir'] : __DIR__ . '/cache/');
-  
+    $this->cacheDir      = ((@$config['cachedir']) ? $config['cachedir'] : __DIR__ . "/cache/");
+    $config['port']      = (strstr($config['host'], ':') ? explode(':', $config['host'])[1] : '');
+
     $dsn = '';
-  
+
     if ($config['driver'] == 'mysql' || $config['driver'] == '' || $config['driver'] == 'pgsql')
-      $dsn = $config['driver'] . ':host=' . $config['host'] . ';dbname=' . $config['database'];
-      
+      $dsn = $config['driver'] . ':host=' . $config['host'] . ';'
+            . (($config['port']) != '' ? 'port=' . $config['port'] . ';' : '')
+            . 'dbname=' . $config['database'];
+
     elseif ($config['driver'] == 'sqlite')
       $dsn = 'sqlite:' . $config['database'];
-        
-    elseif($config['driver'] == 'oracle') 
+
+    elseif($config['driver'] == 'oracle')
       $dsn = 'oci:dbname=' . $config['host'] . '/' . $config['database'];
 
     try
@@ -68,7 +71,7 @@ class Pdox
       $this->pdo->exec("SET NAMES '".$config['charset']."' COLLATE '".$config['collation']."'");
       $this->pdo->exec("SET CHARACTER SET '".$config['charset']."'");
       $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
-    } 
+    }
     catch (PDOException $e)
     {
       die('Cannot the connect to Database with PDO.<br /><br />'.$e->getMessage());
@@ -89,15 +92,15 @@ class Pdox
     }
     else
       $this->from = $this->prefix . $table;
-    
+
     return $this;
   }
-  
+
   public function select($fields)
   {
     $select = (is_array($fields) ? implode(", ", $fields) : $fields);
     $this->select = ($this->select == '*' ? $select : $this->select . ", " . $select);
-    
+
     return $this;
   }
 
@@ -140,62 +143,62 @@ class Pdox
 
     return $this;
   }
-  
+
   public function join($table, $field1 = null, $op = null, $field2 = null, $type = '')
   {
     $on = $field1;
     $table = $this->prefix . $table;
-    
-    if(!is_null($op)) 
+
+    if(!is_null($op))
       $on = (!in_array($op, $this->op) ? $this->prefix . $field1 . ' = ' . $this->prefix . $op : $this->prefix . $field1 . ' ' . $op . ' ' . $this->prefix . $field2);
-    
+
     if (is_null($this->join))
       $this->join = ' ' . $type . 'JOIN' . ' ' . $table . ' ON ' . $on;
     else
       $this->join = $this->join . ' ' . $type . 'JOIN' . ' ' . $table . ' ON ' . $on;
-    
+
     return $this;
   }
-  
+
   public function innerJoin($table, $field1, $op = '', $field2 = '')
   {
     $this->join($table, $field1, $op, $field2, 'INNER ');
 
     return $this;
   }
-  
+
   public function leftJoin($table, $field1, $op = '', $field2 = '')
   {
     $this->join($table, $field1, $op, $field2, 'LEFT ');
 
     return $this;
   }
-  
+
   public function rightJoin($table, $field1, $op = '', $field2 = '')
   {
     $this->join($table, $field1, $op, $field2, 'RIGHT ');
-    
+
     return $this;
   }
-  
+
   public function fullOuterJoin($table, $field1, $op = '', $field2 = '')
   {
     $this->join($table, $field1, $op, $field2, 'FULL OUTER ');
-    
+
     return $this;
   }
-  
+
   public function leftOuterJoin($table, $field1, $op = '', $field2 = '')
   {
     $this->join($table, $field1, $op, $field2, 'LEFT OUTER ');
-    
+
     return $this;
   }
-  
+
   public function rightOuterJoin($table, $field1, $op = '', $field2 = '')
   {
     $this->join($table, $field1, $op, $field2, 'RIGHT OUTER ');
-    
+
     return $this;
   }
 
@@ -204,10 +207,10 @@ class Pdox
     if (is_array($where))
     {
       $_where = [];
-      
-      foreach ($where as $column => $data) 
+
+      foreach ($where as $column => $data)
         $_where[] = $type . $column . '=' . $this->escape($data);
-        
+
       $where = implode(' '.$and_or.' ', $_where);
     }
     else
@@ -216,7 +219,7 @@ class Pdox
       {
         $x = explode('?', $where);
         $w = '';
-        
+
         foreach($x as $k => $v)
           if(!empty($v))
             $w .= $type . $v . (isset($op[$k]) ? $this->escape($op[$k]) : '');
@@ -228,13 +231,13 @@ class Pdox
       else
         $where = $type . $where . ' ' . $op . ' ' . $this->escape($val);
     }
-    
+
     if($this->grouped)
     {
       $where = '(' . $where;
       $this->grouped = false;
     }
-    
+
     if (is_null($this->where))
       $this->where = $where;
     else
@@ -246,135 +249,135 @@ class Pdox
   public function orWhere($where, $op = null, $val = null)
   {
     $this->where($where, $op, $val, '', 'OR');
-    
+
     return $this;
   }
 
   public function notWhere($where, $op = null, $val = null)
   {
     $this->where($where, $op, $val, 'NOT ', 'AND');
-    
+
     return $this;
   }
 
   public function orNotWhere($where, $op = null, $val = null)
   {
     $this->where($where, $op, $val, 'NOT ', 'OR');
-    
+
     return $this;
   }
-  
+
   public function grouped(Closure $obj)
   {
     $this->grouped = true;
     call_user_func($obj);
     $this->where .= ')';
-    
+
     return $this;
   }
-  
+
   public function in($field, Array $keys, $type = '', $and_or = 'AND')
   {
     if (is_array($keys))
     {
       $_keys = [];
-      
+
       foreach ($keys as $k => $v)
         $_keys[] = (is_numeric($v) ? $v : $this->escape($v));
-      
+
       $keys = implode(', ', $_keys);
-      
-      if (is_null($this->where)) 
+
+      if (is_null($this->where))
         $this->where = $field . ' ' . $type . 'IN (' . $keys . ')';
-      else 
+      else
         $this->where = $this->where . ' ' . $and_or . ' ' . $field . ' '.$type.'IN (' . $keys . ')';
     }
-    
+
     return $this;
   }
-  
+
   public function notIn($field, Array $keys)
   {
     $this->in($field, $keys, 'NOT ', 'AND');
-    
+
     return $this;
   }
 
   public function orIn($field, Array $keys)
   {
     $this->in($field, $keys, '', 'OR');
-    
+
     return $this;
   }
 
   public function orNotIn($field, Array $keys)
   {
     $this->in($field, $keys, 'NOT ', 'OR');
-    
+
     return $this;
   }
-  
+
   public function between($field, $value1, $value2, $type = '', $and_or = 'AND')
   {
-    if (is_null($this->where)) 
+    if (is_null($this->where))
       $this->where = $field . ' ' . $type . 'BETWEEN ' . $this->escape($value1) . ' AND ' . $this->escape($value2);
-    else 
+    else
       $this->where = $this->where . ' ' . $and_or . ' ' . $field . ' ' . $type . 'BETWEEN ' . $this->escape($value1) . ' AND ' . $this->escape($value2);
 
     return $this;
   }
-  
+
   public function notBetween($field, $value1, $value2)
   {
     $this->between($field, $value1, $value2, 'NOT ', 'AND');
-    
+
     return $this;
   }
 
   public function orBetween($field, $value1, $value2)
   {
     $this->between($field, $value1, $value2, '', 'OR');
-    
+
     return $this;
   }
 
   public function orNotBetween($field, $value1, $value2)
   {
     $this->between($field, $value1, $value2, 'NOT ', 'OR');
-    
+
     return $this;
   }
-  
+
   public function like($field, $data, $type = '', $and_or = 'AND')
   {
     $like = $this->escape($data);
-    
+
     if (is_null($this->where))
       $this->where = $field . ' ' . $type . 'LIKE ' . $like;
     else
       $this->where = $this->where . ' '.$and_or.' ' . $field . ' ' . $type . 'LIKE ' . $like;
-    
+
     return $this;
   }
-  
+
   public function orLike($field, $data)
   {
     $this->like($field, $data, '', 'OR');
-    
+
     return $this;
   }
 
   public function notLike($field, $data)
   {
     $this->like($field, $data, 'NOT ', 'AND');
-    
+
     return $this;
   }
 
   public function orNotLike($field, $data)
   {
     $this->like($field, $data, 'NOT ', 'OR');
-    
+
     return $this;
   }
 
@@ -384,7 +387,7 @@ class Pdox
       $this->limit = $limit . ', ' . $limitEnd;
     else
       $this->limit = $limit;
-    
+
     return $this;
   }
 
@@ -399,7 +402,7 @@ class Pdox
       else
         $this->orderBy = $orderBy . ' ASC';
     }
-    
+
     return $this;
   }
 
@@ -412,21 +415,21 @@ class Pdox
 
     return $this;
   }
-  
+
   public function having($field, $op = null, $val = null)
   {
     if(is_array($op))
     {
       $x = explode('?', $field);
       $w = '';
-      
+
       foreach($x as $k => $v)
         if(!empty($v))
           $w .= $v . (isset($op[$k]) ? $this->escape($op[$k]) : '');
 
       $this->having = $w;
     }
-    
+
     elseif (!in_array($op, $this->op))
       $this->having = $field . ' > ' . $this->escape($op);
     else
@@ -439,7 +442,7 @@ class Pdox
   {
     return $this->numRows;
   }
-  
+
   public function insertId()
   {
     return $this->insertId;
@@ -452,12 +455,12 @@ class Pdox
     $msg .= '<h4>Error: <em style="font-weight:normal;">'.$this->error.'</em></h4>';
     die($msg);
   }
-  
+
   public function get($type = false)
   {
     $this->limit = 1;
     $query = $this->getAll(true);
-    
+
     if($type == true)
       return $query;
     else
@@ -467,25 +470,25 @@ class Pdox
   public function getAll($type = false)
   {
     $query = 'SELECT ' . $this->select . ' FROM ' . $this->from;
-    
+
     if (!is_null($this->join))
       $query .= $this->join;
-    
+
     if (!is_null($this->where))
       $query .= ' WHERE ' . $this->where;
-    
+
     if (!is_null($this->groupBy))
       $query .= ' GROUP BY ' . $this->groupBy;
-    
-    if (!is_null($this->having)) 
+
+    if (!is_null($this->having))
       $query .= ' HAVING ' . $this->having;
-    
-    if (!is_null($this->orderBy)) 
+
+    if (!is_null($this->orderBy))
       $query .= ' ORDER BY ' . $this->orderBy;
-    
-    if (!is_null($this->limit)) 
+
+    if (!is_null($this->limit))
       $query .= ' LIMIT ' . $this->limit;
-    
+
     if($type == true)
       return $query;
     else
@@ -497,17 +500,17 @@ class Pdox
     $columns = array_keys($data);
     $column = implode(',', $columns);
     $val = implode(', ', array_map([$this, 'escape'], $data));
-    
+
     $query = 'INSERT INTO ' . $this->from . ' (' . $column . ') VALUES (' . $val . ')';
     $query = $this->query($query);
-    
+
     if ($query)
     {
       $this->insertId = $this->pdo->lastInsertId();
-      
+
       return $this->insertId();
     }
-    else 
+    else
       return false;
   }
 
@@ -515,84 +518,84 @@ class Pdox
   {
     $query = 'UPDATE ' . $this->from . ' SET ';
     $values = [];
-    
+
     foreach ($data as $column => $val)
       $values[] = $column . '=' . $this->escape($val);
 
     $query .= (is_array($data) ? implode(',', $values) : $data);
-    
-    if (!is_null($this->where)) 
+
+    if (!is_null($this->where))
       $query .= ' WHERE ' . $this->where;
-    
+
     if (!is_null($this->orderBy))
       $query .= ' ORDER BY ' . $this->orderBy;
-      
+
     if (!is_null($this->limit))
       $query .= ' LIMIT ' . $this->limit;
-    
+
     return $this->query($query);
   }
 
   public function delete()
   {
     $query = 'DELETE FROM ' . $this->from;
-    
+
     if (!is_null($this->where))
       $query .= ' WHERE ' . $this->where;
-    
+
     if (!is_null($this->orderBy))
       $query .= ' ORDER BY ' . $this->orderBy;
-      
+
     if (!is_null($this->limit))
       $query .= ' LIMIT ' . $this->limit;
 
     if($query == 'DELETE FROM ' . $this->from)
       $query = 'TRUNCATE TABLE ' . $this->from;
-    
+
     return $this->query($query);
   }
-  
+
   public function query($query, $all = true, $array = false)
   {
-    $this->reset();  
-    
+    $this->reset();
+
     if(is_array($all))
     {
       $x = explode('?', $query);
       $q = '';
-      
+
       foreach($x as $k => $v)
         if(!empty($v))
           $q .= $v . (isset($all[$k]) ? $this->escape($all[$k]) : '');
-        
+
       $query = $q;
     }
-    
+
     $this->query = preg_replace('/\s\s+|\t\t+/', ' ', trim($query));
     $str = stristr($this->query, 'SELECT');
-    
+
     $cache = false;
-    
+
     if (!is_null($this->cache))
       $cache = $this->cache->getCache($this->query, $array);
-    
+
     if (!$cache && $str)
     {
       $sql = $this->pdo->query($this->query);
-      
+
       if ($sql)
       {
         $this->numRows = $sql->rowCount();
-        
+
         if (($this->numRows > 0))
         {
           if ($all)
           {
             $q = [];
-            
+
             while ($result = ($array == false) ? $sql->fetchAll(PDO::FETCH_OBJ) : $sql->fetchAll(PDO::FETCH_ASSOC))
               $q[] = $result;
-            
+
             $this->result = $q[0];
           }
           else
@@ -601,33 +604,33 @@ class Pdox
             $this->result = $q;
           }
         }
-        
-        if (!is_null($this->cache)) 
+
+        if (!is_null($this->cache))
           $this->cache->setCache($this->query, $this->result);
-        
+
         $this->cache = null;
       }
-      
+
       else
       {
         $this->cache = null;
         $this->error = $this->pdo->errorInfo();
         $this->error = $this->error[2];
-        
+
         return $this->error();
       }
     }
-    
+
     elseif ((!$cache && !$str) || ($cache && !$str))
     {
       $this->cache = null;
       $this->result = $this->pdo->query($this->query);
-      
+
       if (!$this->result)
       {
         $this->error = $this->pdo->errorInfo();
         $this->error = $this->error[2];
-        
+
         return $this->error();
       }
     }
@@ -636,38 +639,38 @@ class Pdox
       $this->cache = null;
       $this->result = $cache;
     }
-    
+
     $this->queryCount++;
-    
+
     return $this->result;
   }
-  
+
   public function escape($data)
   {
     if(is_null($data))
       return null;
-  
+
     return $this->pdo->quote(trim($data));
   }
-  
+
   public function cache($time)
   {
     $this->cache = new Cache($this->cacheDir, $time);
-    
+
     return $this;
   }
-  
+
   public function queryCount()
   {
     return $this->queryCount;
   }
-  
+
   public function getQuery()
   {
     return $this->query;
   }
-  
-  private function reset() 
+
+  private function reset()
   {
     $this->select  = '*';
     $this->from    = null;
@@ -683,10 +686,10 @@ class Pdox
     $this->query  = null;
     $this->error  = null;
     $this->result  = [];
-    
+
     return;
   }
-  
+
   function __destruct()
   {
     $this->pdo = null;

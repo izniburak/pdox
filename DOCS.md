@@ -49,39 +49,40 @@ If you have a problem, you can [contact me][support-url].
 
 # Detailed Usage and Methods
 
-## config 
+## config
 ```php
 $config = [
 	# Host name or IP Address (optional)
+  # hostname:port (for Port Usage. Example: 127.0.0.1:1010) 
 	# default value: localhost
 	'host'      => 'localhost',
-		
+
 	# Database Driver Type (optional)
 	# default value: mysql
 	# values: mysql, pgsql, sqlite, oracle
 	'driver'    => 'mysql',
-		 
+
 	# Database Name (required)
 	'database'  => 'test',
-		
+
 	# Database User Name (required)
 	'username'  => 'root',
-		
+
 	# Database User Password (required)
 	'password'  => '',
-		
+
 	# Database Charset (optional)
 	# default value: utf8
 	'charset'   => 'utf8',
-		
+
 	# Database Charset Collation (optional)
 	# default value: utf8_general_ci
 	'collation' => 'utf8_general_ci',
-		
+
 	# Database Prefix (optional)
 	# default value: null
 	'prefix'     => '',
-	
+
 	# Cache Directory of the Sql Result (optional)
 	# default value: __DIR__ . '/cache/'
 	'cachedir'	=> __DIR__ . '/cache/sql/'
@@ -126,7 +127,7 @@ $db->select('title')->table('pages')->where('id', 17)->get(); // " SELECT title 
 
 ### join
 ```php
-# Usage 1: 
+# Usage 1:
 $db->table('foo')->join('bar', 'foo.field', 'bar.field')->getAll();
 $db->table('foo')->leftJoin('bar', 'foo.field', 'bar.field')->getAll();
 $db->table('foo')->rightJoin('bar', 'foo.field', 'bar.field')->get();
@@ -149,7 +150,7 @@ $where = [
 ];
 $db->where($where);
 
-# Usage 2: 
+# Usage 2:
 $db->where('status', 2);
 $db->where('status', 1)->where('name', 'burak');
 $db->where('status', 1)->orWhere('status', 2);
@@ -158,7 +159,7 @@ $db->where('status', 1)->orWhere('status', 2);
 $db->where('age', '>', 20);
 $db->where('age', '>', 20)->orWhere('age', '<', 30);
 
-# Usage 4: 
+# Usage 4:
 $db->where('status = ? AND age = ?', [1, 20]);
 $db->where('status = ? AND title = ?', [0, 'example title']);
 ```
@@ -293,7 +294,7 @@ $db->error();
 
 ### cache
 ```php
-# Usage: ...->cache($time)->... 
+# Usage: ...->cache($time)->...
 $db->table('pages')->where('slug', 'example-page.html')->cache(60)->get(); // cache time: 60 seconds
 ```
 
