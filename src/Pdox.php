@@ -36,45 +36,45 @@ class Pdox
   private $error      = null;
   private $result     = [];
   private $prefix     = null;
-  private $op         = ['=','!=','<','>','<=','>=','<>'];
+  private $op         = ['=', "!=", '<', '>', "<=", ">=", "<>"];
   private $cache      = null;
   private $cacheDir   = null;
   private $queryCount = 0;
 
   public function __construct(Array $config)
   {
-    $config['driver']    = ((@$config['driver']) ? $config['driver'] : 'mysql');
-    $config['host']      = ((@$config['host']) ? $config['host'] : 'localhost');
-    $config['charset']   = ((@$config['charset']) ? $config['charset'] : 'utf8');
-    $config['collation'] = ((@$config['collation']) ? $config['collation'] : 'utf8_general_ci');
-    $config['prefix']    = ((@$config['prefix']) ? $config['prefix'] : '');
-    $this->prefix        = $config['prefix'];
-    $this->cacheDir      = ((@$config['cachedir']) ? $config['cachedir'] : __DIR__ . "/cache/");
-    $config['port']      = (strstr($config['host'], ':') ? explode(':', $config['host'])[1] : '');
+    $config["driver"]    = ((@$config["driver"]) ? $config["driver"] : "mysql");
+    $config["host"]      = ((@$config["host"]) ? $config["host"] : "localhost");
+    $config["charset"]   = ((@$config["charset"]) ? $config["charset"] : "utf8");
+    $config["collation"] = ((@$config["collation"]) ? $config["collation"] : "utf8_general_ci");
+    $config["prefix"]    = ((@$config["prefix"]) ? $config["prefix"] : '');
+    $this->prefix        = $config["prefix"];
+    $this->cacheDir      = ((@$config["cachedir"]) ? $config["cachedir"] : __DIR__ . "/cache/");
+    $config["port"]      = (strstr($config["host"], ':') ? explode(':', $config["host"])[1] : '');
 
     $dsn = '';
 
-    if ($config['driver'] == 'mysql' || $config['driver'] == '' || $config['driver'] == 'pgsql')
-      $dsn = $config['driver'] . ':host=' . $config['host'] . ';'
-            . (($config['port']) != '' ? 'port=' . $config['port'] . ';' : '')
-            . 'dbname=' . $config['database'];
+    if ($config["driver"] == "mysql" || $config["driver"] == '' || $config["driver"] == "pgsql")
+      $dsn = $config["driver"] . ":host=" . $config["host"] . ';'
+            . (($config["port"]) != '' ? "port=" . $config["port"] . ';' : '')
+            . "dbname=" . $config["database"];
 
-    elseif ($config['driver'] == 'sqlite')
-      $dsn = 'sqlite:' . $config['database'];
+    elseif ($config["driver"] == "sqlite")
+      $dsn = "sqlite:" . $config["database"];
 
-    elseif($config['driver'] == 'oracle')
-      $dsn = 'oci:dbname=' . $config['host'] . '/' . $config['database'];
+    elseif($config["driver"] == "oracle")
+      $dsn = "oci:dbname=" . $config["host"] . '/' . $config["database"];
 
     try
     {
-      $this->pdo = new PDO($dsn, $config['username'], $config['password']);
-      $this->pdo->exec("SET NAMES '".$config['charset']."' COLLATE '".$config['collation']."'");
-      $this->pdo->exec("SET CHARACTER SET '".$config['charset']."'");
+      $this->pdo = new PDO($dsn, $config["username"], $config["password"]);
+      $this->pdo->exec("SET NAMES '" . $config["charset"] . "' COLLATE '" . $config["collation"] . "'");
+      $this->pdo->exec("SET CHARACTER SET '" . $config["charset"] . "'");
       $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
     }
     catch (PDOException $e)
     {
-      die('Cannot the connect to Database with PDO.<br /><br />'.$e->getMessage());
+      die("Cannot the connect to Database with PDO.<br /><br />" . $e->getMessage());
     }
 
     return $this->pdo;
@@ -86,9 +86,9 @@ class Pdox
     {
       $f = '';
       foreach($table as $key)
-        $f .= $this->prefix . $key . ', ';
+        $f .= $this->prefix . $key . ", ";
 
-      $this->from = rtrim($f, ', ');
+      $this->from = rtrim($f, ", ");
     }
     else
       $this->from = $this->prefix . $table;
@@ -106,7 +106,7 @@ class Pdox
 
   public function max($field, $name = null)
   {
-    $func = "MAX(" . $field . ")" . (!is_null($name) ? " AS " . $name : "");
+    $func = "MAX(" . $field . ')' . (!is_null($name) ? " AS " . $name : '');
     $this->select = ($this->select == '*' ? $func : $this->select . ", " . $func);
 
     return $this;
@@ -114,7 +114,7 @@ class Pdox
 
   public function min($field, $name = null)
   {
-    $func = "MIN(" . $field . ")" . (!is_null($name) ? " AS " . $name : "");
+    $func = "MIN(" . $field . ')' . (!is_null($name) ? " AS " . $name : '');
     $this->select = ($this->select == '*' ? $func : $this->select . ", " . $func);
 
     return $this;
@@ -122,7 +122,7 @@ class Pdox
 
   public function sum($field, $name = null)
   {
-    $func = "SUM(" . $field . ")" . (!is_null($name) ? " AS " . $name : "");
+    $func = "SUM(" . $field . ')' . (!is_null($name) ? " AS " . $name : '');
     $this->select = ($this->select == '*' ? $func : $this->select . ", " . $func);
 
     return $this;
@@ -130,7 +130,7 @@ class Pdox
 
   public function count($field, $name = null)
   {
-    $func = "COUNT(" . $field . ")" . (!is_null($name) ? " AS " . $name : "");
+    $func = "COUNT(" . $field . ')' . (!is_null($name) ? " AS " . $name : '');
     $this->select = ($this->select == '*' ? $func : $this->select . ", " . $func);
 
     return $this;
@@ -138,7 +138,7 @@ class Pdox
 
   public function avg($field, $name = null)
   {
-    $func = "AVG(" . $field . ")" . (!is_null($name) ? " AS " . $name : "");
+    $func = "AVG(" . $field . ')' . (!is_null($name) ? " AS " . $name : '');
     $this->select = ($this->select == '*' ? $func : $this->select . ", " . $func);
 
     return $this;
@@ -150,59 +150,59 @@ class Pdox
     $table = $this->prefix . $table;
 
     if(!is_null($op))
-      $on = (!in_array($op, $this->op) ? $this->prefix . $field1 . ' = ' . $this->prefix . $op : $this->prefix . $field1 . ' ' . $op . ' ' . $this->prefix . $field2);
+      $on = (!in_array($op, $this->op) ? $this->prefix . $field1 . " = " . $this->prefix . $op : $this->prefix . $field1 . ' ' . $op . ' ' . $this->prefix . $field2);
 
     if (is_null($this->join))
-      $this->join = ' ' . $type . 'JOIN' . ' ' . $table . ' ON ' . $on;
+      $this->join = ' ' . $type . "JOIN" . ' ' . $table . " ON " . $on;
     else
-      $this->join = $this->join . ' ' . $type . 'JOIN' . ' ' . $table . ' ON ' . $on;
+      $this->join = $this->join . ' ' . $type . "JOIN" . ' ' . $table . " ON " . $on;
 
     return $this;
   }
 
   public function innerJoin($table, $field1, $op = '', $field2 = '')
   {
-    $this->join($table, $field1, $op, $field2, 'INNER ');
+    $this->join($table, $field1, $op, $field2, "INNER ");
 
     return $this;
   }
 
   public function leftJoin($table, $field1, $op = '', $field2 = '')
   {
-    $this->join($table, $field1, $op, $field2, 'LEFT ');
+    $this->join($table, $field1, $op, $field2, "LEFT ");
 
     return $this;
   }
 
   public function rightJoin($table, $field1, $op = '', $field2 = '')
   {
-    $this->join($table, $field1, $op, $field2, 'RIGHT ');
+    $this->join($table, $field1, $op, $field2, "RIGHT ");
 
     return $this;
   }
 
   public function fullOuterJoin($table, $field1, $op = '', $field2 = '')
   {
-    $this->join($table, $field1, $op, $field2, 'FULL OUTER ');
+    $this->join($table, $field1, $op, $field2, "FULL OUTER ");
 
     return $this;
   }
 
   public function leftOuterJoin($table, $field1, $op = '', $field2 = '')
   {
-    $this->join($table, $field1, $op, $field2, 'LEFT OUTER ');
+    $this->join($table, $field1, $op, $field2, "LEFT OUTER ");
 
     return $this;
   }
 
   public function rightOuterJoin($table, $field1, $op = '', $field2 = '')
   {
-    $this->join($table, $field1, $op, $field2, 'RIGHT OUTER ');
+    $this->join($table, $field1, $op, $field2, "RIGHT OUTER ");
 
     return $this;
   }
 
-  public function where($where, $op = null, $val = null, $type = '', $and_or = 'AND')
+  public function where($where, $op = null, $val = null, $type = '', $and_or = "AND")
   {
     if (is_array($where))
     {
@@ -211,7 +211,7 @@ class Pdox
       foreach ($where as $column => $data)
         $_where[] = $type . $column . '=' . $this->escape($data);
 
-      $where = implode(' '.$and_or.' ', $_where);
+      $where = implode(' ' . $and_or . ' ', $_where);
     }
     else
     {
@@ -227,7 +227,7 @@ class Pdox
         $where = $w;
       }
       elseif (!in_array($op, $this->op) || $op == false)
-        $where = $type . $where . ' = ' . $this->escape($op);
+        $where = $type . $where . " = " . $this->escape($op);
       else
         $where = $type . $where . ' ' . $op . ' ' . $this->escape($val);
     }
@@ -241,28 +241,28 @@ class Pdox
     if (is_null($this->where))
       $this->where = $where;
     else
-      $this->where = $this->where . ' '.$and_or.' ' . $where;
+      $this->where = $this->where . ' ' . $and_or . ' ' . $where;
 
     return $this;
   }
 
   public function orWhere($where, $op = null, $val = null)
   {
-    $this->where($where, $op, $val, '', 'OR');
+    $this->where($where, $op, $val, '', "OR");
 
     return $this;
   }
 
   public function notWhere($where, $op = null, $val = null)
   {
-    $this->where($where, $op, $val, 'NOT ', 'AND');
+    $this->where($where, $op, $val, "NOT ", "AND");
 
     return $this;
   }
 
   public function orNotWhere($where, $op = null, $val = null)
   {
-    $this->where($where, $op, $val, 'NOT ', 'OR');
+    $this->where($where, $op, $val, "NOT ", "OR");
 
     return $this;
   }
@@ -276,7 +276,7 @@ class Pdox
     return $this;
   }
 
-  public function in($field, Array $keys, $type = '', $and_or = 'AND')
+  public function in($field, Array $keys, $type = '', $and_or = "AND")
   {
     if (is_array($keys))
     {
@@ -285,12 +285,12 @@ class Pdox
       foreach ($keys as $k => $v)
         $_keys[] = (is_numeric($v) ? $v : $this->escape($v));
 
-      $keys = implode(', ', $_keys);
+      $keys = implode(", ", $_keys);
 
       if (is_null($this->where))
-        $this->where = $field . ' ' . $type . 'IN (' . $keys . ')';
+        $this->where = $field . ' ' . $type . "IN (" . $keys . ')';
       else
-        $this->where = $this->where . ' ' . $and_or . ' ' . $field . ' '.$type.'IN (' . $keys . ')';
+        $this->where = $this->where . ' ' . $and_or . ' ' . $field . ' ' .$type. "IN (" . $keys . ')';
     }
 
     return $this;
@@ -298,85 +298,85 @@ class Pdox
 
   public function notIn($field, Array $keys)
   {
-    $this->in($field, $keys, 'NOT ', 'AND');
+    $this->in($field, $keys, "NOT ", "AND");
 
     return $this;
   }
 
   public function orIn($field, Array $keys)
   {
-    $this->in($field, $keys, '', 'OR');
+    $this->in($field, $keys, '', "OR");
 
     return $this;
   }
 
   public function orNotIn($field, Array $keys)
   {
-    $this->in($field, $keys, 'NOT ', 'OR');
+    $this->in($field, $keys, "NOT ", "OR");
 
     return $this;
   }
 
-  public function between($field, $value1, $value2, $type = '', $and_or = 'AND')
+  public function between($field, $value1, $value2, $type = '', $and_or = "AND")
   {
     if (is_null($this->where))
-      $this->where = $field . ' ' . $type . 'BETWEEN ' . $this->escape($value1) . ' AND ' . $this->escape($value2);
+      $this->where = $field . ' ' . $type . "BETWEEN " . $this->escape($value1) . " AND " . $this->escape($value2);
     else
-      $this->where = $this->where . ' ' . $and_or . ' ' . $field . ' ' . $type . 'BETWEEN ' . $this->escape($value1) . ' AND ' . $this->escape($value2);
+      $this->where = $this->where . ' ' . $and_or . ' ' . $field . ' ' . $type . "BETWEEN " . $this->escape($value1) . " AND " . $this->escape($value2);
 
     return $this;
   }
 
   public function notBetween($field, $value1, $value2)
   {
-    $this->between($field, $value1, $value2, 'NOT ', 'AND');
+    $this->between($field, $value1, $value2, "NOT ", "AND");
 
     return $this;
   }
 
   public function orBetween($field, $value1, $value2)
   {
-    $this->between($field, $value1, $value2, '', 'OR');
+    $this->between($field, $value1, $value2, '', "OR");
 
     return $this;
   }
 
   public function orNotBetween($field, $value1, $value2)
   {
-    $this->between($field, $value1, $value2, 'NOT ', 'OR');
+    $this->between($field, $value1, $value2, "NOT ", "OR");
 
     return $this;
   }
 
-  public function like($field, $data, $type = '', $and_or = 'AND')
+  public function like($field, $data, $type = '', $and_or = "AND")
   {
     $like = $this->escape($data);
 
     if (is_null($this->where))
-      $this->where = $field . ' ' . $type . 'LIKE ' . $like;
+      $this->where = $field . ' ' . $type . "LIKE " . $like;
     else
-      $this->where = $this->where . ' '.$and_or.' ' . $field . ' ' . $type . 'LIKE ' . $like;
+      $this->where = $this->where . ' ' . $and_or . ' ' . $field . ' ' . $type . "LIKE " . $like;
 
     return $this;
   }
 
   public function orLike($field, $data)
   {
-    $this->like($field, $data, '', 'OR');
+    $this->like($field, $data, '', "OR");
 
     return $this;
   }
 
   public function notLike($field, $data)
   {
-    $this->like($field, $data, 'NOT ', 'AND');
+    $this->like($field, $data, "NOT ", "AND");
 
     return $this;
   }
 
   public function orNotLike($field, $data)
   {
-    $this->like($field, $data, 'NOT ', 'OR');
+    $this->like($field, $data, "NOT ", "OR");
 
     return $this;
   }
@@ -384,7 +384,7 @@ class Pdox
   public function limit($limit, $limitEnd = null)
   {
     if (!is_null($limitEnd))
-      $this->limit = $limit . ', ' . $limitEnd;
+      $this->limit = $limit . ", " . $limitEnd;
     else
       $this->limit = $limit;
 
@@ -397,10 +397,10 @@ class Pdox
       $this->orderBy = $orderBy . ' ' . strtoupper($order_dir);
     else
     {
-      if(stristr($orderBy, ' ') || $orderBy == 'rand()')
+      if(stristr($orderBy, ' ') || $orderBy == "rand()")
         $this->orderBy = $orderBy;
       else
-        $this->orderBy = $orderBy . ' ASC';
+        $this->orderBy = $orderBy . " ASC";
     }
 
     return $this;
@@ -409,7 +409,7 @@ class Pdox
   public function groupBy($groupBy)
   {
     if(is_array($groupBy))
-      $this->groupBy = implode(', ', $groupBy);
+      $this->groupBy = implode(", ", $groupBy);
     else
       $this->groupBy = $groupBy;
 
@@ -431,7 +431,7 @@ class Pdox
     }
 
     elseif (!in_array($op, $this->op))
-      $this->having = $field . ' > ' . $this->escape($op);
+      $this->having = $field . " > " . $this->escape($op);
     else
       $this->having = $field . ' ' . $op . ' ' . $this->escape($val);
 
@@ -464,44 +464,44 @@ class Pdox
     if($type == true)
       return $query;
     else
-      return $this->query( $query, false, (($type == 'array') ? true : false) );
+      return $this->query( $query, false, (($type == "array") ? true : false) );
   }
 
   public function getAll($type = false)
   {
-    $query = 'SELECT ' . $this->select . ' FROM ' . $this->from;
+    $query = "SELECT " . $this->select . " FROM " . $this->from;
 
     if (!is_null($this->join))
       $query .= $this->join;
 
     if (!is_null($this->where))
-      $query .= ' WHERE ' . $this->where;
+      $query .= " WHERE " . $this->where;
 
     if (!is_null($this->groupBy))
-      $query .= ' GROUP BY ' . $this->groupBy;
+      $query .= " GROUP BY " . $this->groupBy;
 
     if (!is_null($this->having))
-      $query .= ' HAVING ' . $this->having;
+      $query .= " HAVING " . $this->having;
 
     if (!is_null($this->orderBy))
-      $query .= ' ORDER BY ' . $this->orderBy;
+      $query .= " ORDER BY " . $this->orderBy;
 
     if (!is_null($this->limit))
-      $query .= ' LIMIT ' . $this->limit;
+      $query .= " LIMIT " . $this->limit;
 
     if($type == true)
       return $query;
     else
-      return $this->query( $query, true, (($type == 'array') ? true : false) );
+      return $this->query( $query, true, (($type == "array") ? true : false) );
   }
 
   public function insert($data)
   {
     $columns = array_keys($data);
     $column = implode(',', $columns);
-    $val = implode(', ', array_map([$this, 'escape'], $data));
+    $val = implode(", ", array_map([$this, "escape"], $data));
 
-    $query = 'INSERT INTO ' . $this->from . ' (' . $column . ') VALUES (' . $val . ')';
+    $query = "INSERT INTO " . $this->from . " (" . $column . ") VALUES (" . $val . ')';
     $query = $this->query($query);
 
     if ($query)
@@ -516,7 +516,7 @@ class Pdox
 
   public function update($data)
   {
-    $query = 'UPDATE ' . $this->from . ' SET ';
+    $query = "UPDATE " . $this->from . " SET ";
     $values = [];
 
     foreach ($data as $column => $val)
@@ -525,32 +525,32 @@ class Pdox
     $query .= (is_array($data) ? implode(',', $values) : $data);
 
     if (!is_null($this->where))
-      $query .= ' WHERE ' . $this->where;
+      $query .= " WHERE " . $this->where;
 
     if (!is_null($this->orderBy))
-      $query .= ' ORDER BY ' . $this->orderBy;
+      $query .= " ORDER BY " . $this->orderBy;
 
     if (!is_null($this->limit))
-      $query .= ' LIMIT ' . $this->limit;
+      $query .= " LIMIT " . $this->limit;
 
     return $this->query($query);
   }
 
   public function delete()
   {
-    $query = 'DELETE FROM ' . $this->from;
+    $query = "DELETE FROM " . $this->from;
 
     if (!is_null($this->where))
-      $query .= ' WHERE ' . $this->where;
+      $query .= " WHERE " . $this->where;
 
     if (!is_null($this->orderBy))
-      $query .= ' ORDER BY ' . $this->orderBy;
+      $query .= " ORDER BY " . $this->orderBy;
 
     if (!is_null($this->limit))
-      $query .= ' LIMIT ' . $this->limit;
+      $query .= " LIMIT " . $this->limit;
 
-    if($query == 'DELETE FROM ' . $this->from)
-      $query = 'TRUNCATE TABLE ' . $this->from;
+    if($query == "DELETE FROM " . $this->from)
+      $query = "TRUNCATE TABLE " . $this->from;
 
     return $this->query($query);
   }
@@ -571,8 +571,8 @@ class Pdox
       $query = $q;
     }
 
-    $this->query = preg_replace('/\s\s+|\t\t+/', ' ', trim($query));
-    $str = stristr($this->query, 'SELECT');
+    $this->query = preg_replace("/\s\s+|\t\t+/", ' ', trim($query));
+    $str = (stripos($this->query, "select") === 0 ? true : false);
 
     $cache = false;
 
@@ -610,7 +610,6 @@ class Pdox
 
         $this->cache = null;
       }
-
       else
       {
         $this->cache = null;
