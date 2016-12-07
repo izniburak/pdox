@@ -53,7 +53,7 @@ If you have a problem, you can [contact me][support-url].
 ```php
 $config = [
 	# Host name or IP Address (optional)
-  # hostname:port (for Port Usage. Example: 127.0.0.1:1010) 
+  # hostname:port (for Port Usage. Example: 127.0.0.1:1010)
 	# default value: localhost
 	'host'      => 'localhost',
 
@@ -259,6 +259,51 @@ $db->table('users')->where('id', 10)->update($data);
 ### delete
 ```php
 $db->table('users')->where('id', 5)->delete();
+```
+
+### analyze
+```php
+$query = $db->table('users')->analyze();
+var_dump($query);
+
+# Output:
+# "ANALYZE TABLE users"
+```
+
+### check
+```php
+$query = $db->table(['users', 'pages'])->check();
+var_dump($query);
+
+# Output:
+# "CHECK TABLE users, pages"
+```
+
+### checksum
+```php
+$query = $db->table(['users', 'pages'])->checksum();
+var_dump($query);
+
+# Output:
+# "CHECKSUM TABLE users, pages"
+```
+
+### optimize
+```php
+$query = $db->table(['users', 'pages'])->optimize();
+var_dump($query);
+
+# Output:
+# "OPTIMIZE TABLE users, pages"
+```
+
+### repair
+```php
+$query = $db->table(['users', 'pages'])->repair();
+var_dump($query);
+
+# Output:
+# "REPAIR TABLE users, pages"
 ```
 
 ### query
