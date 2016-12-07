@@ -270,7 +270,7 @@ class Pdox
   public function grouped(Closure $obj)
   {
     $this->grouped = true;
-    call_user_func($obj);
+    call_user_func_array($obj, [$this]);
     $this->where .= ')';
 
     return $this;
@@ -555,6 +555,31 @@ class Pdox
     return $this->query($query);
   }
 
+  public function analyze()
+  {
+    return $this->query("ANALYZE TABLE " . $this->from);
+  }
+
+  public function check()
+  {
+    return $this->query("CHECK TABLE " . $this->from);
+  }
+
+  public function checksum()
+  {
+    return $this->query("CHECKSUM TABLE " . $this->from);
+  }
+
+  public function optimize()
+  {
+    return $this->query("OPTIMIZE TABLE " . $this->from);
+  }
+
+  public function repair()
+  {
+    return $this->query("REPAIR TABLE " . $this->from);
+  }
+
   public function query($query, $all = true, $array = false)
   {
     $this->reset();
@@ -572,10 +597,18 @@ class Pdox
     }
 
     $this->query = preg_replace("/\s\s+|\t\t+/", ' ', trim($query));
-    $str = (stripos($this->query, "select") === 0 ? true : false);
+
+    $str = false;
+    foreach (["select", "optimize", "check", "repair", "checksum", "analyze"] as $value)
+    {
+      if(stripos($this->query, $value) === 0)
+      {
+        $str = true;
+        break;
+      }
+    }
 
     $cache = false;
-
     if (!is_null($this->cache))
       $cache = $this->cache->getCache($this->query, $array);
 
@@ -623,9 +656,9 @@ class Pdox
     elseif ((!$cache && !$str) || ($cache && !$str))
     {
       $this->cache = null;
-      $this->result = $this->pdo->query($this->query);
+      $this->result = $this->pdo->exec($this->query);
 
-      if (!$this->result)
+      if ($this->result === false)
       {
         $this->error = $this->pdo->errorInfo();
         $this->error = $this->error[2];
