@@ -21,25 +21,25 @@ class Pdox
 {
   public $pdo = null;
 
-  private $select     = '*';
-  private $from       = null;
-  private $where      = null;
-  private $limit      = null;
-  private $join       = null;
-  private $orderBy    = null;
-  private $groupBy    = null;
-  private $having     = null;
-  private $grouped    = false;
-  private $numRows    = 0;
-  private $insertId   = null;
-  private $query      = null;
-  private $error      = null;
-  private $result     = [];
-  private $prefix     = null;
-  private $op         = ['=', "!=", '<', '>', "<=", ">=", "<>"];
-  private $cache      = null;
-  private $cacheDir   = null;
-  private $queryCount = 0;
+  protected $select     = '*';
+  protected $from       = null;
+  protected $where      = null;
+  protected $limit      = null;
+  protected $join       = null;
+  protected $orderBy    = null;
+  protected $groupBy    = null;
+  protected $having     = null;
+  protected $grouped    = false;
+  protected $numRows    = 0;
+  protected $insertId   = null;
+  protected $query      = null;
+  protected $error      = null;
+  protected $result     = [];
+  protected $prefix     = null;
+  protected $op         = ['=', "!=", '<', '>', "<=", ">=", "<>"];
+  protected $cache      = null;
+  protected $cacheDir   = null;
+  protected $queryCount = 0;
 
   public function __construct(Array $config)
   {
@@ -702,7 +702,7 @@ class Pdox
     return $this->query;
   }
 
-  private function reset()
+  protected function reset()
   {
     $this->select  = '*';
     $this->from    = null;

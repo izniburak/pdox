@@ -1,25 +1,25 @@
 {
-    "name": "izniburak/pdox",
-    "type": "library",
-    "description": "Useful Query Builder, PDO Class for PHP. A simple access to your SQL records.",
-    "keywords": ["php","pdo","orm","sql","query","builder"],
-    "homepage": "https://github.com/izniburak/PDOx",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "İzni Burak Demirtaş",
-            "email": "info@burakdemirtas.org",
-            "homepage": "http://burakdemirtas.org"
-        }
-    ],
-    "require": {
-        "php": ">=5.4.0",
-        "ext-pdo": "*"
-    },
-    "autoload": {
-        "psr-4": {
-			"Buki\\": "src"
-		}
-    },
-	"minimum-stability": "dev"
+  "name": "izniburak/pdox",
+  "type": "library",
+  "description": "Useful Query Builder, PDO Class for PHP. A simple access to your SQL records.",
+  "keywords": ["php","pdo","sql","query","builder"],
+  "homepage": "https://github.com/izniburak/PDOx",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "İzni Burak Demirtaş",
+      "email": "info@burakdemirtas.org",
+      "homepage": "http://burakdemirtas.org"
+    }
+  ],
+  "require": {
+    "php": ">=5.4.0",
+    "ext-pdo": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Buki\\": "src"
+    }
+  },
+  "minimum-stability": "dev"
 }
