@@ -1,4 +1,12 @@
 ## PDOx
+```
+ _____  _____   ____       
+ |  __ \|  __ \ / __ \      
+ | |__) | |  | | |  | |_  __
+ |  ___/| |  | | |  | \ \/ /
+ | |    | |__| | |__| |>  < 
+ |_|    |_____/ \____//_/\_\
+```
 Fast, efficient and useful Query Builder and PDO Class for #PHP
 
 [![Total Downloads](https://poser.pugx.org/izniburak/pdox/d/total.svg)](https://packagist.org/packages/izniburak/pdox)
