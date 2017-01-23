@@ -352,10 +352,16 @@ class Pdox
   {
     $like = $this->escape($data);
 
+    $where = $field . ' ' . $type . "LIKE " . $like;
+    if($this->grouped)
+    {
+      $where = '(' . $where;
+      $this->grouped = false;
+    }
     if (is_null($this->where))
-      $this->where = $field . ' ' . $type . "LIKE " . $like;
+      $this->where = $where;
     else
-      $this->where = $this->where . ' ' . $and_or . ' ' . $field . ' ' . $type . "LIKE " . $like;
+      $this->where = $this->where . ' ' . $and_or . ' ' . $where;
 
     return $this;
   }
