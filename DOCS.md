@@ -167,8 +167,17 @@ $db->where('status = ? AND title = ?', [0, 'example title']);
 ### grouped
 ```php
 $db->table('users')
-	->grouped(function() use ($db) {
-		$db->where('country', 'TURKEY')->orWhere('country', 'ENGLAND');
+	->grouped(function($q) {
+		$q->where('country', 'TURKEY')->orWhere('country', 'ENGLAND');
+	})
+	->where('status', 1)
+	->getAll();
+
+
+$key = 10;
+$db->table('users')
+	->grouped(function($q) use ($key) {
+		$q->where('key_field', $key)->orWhere('status', 0);
 	})
 	->where('status', 1)
 	->getAll();
