@@ -4,7 +4,7 @@
  |  __ \|  __ \ / __ \      
  | |__) | |  | | |  | |_  __
  |  ___/| |  | | |  | \ \/ /
- | |    | |__| | |__| |>  < 
+ | |    | |__| | |__| |>  <
  |_|    |_____/ \____//_/\_\
 ```
 Fast, efficient and useful Query Builder and PDO Class for #PHP
@@ -20,7 +20,7 @@ composer.json file:
 ```json
 {
     "require": {
-        "izniburak/pdox": "dev-master"
+        "izniburak/pdox": "^1"
     }
 }
 ```
@@ -32,7 +32,7 @@ $ composer install
 OR run the following command directly.
 
 ```
-$ composer require izniburak/pdox:dev-master
+$ composer require izniburak/pdox
 ```
 
 ## Example Usage
@@ -62,10 +62,10 @@ $records = $db->table('users')
 var_dump($records);
 ```
 
-## Docs 
-Documentation page: [PDOx Docs][doc-url] 
+## Docs
+Documentation page: [PDOx Docs][doc-url]
 
-## Support 
+## Support
 [izniburak's homepage][author-url]
 
 [izniburak's twitter][twitter-url]
