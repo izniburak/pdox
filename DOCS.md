@@ -91,6 +91,40 @@ $config = [
 $db = new \Buki\Pdox($config);
 ```
 
+## Contents
+
+ * [Select](#select)
+ * [Table](#table)
+ * [get AND getAll](#get-and-getall)
+ * [join](#join)
+ * [where - orWhere](#where---orwhere)
+ * [grouped](#grouped)
+ * [in - notIn - orIn - orNotIn](#in---notin---orin---ornotin)
+ * [between - orBetween - notBetween - orNotBetween](#between---orbetween---notbetween---ornotbetween)
+ * [like - orLike](#like---orlike)
+ * [groupBy](#groupby)
+ * [having](#having)
+ * [orderBy](#orderby)
+ * [limit](#limit)
+ * [insert](#insert)
+ * [update](#update)
+ * [delete](#delete)
+ * [analyze](#analyze)
+ * [check](#check)
+ * [checksum](#checksum)
+ * [optimize](#optimize)
+ * [repair](#repair)
+ * [query](#query)
+ * [insertId](#insertid)
+ * [numRows](#numrows)
+ * [error](#error)
+ * [cache](#cache)
+ * [queryCount](#querycount)
+ * [getQuery](#getquery)
+ * [escape](#escape) - (Not yet)
+ 
+## Methods
+
 ### select
 ```php
 # Usage 1: string parameter
