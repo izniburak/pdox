@@ -52,9 +52,9 @@ If you have a problem, you can [contact me][support-url].
 ## config
 ```php
 $config = [
-	# Host name or IP Address (optional)
-  # hostname:port (for Port Usage. Example: 127.0.0.1:1010)
-	# default value: localhost
+    # Host name or IP Address (optional)
+    # hostname:port (for Port Usage. Example: 127.0.0.1:1010)
+    # default value: localhost
 	'host'      => 'localhost',
 
 	# Database Driver Type (optional)
@@ -122,7 +122,7 @@ $db = new \Buki\Pdox($config);
  * [queryCount](#querycount)
  * [getQuery](#getquery)
  * [escape](#escape) - (Not yet)
- 
+
 ## Methods
 
 ### select
@@ -134,6 +134,19 @@ $db->select('title AS t, content AS c');
 # Usage2: array parameter
 $db->select(['title', 'content']);
 $db->select(['title AS t', 'content AS c']);
+```
+
+### select functions (min, max, sum, avg, count)
+```php
+# Usage 1:
+$db->table('test')->max('price');
+
+# Output: "SELECT MAX(price) FROM test"
+
+# Usage 2:
+$db->table('test')->count('id', 'total_row');
+
+# Output: "SELECT COUNT(id) AS total_row FROM test"
 ```
 
 ### table
