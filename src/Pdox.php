@@ -295,7 +295,7 @@ class Pdox
         $where = '(' . $where;
         $this->grouped = false;
       }
-      
+
       if (is_null($this->where))
         $this->where = $where;
       else
@@ -336,7 +336,7 @@ class Pdox
       $where = '(' . $where;
       $this->grouped = false;
     }
-    
+
     if (is_null($this->where))
       $this->where = $where;
     else
@@ -487,7 +487,7 @@ class Pdox
     $this->limit = 1;
     $query = $this->getAll(true);
 
-    if($type == true)
+    if($type === true)
       return $query;
     else
       return $this->query( $query, false, (($type == "array") ? true : false) );
