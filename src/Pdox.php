@@ -515,7 +515,7 @@ class Pdox
     if (!is_null($this->limit))
       $query .= " LIMIT " . $this->limit;
 
-    if($type == true)
+    if($type === true)
       return $query;
     else
       return $this->query( $query, true, (($type == "array") ? true : false) );
