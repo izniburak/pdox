@@ -25,6 +25,7 @@ class Pdox
   protected $from       = null;
   protected $where      = null;
   protected $limit      = null;
+  protected $offset     = null;
   protected $join       = null;
   protected $orderBy    = null;
   protected $groupBy    = null;
@@ -417,6 +418,21 @@ class Pdox
     return $this;
   }
 
+  public function offset($offset) {
+
+    $this->offset = $offset;
+
+    return $this;
+  }
+
+  public function pagination($perPage, $page) {
+
+    $this->limit = $perPage;
+    $this->offset = ($page - 1) * $perPage;
+
+    return $this;
+  }
+
   public function orderBy($orderBy, $order_dir = null)
   {
     if (!is_null($order_dir))
@@ -514,6 +530,9 @@ class Pdox
 
     if (!is_null($this->limit))
       $query .= " LIMIT " . $this->limit;
+
+    if (!is_null($this->offset))
+      $query .= " OFFSET " . $this->offset;
 
     if($type === true)
       return $query;
