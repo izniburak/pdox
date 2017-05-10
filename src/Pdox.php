@@ -753,6 +753,7 @@ class Pdox
     $this->from    = null;
     $this->where  = null;
     $this->limit  = null;
+    $this->offset  = null;
     $this->orderBy  = null;
     $this->groupBy  = null;
     $this->having  = null;
