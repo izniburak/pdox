@@ -41,6 +41,7 @@ class Pdox
   protected $cache      = null;
   protected $cacheDir   = null;
   protected $queryCount = 0;
+  protected $debug      = true;
 
   public function __construct(Array $config)
   {
@@ -48,10 +49,10 @@ class Pdox
     $config["host"]      = ((@$config["host"]) ? $config["host"] : "localhost");
     $config["charset"]   = ((@$config["charset"]) ? $config["charset"] : "utf8");
     $config["collation"] = ((@$config["collation"]) ? $config["collation"] : "utf8_general_ci");
-    $config["prefix"]    = ((@$config["prefix"]) ? $config["prefix"] : '');
-    $this->prefix        = $config["prefix"];
+    $this->prefix        = ((@$config["prefix"]) ? $config["prefix"] : '');
     $this->cacheDir      = ((@$config["cachedir"]) ? $config["cachedir"] : __DIR__ . "/cache/");
     $config["port"]      = (strstr($config["host"], ':') ? explode(':', $config["host"])[1] : '');
+    $this->debug         = ((@$config["debug"]) ? $config["debug"] : true);
 
     $dsn = '';
 
@@ -418,15 +419,15 @@ class Pdox
     return $this;
   }
 
-  public function offset($offset) {
-
+  public function offset($offset)
+  {
     $this->offset = $offset;
 
     return $this;
   }
 
-  public function pagination($perPage, $page) {
-
+  public function pagination($perPage, $page)
+  {
     $this->limit = $perPage;
     $this->offset = ($page - 1) * $perPage;
 
@@ -492,10 +493,15 @@ class Pdox
 
   public function error()
   {
-    $msg = '<h1>Database Error</h1>';
-    $msg .= '<h4>Query: <em style="font-weight:normal;">"'.$this->query.'"</em></h4>';
-    $msg .= '<h4>Error: <em style="font-weight:normal;">'.$this->error.'</em></h4>';
-    die($msg);
+    if($this->debug)
+    {
+      $msg = '<h1>Database Error</h1>';
+      $msg .= '<h4>Query: <em style="font-weight:normal;">"'.$this->query.'"</em></h4>';
+      $msg .= '<h4>Error: <em style="font-weight:normal;">'.$this->error.'</em></h4>';
+      die($msg);
+    }
+    else
+      return false;
   }
 
   public function get($type = false)
