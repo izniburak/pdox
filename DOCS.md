@@ -94,6 +94,7 @@ $db = new \Buki\Pdox($config);
 ## Contents
 
  * [Select](#select)
+ * [Select Functions (min, max, sum, avg, count)](#selectDetails)
  * [Table](#table)
  * [get AND getAll](#get-and-getall)
  * [join](#join)
