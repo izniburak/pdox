@@ -730,6 +730,9 @@ class Pdox
 
   public function escape($data)
   {
+    if($data === NULL)
+      return 'NULL';
+      
     if(is_null($data))
       return null;
 
