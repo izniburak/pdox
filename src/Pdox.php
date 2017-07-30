@@ -45,14 +45,14 @@ class Pdox
 
   public function __construct(Array $config)
   {
-    $config["driver"]    = ((@$config["driver"]) ? $config["driver"] : "mysql");
-    $config["host"]      = ((@$config["host"]) ? $config["host"] : "localhost");
-    $config["charset"]   = ((@$config["charset"]) ? $config["charset"] : "utf8");
-    $config["collation"] = ((@$config["collation"]) ? $config["collation"] : "utf8_general_ci");
-    $this->prefix        = ((@$config["prefix"]) ? $config["prefix"] : '');
-    $this->cacheDir      = ((@$config["cachedir"]) ? $config["cachedir"] : __DIR__ . "/cache/");
+    $config["driver"]    = (isset($config["driver"]) ? $config["driver"] : "mysql");
+    $config["host"]      = (isset($config["host"]) ? $config["host"] : "localhost");
+    $config["charset"]   = (isset($config["charset"]) ? $config["charset"] : "utf8");
+    $config["collation"] = (isset($config["collation"]) ? $config["collation"] : "utf8_general_ci");
     $config["port"]      = (strstr($config["host"], ':') ? explode(':', $config["host"])[1] : '');
-    $this->debug         = ((@$config["debug"]) ? $config["debug"] : true);
+    $this->prefix        = (isset($config["prefix"]) ? $config["prefix"] : '');
+    $this->cacheDir      = (isset($config["cachedir"]) ? $config["cachedir"] : __DIR__ . "/cache/");
+    $this->debug         = (isset($config["debug"]) ? $config["debug"] : true);
 
     $dsn = '';
 
@@ -732,7 +732,7 @@ class Pdox
   {
     if($data === NULL)
       return 'NULL';
-      
+
     if(is_null($data))
       return null;
 
