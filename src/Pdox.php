@@ -493,15 +493,16 @@ class Pdox
 
   public function error()
   {
-    if($this->debug)
+    $msg = '<h1>Database Error</h1>';
+    $msg .= '<h4>Query: <em style="font-weight:normal;">"'.$this->query.'"</em></h4>';
+    $msg .= '<h4>Error: <em style="font-weight:normal;">'.$this->error.'</em></h4>';
+    if($this->debug === true)
     {
-      $msg = '<h1>Database Error</h1>';
-      $msg .= '<h4>Query: <em style="font-weight:normal;">"'.$this->query.'"</em></h4>';
-      $msg .= '<h4>Error: <em style="font-weight:normal;">'.$this->error.'</em></h4>';
       die($msg);
     }
-    else
-      return false;
+    else {
+      throw new \Exception($msg);
+    }
   }
 
   public function get($type = false)
