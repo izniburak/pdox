@@ -13,6 +13,7 @@
 namespace Buki;
 
 use Buki\Cache;
+use Exception;
 use PDO;
 use PDOException;
 use Closure;
@@ -496,13 +497,11 @@ class Pdox
     $msg = '<h1>Database Error</h1>';
     $msg .= '<h4>Query: <em style="font-weight:normal;">"'.$this->query.'"</em></h4>';
     $msg .= '<h4>Error: <em style="font-weight:normal;">'.$this->error.'</em></h4>';
+
     if($this->debug === true)
-    {
       die($msg);
-    }
-    else {
-      throw new \Exception($msg);
-    }
+    else
+      throw new Exception($this->error . ". ("  . $this->query . ")");
   }
 
   public function get($type = false)
