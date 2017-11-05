@@ -110,6 +110,7 @@ $db = new \Buki\Pdox($config);
  * [insert](#insert)
  * [update](#update)
  * [delete](#delete)
+ * [distinct](#distinct)
  * [analyze](#analyze)
  * [check](#check)
  * [checksum](#checksum)
@@ -316,6 +317,12 @@ $db->table('users')->where('id', 10)->update($data);
 ### delete
 ```php
 $db->table('users')->where('id', 5)->delete();
+```
+
+
+### distinct
+```php
+$db->table('users')->select('id, fname DISTINCT company')->getAll();
 ```
 
 ### analyze
