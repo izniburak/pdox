@@ -1,14 +1,13 @@
 <?php
-/*
-*
-* @ Package: PDOx - Useful Query Builder & PDO Class
-* @ Class: Cache
-* @ Author: izni burak demirtas / @izniburak <info@burakdemirtas.org>
-* @ Web: http://burakdemirtas.org
-* @ URL: https://github.com/izniburak/PDOx
-* @ Licence: The MIT License (MIT) - Copyright (c) - http://opensource.org/licenses/MIT
-*
-*/
+/**
+  * PDOx - Useful Query Builder & PDO Class
+  *
+  * @class    Cache
+  * @author   izni burak demirtaş (@izniburak) <info@burakdemirtas.org>
+  * @web      <http://burakdemirtas.org>
+  * @url      <https://github.com/izniburak/PDOx>
+  * @license  The MIT License (MIT) - <http://opensource.org/licenses/MIT>
+  */
 
 namespace Buki;
 
@@ -21,7 +20,7 @@ class Cache
   function __construct($dir = null, $time = 0)
   {
     if(!file_exists($dir))
-            mkdir($dir, 0755);
+      mkdir($dir, 0755);
 
     $this->cacheDir = $dir;
     $this->cache = $time;
@@ -49,12 +48,10 @@ class Cache
 
     $cacheFile = $this->cacheDir . $this->fileName($sql) . ".cache";
 
-    if (file_exists($cacheFile))
-    {
+    if (file_exists($cacheFile)) {
       $cache = json_decode(file_get_contents($cacheFile), $array);
 
-      if (($array ? $cache["finish"] : $cache->finish) < time())
-      {
+      if (($array ? $cache["finish"] : $cache->finish) < time()) {
         unlink($cacheFile);
         return;
       }
