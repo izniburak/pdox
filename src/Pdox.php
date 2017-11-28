@@ -741,6 +741,7 @@ class Pdox
     else {
       $this->cache = null;
       $this->result = $cache;
+      $this->numRows = count($this->result);
     }
 
     $this->queryCount++;
