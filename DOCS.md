@@ -20,7 +20,6 @@ OR run the following command directly.
 $ composer require izniburak/pdox
 ```
 
-
 ## Quick Usage
 ```php
 require 'vendor/autoload.php';
@@ -39,22 +38,18 @@ $config = [
 $db = new \Buki\Pdox($config);
 ```
 
-
 Congratulations! Now, you can use PDOx.
 
 If you have a problem, you can [contact me][support-url].
-
-
-
 
 # Detailed Usage and Methods
 
 ## config
 ```php
 $config = [
-    # Host name or IP Address (optional)
-    # hostname:port (for Port Usage. Example: 127.0.0.1:1010)
-    # default value: localhost
+	# Host name or IP Address (optional)
+	# hostname:port (for Port Usage. Example: 127.0.0.1:1010)
+	# default value: localhost
 	'host'      => 'localhost',
 
 	# Database Driver Type (optional)
@@ -93,16 +88,16 @@ $db = new \Buki\Pdox($config);
 
 ## Contents
 
- * [Select](#select)
- * [Select Functions (min, max, sum, avg, count)](#selectDetails)
- * [Table](#table)
+ * [select](#select)
+ * [select functions (min, max, sum, avg, count)](#select-functions-min-max-sum-avg-count)
+ * [table](#table)
  * [get AND getAll](#get-and-getall)
  * [join](#join)
- * [where - orWhere](#where---orwhere)
+ * [where](#where)
  * [grouped](#grouped)
- * [in - notIn - orIn - orNotIn](#in---notin---orin---ornotin)
- * [between - orBetween - notBetween - orNotBetween](#between---orbetween---notbetween---ornotbetween)
- * [like - orLike](#like---orlike)
+ * [in](#in)
+ * [between](#between)
+ * [like](#like)
  * [groupBy](#groupby)
  * [having](#having)
  * [orderBy](#orderby)
@@ -110,56 +105,66 @@ $db = new \Buki\Pdox($config);
  * [insert](#insert)
  * [update](#update)
  * [delete](#delete)
- * [analyze](#analyze)
- * [check](#check)
- * [checksum](#checksum)
- * [optimize](#optimize)
- * [repair](#repair)
+ * [analyze](#analyze) - [check](#check) - [checksum](#checksum) - [optimize](#optimize) - [repair](#repair)
  * [query](#query)
  * [insertId](#insertid)
  * [numRows](#numrows)
- * [error](#error)
  * [cache](#cache)
+ * [transaction](#transaction) - [commit](#transaction) - [rollBack](#transaction)
+ * [error](#error)
  * [queryCount](#querycount)
  * [getQuery](#getquery)
- * [escape](#escape) - (Not yet)
 
 ## Methods
 
 ### select
 ```php
 # Usage 1: string parameter
-$db->select('title, content');
-$db->select('title AS t, content AS c');
+$db->select('title, content')->table('test')->getAll();
+# Output: "SELECT title, content FROM test"
 
+$db->select('title AS t, content AS c')->table('test')->getAll();
+# Output: "SELECT title AS t, content AS c FROM test"
+```
+```php
 # Usage2: array parameter
-$db->select(['title', 'content']);
-$db->select(['title AS t', 'content AS c']);
+$db->select(['title', 'content'])->table('test')->getAll();
+# Output: "SELECT title, content FROM test"
+
+$db->select(['title AS t', 'content AS c'])->table('test')->getAll();
+# Output: "SELECT title AS t, content AS c FROM test"
 ```
 
 ### select functions (min, max, sum, avg, count)
 ```php
 # Usage 1:
 $db->table('test')->max('price');
-
 # Output: "SELECT MAX(price) FROM test"
 
 # Usage 2:
 $db->table('test')->count('id', 'total_row');
-
 # Output: "SELECT COUNT(id) AS total_row FROM test"
 ```
 
 ### table
 ```php
-# Usage 1: string parameter
+### Usage 1: string parameter
 $db->table('table');
-$db->table('table1, table2');
-$db->table('table1 AS t1, table2 AS t2');
+# Output: "SELECT * FROM table"
 
-# Usage2: array parameter
+$db->table('table1, table2');
+# Output: "SELECT * FROM table1, table2"
+
+$db->table('table1 AS t1, table2 AS t2');
+# Output: "SELECT * FROM table1 AS t1, table2 AS t2"
+```
+```php
+### Usage 2: array parameter
 $db->table(['table1', 'table2']);
+# Output: "SELECT * FROM table1, table2"
+
 $db->table(['table1 AS t1', 'table2 AS t2']);
+# Output: "SELECT * FROM table1 AS t1, table2 AS t2"
 ```
 
 ### get AND getAll
@@ -167,49 +172,83 @@ $db->table(['table1 AS t1', 'table2 AS t2']);
 # get(): return 1 record.
 # getAll(): return multiple records.
 
-$db->table('test')->getAll(); 	// " SELECT * FROM test "
-$db->select('username')->table('users')->where('status', 1)->getAll(); 	// " SELECT username FROM users WHERE status = '1' "
+$db->table('test')->getAll(); 
+# Output: "SELECT * FROM test"
 
-$db->select('title')->table('pages')->where('id', 17)->get(); // " SELECT title FROM pages WHERE id = '17' LIMIT 1 "
+$db->select('username')->table('users')->where('status', 1)->getAll();
+# Output: "SELECT username FROM users WHERE status='1'"
+
+$db->select('title')->table('pages')->where('id', 17)->get(); 
+# Output: "SELECT title FROM pages WHERE id='17' LIMIT 1"
 ```
 
 ### join
 ```php
-# Usage 1:
-$db->table('foo')->join('bar', 'foo.field', 'bar.field')->getAll();
-$db->table('foo')->leftJoin('bar', 'foo.field', 'bar.field')->getAll();
-$db->table('foo')->rightJoin('bar', 'foo.field', 'bar.field')->get();
-$db->table('foo')->innerJoin('bar', 'foo.field', 'bar.field')->get();
+$db->table('test as t')->join('foo as f', 't.id', 'f.t_id')->where('t.status', 1)->getAll();
+# Output: "SELECT * FROM test as t JOIN foo as f ON t.id=f.t_id WHERE t.status='1'"
+```
+You can use this method in 7 ways. These;
+- join
+- left_join
+- right_join
+- inner_join
+- full_outer_join
+- left_outer_join
+- right_outer_join
 
-# Usage 2:
-$db->table('foo')->join('bar', 'foo.field', '=', 'bar.field')->getAll();
-$db->table('foo')->leftJoin('bar', 'foo.field', '=', 'bar.field')->getAll();
-$db->table('foo')->rightJoin('bar', 'foo.field', '=', 'bar.field')->get();
-$db->table('foo')->innerJoin('bar', 'foo.field', '=', 'bar.field')->get();
+Examples:
+```php
+$db->table('test as t')->leftJoin('foo as f', 't.id', 'f.t_id')->getAll();
+# Output: "SELECT * FROM test as t LEFT JOIN foo as f ON t.id=f.t_id"
 ```
 
-### where - orWhere
 ```php
-# Usage 1: array parameter
+$db->table('test as t')->fullOuterJoin('foo as f', 't.id', 'f.t_id')->getAll();
+# Output: "SELECT * FROM test as t FULL OUTER JOIN foo as f ON t.id=f.t_id"
+```
+
+### where
+```php
 $where = [
 	'name' => 'Burak',
 	'age' => 23,
 	'status' => 1
 ];
-$db->where($where);
+$db->table('test')->where($where)->get();
+# Output: "SELECT * FROM test WHERE name='Burak' AND age='23' AND status='1' LIMIT 1"
 
-# Usage 2:
-$db->where('status', 2);
-$db->where('status', 1)->where('name', 'burak');
-$db->where('status', 1)->orWhere('status', 2);
+# OR
 
-# Usage 3:
-$db->where('age', '>', 20);
-$db->where('age', '>', 20)->orWhere('age', '<', 30);
+$db->table('test')->where('active', 1)->getAll();
+# Output: "SELECT * FROM test WHERE active='1'"
 
-# Usage 4:
-$db->where('status = ? AND age = ?', [1, 20]);
-$db->where('status = ? AND title = ?', [0, 'example title']);
+# OR
+
+$db->table('test')->where('age', '>=', 18)->getAll();
+# Output: "SELECT * FROM test WHERE age>='18'"
+
+# OR
+
+$db->table('test')->where('age = ? OR age = ?', [18, 20])->getAll();
+# Output: "SELECT * FROM test WHERE age='18' OR age='20'"
+```
+
+You can use this method in 4 ways. These;
+
+- where
+- orWhere
+- notWhere
+- orNotWhere
+
+Example:
+```php
+$db->table('test')->where('active', 1)->notWhere('auth', 1)->getAll();
+# Output: "SELECT * FROM test WHERE active = '1' AND NOT auth = '1'"
+
+# OR
+
+$db->table('test')->where('age', 20)->orWhere('age', '>', 25)->getAll();
+# Output: "SELECT * FROM test WHERE age = '20' OR age > '25'"
 ```
 
 ### grouped
@@ -220,73 +259,144 @@ $db->table('users')
 	})
 	->where('status', 1)
 	->getAll();
-
-
-$key = 10;
-$db->table('users')
-	->grouped(function($q) use ($key) {
-		$q->where('key_field', $key)->orWhere('status', 0);
-	})
-	->where('status', 1)
-	->getAll();
+# Ouput: "SELECT * FROM users WHERE (country='TURKEY' OR country='ENGLAND') AND status ='1'"
 ```
 
-### in - notIn - orIn - orNotIn
+### in
 ```php
-$db->in('page', ['about', 'contact', 'products']);
-$db->orIn('id', [1, 2, 3]);
-$db->notIn('age', [20, 21, 22, 23]);
-$db->orNotIn('age', [30, 31, 32, 32]);
+$db->table('test')->where('active', 1)->in('id', [1, 2, 3])->getAll();
+# Output: "SELECT * FROM test WHERE active = '1' AND id IN ('1', '2', '3')"
 ```
 
-### between - orBetween - notBetween - orNotBetween
+You can use this method in 4 ways. These;
+
+- in
+- orIn
+- notIn
+- orNotIn
+
+Example:
 ```php
-$db->between('age', 10, 20);
-$db->orBetween('age', 20, 30);
-$db->notBetween('year', 2010, 2015);
-$db->orNotBetween('year', 2005, 2009);
+$db->table('test')->where('active', 1)->notIn('id', [1, 2, 3])->getAll();
+# Output: "SELECT * FROM test WHERE active = '1' AND id NOT IN ('1', '2', '3')"
+
+# OR
+
+$db->table('test')->where('active', 1)->orIn('id', [1, 2, 3])->getAll();
+# Output: "SELECT * FROM test WHERE active = '1' OR id IN ('1', '2', '3')"
 ```
 
-### like - orLike
+### between
 ```php
-$db->like('title', '%burak%');		// " title LIKE '%burak%' "
-$db->like('title', 'izniburak%');	// " title LIKE 'izniburak%' "
-$db->like('title', '%izniburak');	// " title LIKE '%izniburak' "
+$db->table('test')->where('active', 1)->between('age', 18, 25)->getAll();
+# Output: "SELECT * FROM test WHERE active = '1' AND age BETWEEN '18' AND '25'"
+```
 
-$db->like('tag', '%php%')->orLike('tag', '%web%');
-$db->like('tag', '%php%')->orLike('tag', 'web%');
-$db->like('tag', '%php%')->orLike('tag', '%web');
+You can use this method in 4 ways. These;
+
+- between
+- orBetween
+- notBetween
+- orNotBetween
+
+Example:
+```php
+$db->table('test')->where('active', 1)->notBetween('age', 18, 25)->getAll();
+# Output: "SELECT * FROM test WHERE active = '1' AND age NOT BETWEEN '18' AND '25'"
+
+# OR
+
+$db->table('test')->where('active', 1)->orBetween('age', 18, 25)->getAll();
+# Output: "SELECT * FROM test WHERE active = '1' OR age BETWEEN '18' AND '25'"
+```
+
+### like
+```php
+$db->table('test')->like('title', "%php%")->getAll();
+# Output: "SELECT * FROM test WHERE title LIKE '%php%'"
+```
+
+You can use this method in 4 ways. These;
+
+- like
+- orLike
+- notLike
+- orNotLike
+
+Example:
+```php
+$db->table('test')->where('active', 1)->notLike('tags', '%dot-net%')->getAll();
+# Output: "SELECT * FROM test WHERE active = '1' AND tags NOT LIKE '%dot-net%'"
+
+# OR
+
+$db->table('test')->like('bio', '%php%')->orLike('bio', '%java%')->getAll();
+# Output: "SELECT * FROM test WHERE bio LIKE '%php%' OR bio LIKE '%java%'"
 ```
 
 ### groupBy
 ```php
-# Usage 1: string parameter
-$db->groupBy('country');
-$db->groupBy('country, city');
+# Usage 1: One parameter
+$db->table('test')->where('status', 1)->groupBy('cat_id')->getAll();
+# Output: "SELECT * FROM test WHERE status = '1' GROUP BY cat_id"
+```
 
-# Usage 2: array parameter
-$db->groupBy(['country', 'city']);
+```php
+# Usage 1: Array parameter
+$db->table('test')->where('status', 1)->groupBy(['cat_id', 'user_id'])->getAll();
+# Output: "SELECT * FROM test WHERE status = '1' GROUP BY cat_id, user_id"
 ```
 
 ### having
 ```php
-$db->having('AVG(price)', 2000);	// " AVG(price) > 2000 "
-$db->having('AVG(price)', '>=', 3000);	// " AVG(price) >= 3000 "
-$db->having('SUM(age) <= ?', [50]);	// " SUM(age) <= 50 "
+$db->table('test')->where('status', 1)->groupBy('city')->having('COUNT(person)', 100)->getAll();
+# Output: "SELECT * FROM test WHERE status='1' GROUP BY city HAVING COUNT(person) > '100'"
+
+# OR
+
+$db->table('test')->where('active', 1)->groupBy('department_id')->having('AVG(salary)', '<=', 500)->getAll();
+# Output: "SELECT * FROM test WHERE active='1' GROUP BY department_id HAVING AVG(salary) <= '500'"
+
+# OR
+
+$db->table('test')->where('active', 1)->groupBy('department_id')->having('AVG(salary) > ? AND MAX(salary) < ?', [250, 1000])->getAll();
+# Output: "SELECT * FROM test WHERE active='1' GROUP BY department_id HAVING AVG(salary) > '250' AND MAX(salary) < '1000'"
 ```
 
 ### orderBy
 ```php
-$db->orderBy('id');	// " ORDER BY id ASC
-$db->orderBy('id DESC');
-$db->orderBy('id', 'desc');
-$db->orderBy('rand()');	// " ORDER BY rand() "
+# Usage 1: One parameter
+$db->table('test')->where('status', 1)->orderBy('id')->getAll();
+# Output: "SELECT * FROM test WHERE status='1' ORDER BY id ASC"
+
+### OR
+
+$db->table('test')->where('status', 1)->orderBy('id desc')->getAll();
+# Output: "SELECT * FROM test WHERE status='1' ORDER BY id desc"
+```
+
+```php
+# Usage 1: Two parameters
+$db->table('test')->where('status', 1)->orderBy('id', 'desc')->getAll();
+# Output: "SELECT * FROM test WHERE status='1' ORDER BY id DESC"
+```
+
+```php
+# Usage 3: Rand()
+$db->table('test')->where('status', 1)->orderBy('rand()')->limit(10)->getAll();
+# Output: "SELECT * FROM test WHERE status='1' ORDER BY rand() LIMIT 10"
 ```
 
 ### limit
 ```php
-$db->limit(10);		// " LIMIT 10 "
-$db->limit(10, 20);	// " LIMIT 10, 20 "
+# Usage 1: One parameter
+$db->table('test')->limit(10)->getAll();
+# Output: "SELECT * FROM test LIMIT 10"
+```
+```php
+# Usage 2: Two parameters
+$db->table('test')->limit(10, 20)->getAll();
+# Output: "SELECT * FROM test LIMIT 10, 20"
 ```
 
 ### insert
@@ -294,78 +404,87 @@ $db->limit(10, 20);	// " LIMIT 10, 20 "
 $data = [
 	'title' => 'test',
 	'content' => 'Lorem ipsum dolor sit amet...',
-	'time' => time(),
+	'time' => '2017-05-19 19:05:00',
 	'status' => 1
 ];
 
 $db->table('pages')->insert($data);
+# Output: "INSERT INTO test (title, content, time, status) VALUES ('test', 'Lorem ipsum dolor sit amet...', '2017-05-19 19:05:00', '1')"
 ```
 
 ### update
 ```php
 $data = [
 	'username' => 'izniburak',
-	'password' => md5('demo-password'),
+	'password' => 'pass',
 	'activation' => 1,
 	'status' => 1
 ];
 
 $db->table('users')->where('id', 10)->update($data);
+# Output: "UPDATE users SET username='izniburak', password='pass', activation='1', status='1' WHERE id='10'"
 ```
 
 ### delete
 ```php
-$db->table('users')->where('id', 5)->delete();
+$db->table('test')->where("id", 17)->delete();
+# Output: "DELETE FROM test WHERE id = '17'"
+
+# OR
+
+$db->table('test')->delete();
+# Output: "TRUNCATE TABLE delete"
+```
+
+### transaction
+```php
+$db->transaction();
+
+$data = [
+	'title' => 'new title',
+	'status' => 2
+];
+$db->table('test')->where('id', 10)->update($data);
+
+$db->commit();
+# OR
+$db->rollBack();
 ```
 
 ### analyze
 ```php
-$query = $db->table('users')->analyze();
-var_dump($query);
-
-# Output:
-# "ANALYZE TABLE users"
+$db->table('users')->analyze();
+# Output: "ANALYZE TABLE users"
 ```
 
 ### check
 ```php
-$query = $db->table(['users', 'pages'])->check();
-var_dump($query);
-
-# Output:
-# "CHECK TABLE users, pages"
+$db->table(['users', 'pages'])->check();
+# Output: "CHECK TABLE users, pages"
 ```
 
 ### checksum
 ```php
-$query = $db->table(['users', 'pages'])->checksum();
-var_dump($query);
-
-# Output:
-# "CHECKSUM TABLE users, pages"
+$db->table(['users', 'pages'])->checksum();
+# Output: "CHECKSUM TABLE users, pages"
 ```
 
 ### optimize
 ```php
-$query = $db->table(['users', 'pages'])->optimize();
-var_dump($query);
-
-# Output:
-# "OPTIMIZE TABLE users, pages"
+$db->table(['users', 'pages'])->optimize();
+# Output: "OPTIMIZE TABLE users, pages"
 ```
 
 ### repair
 ```php
-$query = $db->table(['users', 'pages'])->repair();
-var_dump($query);
-
-# Output:
-# "REPAIR TABLE users, pages"
+$db->table(['users', 'pages'])->repair();
+# Output: "REPAIR TABLE users, pages"
 ```
 
 ### query
 ```php
-$db->query('SELECT * FROM test WHERE id = ? AND status = ?', [10, 1]);
+$db->query('SELECT * FROM test WHERE id=? AND status=?', [10, 1]);
+# Output: "SELECT * FROM test WHERE id='10' AND status='1'"
 ```
 
 ### insertId
@@ -376,7 +495,6 @@ $data = [
 	'time' => time(),
 	'status' => 1
 ];
-
 $db->table('pages')->insert($data);
 
 var_dump($db->insertId());
@@ -397,22 +515,20 @@ $db->error();
 ### cache
 ```php
 # Usage: ...->cache($time)->...
-$db->table('pages')->where('slug', 'example-page.html')->cache(60)->get(); // cache time: 60 seconds
+$db->table('pages')->where('slug', 'example-page')->cache(60)->get(); 
+# cache time: 60 seconds
 ```
 
 ### queryCount
 ```php
-$db->queryCount(); // The number of all SQL queries on the page until the end of the beginning.
+$db->queryCount(); 
+# The number of all SQL queries on the page until the end of the beginning.
 ```
 
 ### getQuery
 ```php
-$db->getQuery(); // Last SQL Query.
-```
-
-### escape
-```php
-
+$db->getQuery(); 
+# Last SQL Query.
 ```
 
 [support-url]: https://github.com/izniburak/PDOx#support
