@@ -101,7 +101,7 @@ $db = new \Buki\Pdox($config);
  * [groupBy](#groupby)
  * [having](#having)
  * [orderBy](#orderby)
- * [limit](#limit-offset)
+ * [limit - offset](#limit---offset)
  * [pagination](#pagination)
  * [insert](#insert)
  * [update](#update)
