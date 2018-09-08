@@ -101,7 +101,8 @@ $db = new \Buki\Pdox($config);
  * [groupBy](#groupby)
  * [having](#having)
  * [orderBy](#orderby)
- * [limit](#limit)
+ * [limit](#limit-offset)
+ * [pagination](#pagination)
  * [insert](#insert)
  * [update](#update)
  * [delete](#delete)
@@ -239,6 +240,8 @@ You can use this method in 4 ways. These;
 - orWhere
 - notWhere
 - orNotWhere
+- whereNull
+- whereNotNull
 
 Example:
 ```php
@@ -249,6 +252,9 @@ $db->table('test')->where('active', 1)->notWhere('auth', 1)->getAll();
 
 $db->table('test')->where('age', 20)->orWhere('age', '>', 25)->getAll();
 # Output: "SELECT * FROM test WHERE age = '20' OR age > '25'"
+
+$db->table('test')->whereNotNull('email')->getAll();
+# Output: "SELECT * FROM test WHERE email IS NOT NULL"
 ```
 
 ### grouped
@@ -387,7 +393,7 @@ $db->table('test')->where('status', 1)->orderBy('rand()')->limit(10)->getAll();
 # Output: "SELECT * FROM test WHERE status='1' ORDER BY rand() LIMIT 10"
 ```
 
-### limit
+### limit - offset
 ```php
 # Usage 1: One parameter
 $db->table('test')->limit(10)->getAll();
@@ -397,6 +403,22 @@ $db->table('test')->limit(10)->getAll();
 # Usage 2: Two parameters
 $db->table('test')->limit(10, 20)->getAll();
 # Output: "SELECT * FROM test LIMIT 10, 20"
+
+# Usage 3: with offset method
+$db->table('test')->limit(10)->offset(10)->getAll();
+# Output: "SELECT * FROM test LIMIT 10 OFFSET 10"
+```
+
+### pagination
+```php
+# First parameter: Data count of per page
+# Second parameter: Active page
+
+$db->table('test')->pagination(15, 1)->getAll();
+# Output: "SELECT * FROM test LIMIT 15 OFFSET 0"
+
+$db->table('test')->pagination(15, 2)->getAll();
+# Output: "SELECT * FROM test LIMIT 15 OFFSET 15"
 ```
 
 ### insert
@@ -483,8 +505,14 @@ $db->table(['users', 'pages'])->repair();
 
 ### query
 ```php
-$db->query('SELECT * FROM test WHERE id=? AND status=?', [10, 1]);
-# Output: "SELECT * FROM test WHERE id='10' AND status='1'"
+# Usage 1: Select all records
+$db->query('SELECT * FROM test WHERE id=? AND status=?', [10, 1])->fetchAll();
+
+# Usage 2: Select one record
+$db->query('SELECT * FROM test WHERE id=? AND status=?', [10, 1])->fetch();
+
+# Usage 3: Other queries like Update, Insert, Delete etc...
+$db->query('DELETE FROM test WHERE id=?', [10])->exec();
 ```
 
 ### insertId
