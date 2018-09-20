@@ -592,7 +592,7 @@ class Pdox
       return $query;
     }
 
-    $query = $this->query($query);
+    $query = $this->query($query, false);
     if ($query) {
       $this->insertId = $this->pdo->lastInsertId();
       return $this->insertId();
@@ -627,7 +627,7 @@ class Pdox
       return $query;
     }
 
-    return $this->query($query);
+    return $this->query($query, false);
   }
 
   public function delete($type = false)
@@ -654,32 +654,32 @@ class Pdox
       return $query;
     }
 
-    return $this->query($query);
+    return $this->query($query, false);
   }
 
   public function analyze()
   {
-    return $this->query('ANALYZE TABLE ' . $this->from);
+    return $this->query('ANALYZE TABLE ' . $this->from, false);
   }
 
   public function check()
   {
-    return $this->query('CHECK TABLE ' . $this->from);
+    return $this->query('CHECK TABLE ' . $this->from, false);
   }
 
   public function checksum()
   {
-    return $this->query('CHECKSUM TABLE ' . $this->from);
+    return $this->query('CHECKSUM TABLE ' . $this->from, false);
   }
 
   public function optimize()
   {
-    return $this->query('OPTIMIZE TABLE ' . $this->from);
+    return $this->query('OPTIMIZE TABLE ' . $this->from, false);
   }
 
   public function repair()
   {
-    return $this->query('REPAIR TABLE ' . $this->from);
+    return $this->query('REPAIR TABLE ' . $this->from, false);
   }
 
   public function transaction()

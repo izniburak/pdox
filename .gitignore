@@ -1,6 +1,7 @@
-/.git/
+/.git
 /.DS_Store
 /composer.lock
-/vendor/
+/vendor
 /index.php
 /.htaccess
+/.idea
