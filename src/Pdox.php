@@ -1,19 +1,19 @@
 <?php
 /**
-  * PDOx - Useful Query Builder & PDO Class
-  *
-  * @class    Pdox
-  * @author   izni burak demirtaş (@izniburak) <info@burakdemirtas.org>
-  * @web      <http://burakdemirtas.org>
-  * @url      <https://github.com/izniburak/PDOx>
-  * @license  The MIT License (MIT) - <http://opensource.org/licenses/MIT>
-  */
+ * PDOx - Useful Query Builder & PDO Class
+ *
+ * @class    Pdox
+ * @author   izni burak demirtaş (@izniburak) <info@burakdemirtas.org>
+ * @web      <http://burakdemirtas.org>
+ * @url      <https://github.com/izniburak/PDOx>
+ * @license  The MIT License (MIT) - <http://opensource.org/licenses/MIT>
+ */
 
 namespace Buki;
 
+use Closure;
 use PDO;
 use PDOException;
-use Closure;
 
 class Pdox
 {
@@ -57,8 +57,8 @@ class Pdox
 
         if ($config['driver'] == 'mysql' || $config['driver'] == '' || $config['driver'] == 'pgsql') {
             $dsn = $config['driver'] . ':host=' . $config['host'] . ';'
-            . (($config['port']) != '' ? 'port=' . $config['port'] . ';' : '')
-            . 'dbname=' . $config['database'];
+                . (($config['port']) != '' ? 'port=' . $config['port'] . ';' : '')
+                . 'dbname=' . $config['database'];
         } elseif ($config['driver'] == 'sqlite') {
             $dsn = 'sqlite:' . $config['database'];
         } elseif ($config['driver'] == 'oracle') {
@@ -103,7 +103,7 @@ class Pdox
 
     public function max($field, $name = null)
     {
-        $func = 'MAX(' . $field . ')' . (!is_null($name) ? ' AS ' . $name : '');
+        $func = 'MAX(' . $field . ')' . (! is_null($name) ? ' AS ' . $name : '');
         $this->select = ($this->select == '*' ? $func : $this->select . ', ' . $func);
 
         return $this;
@@ -111,7 +111,7 @@ class Pdox
 
     public function min($field, $name = null)
     {
-        $func = 'MIN(' . $field . ')' . (!is_null($name) ? ' AS ' . $name : '');
+        $func = 'MIN(' . $field . ')' . (! is_null($name) ? ' AS ' . $name : '');
         $this->select = ($this->select == '*' ? $func : $this->select . ', ' . $func);
 
         return $this;
@@ -119,7 +119,7 @@ class Pdox
 
     public function sum($field, $name = null)
     {
-        $func = 'SUM(' . $field . ')' . (!is_null($name) ? ' AS ' . $name : '');
+        $func = 'SUM(' . $field . ')' . (! is_null($name) ? ' AS ' . $name : '');
         $this->select = ($this->select == '*' ? $func : $this->select . ', ' . $func);
 
         return $this;
@@ -127,7 +127,7 @@ class Pdox
 
     public function count($field, $name = null)
     {
-        $func = 'COUNT(' . $field . ')' . (!is_null($name) ? ' AS ' . $name : '');
+        $func = 'COUNT(' . $field . ')' . (! is_null($name) ? ' AS ' . $name : '');
         $this->select = ($this->select == '*' ? $func : $this->select . ', ' . $func);
 
         return $this;
@@ -135,7 +135,7 @@ class Pdox
 
     public function avg($field, $name = null)
     {
-        $func = 'AVG(' . $field . ')' . (!is_null($name) ? ' AS ' . $name : '');
+        $func = 'AVG(' . $field . ')' . (! is_null($name) ? ' AS ' . $name : '');
         $this->select = ($this->select == '*' ? $func : $this->select . ', ' . $func);
 
         return $this;
@@ -146,10 +146,10 @@ class Pdox
         $on = $field1;
         $table = $this->prefix . $table;
 
-        if (!is_null($op)) {
-            $on = (!in_array($op, $this->op) ?
-            $this->prefix . $field1 . ' = ' . $this->prefix . $op :
-            $this->prefix . $field1 . ' ' . $op . ' ' . $this->prefix . $field2);
+        if (! is_null($op)) {
+            $on = (! in_array($op, $this->op) ?
+                $this->prefix . $field1 . ' = ' . $this->prefix . $op :
+                $this->prefix . $field1 . ' ' . $op . ' ' . $this->prefix . $field2);
         }
 
         if (is_null($this->join)) {
@@ -218,12 +218,12 @@ class Pdox
                 $w = '';
 
                 foreach ($x as $k => $v) {
-                    if (!empty($v)) {
+                    if (! empty($v)) {
                         $w .= $type . $v . (isset($op[$k]) ? $this->escape($op[$k]) : '');
                     }
                 }
                 $where = $w;
-            } elseif (!in_array($op, $this->op) || $op == false) {
+            } elseif (! in_array($op, $this->op) || $op == false) {
                 $where = $type . $where . ' = ' . $this->escape($op);
             } else {
                 $where = $type . $where . ' ' . $op . ' ' . $this->escape($val);
@@ -425,7 +425,7 @@ class Pdox
 
     public function limit($limit, $limitEnd = null)
     {
-        if (!is_null($limitEnd)) {
+        if (! is_null($limitEnd)) {
             $this->limit = $limit . ', ' . $limitEnd;
         } else {
             $this->limit = $limit;
@@ -451,7 +451,7 @@ class Pdox
 
     public function orderBy($orderBy, $orderDir = null)
     {
-        if (!is_null($orderDir)) {
+        if (! is_null($orderDir)) {
             $this->orderBy = $orderBy . ' ' . strtoupper($orderDir);
         } else {
             if (stristr($orderBy, ' ') || $orderBy == 'rand()') {
@@ -481,12 +481,12 @@ class Pdox
             $fields = explode('?', $field);
             $where = '';
             foreach ($fields as $key => $value) {
-                if (!empty($value)) {
+                if (! empty($value)) {
                     $where .= $value . (isset($op[$key]) ? $this->escape($op[$key]) : '');
                 }
             }
             $this->having = $where;
-        } elseif (!in_array($op, $this->op)) {
+        } elseif (! in_array($op, $this->op)) {
             $this->having = $field . ' > ' . $this->escape($op);
         } else {
             $this->having = $field . ' ' . $op . ' ' . $this->escape($val);
@@ -534,31 +534,31 @@ class Pdox
     {
         $query = 'SELECT ' . $this->select . ' FROM ' . $this->from;
 
-        if (!is_null($this->join)) {
+        if (! is_null($this->join)) {
             $query .= $this->join;
         }
 
-        if (!is_null($this->where)) {
+        if (! is_null($this->where)) {
             $query .= ' WHERE ' . $this->where;
         }
 
-        if (!is_null($this->groupBy)) {
+        if (! is_null($this->groupBy)) {
             $query .= ' GROUP BY ' . $this->groupBy;
         }
 
-        if (!is_null($this->having)) {
+        if (! is_null($this->having)) {
             $query .= ' HAVING ' . $this->having;
         }
 
-        if (!is_null($this->orderBy)) {
+        if (! is_null($this->orderBy)) {
             $query .= ' ORDER BY ' . $this->orderBy;
         }
 
-        if (!is_null($this->limit)) {
+        if (! is_null($this->limit)) {
             $query .= ' LIMIT ' . $this->limit;
         }
 
-        if (!is_null($this->offset)) {
+        if (! is_null($this->offset)) {
             $query .= ' OFFSET ' . $this->offset;
         }
 
@@ -611,15 +611,15 @@ class Pdox
         }
         $query .= implode(',', $values);
 
-        if (!is_null($this->where)) {
+        if (! is_null($this->where)) {
             $query .= ' WHERE ' . $this->where;
         }
 
-        if (!is_null($this->orderBy)) {
+        if (! is_null($this->orderBy)) {
             $query .= ' ORDER BY ' . $this->orderBy;
         }
 
-        if (!is_null($this->limit)) {
+        if (! is_null($this->limit)) {
             $query .= ' LIMIT ' . $this->limit;
         }
 
@@ -634,15 +634,15 @@ class Pdox
     {
         $query = 'DELETE FROM ' . $this->from;
 
-        if (!is_null($this->where)) {
+        if (! is_null($this->where)) {
             $query .= ' WHERE ' . $this->where;
         }
 
-        if (!is_null($this->orderBy)) {
+        if (! is_null($this->orderBy)) {
             $query .= ' ORDER BY ' . $this->orderBy;
         }
 
-        if (!is_null($this->limit)) {
+        if (! is_null($this->limit)) {
             $query .= ' LIMIT ' . $this->limit;
         }
 
@@ -684,7 +684,7 @@ class Pdox
 
     public function transaction()
     {
-        if (!$this->transactionCount++) {
+        if (! $this->transactionCount++) {
             return $this->pdo->beginTransaction();
         }
 
@@ -694,7 +694,7 @@ class Pdox
 
     public function commit()
     {
-        if (!--$this->transactionCount) {
+        if (! --$this->transactionCount) {
             return $this->pdo->commit();
         }
 
@@ -718,7 +718,7 @@ class Pdox
         }
 
         $query = $this->pdo->exec($this->query);
-        if (!$query) {
+        if (! $query) {
             $this->error = $this->pdo->errorInfo()[2];
             return $this->error();
         }
@@ -734,7 +734,7 @@ class Pdox
 
         $type = ($array === false) ? PDO::FETCH_OBJ : PDO::FETCH_ASSOC;
         $query = $this->pdo->query($this->query);
-        if (!$query) {
+        if (! $query) {
             $this->error = $this->pdo->errorInfo()[2];
             return $this->error();
         }
@@ -759,7 +759,7 @@ class Pdox
             $params = explode('?', $query);
             $newQuery = '';
             foreach ($params as $key => $value) {
-                if (!empty($value)) {
+                if (! empty($value)) {
                     $newQuery .= $value . (isset($all[$key]) ? $this->escape($all[$key]) : '');
                 }
             }
@@ -778,11 +778,11 @@ class Pdox
         }
 
         $cache = false;
-        if (!is_null($this->cache)) {
+        if (! is_null($this->cache)) {
             $cache = $this->cache->getCache($this->query, $array);
         }
 
-        if (!$cache && $str) {
+        if (! $cache && $str) {
             $sql = $this->pdo->query($this->query);
 
             if ($sql) {
@@ -803,7 +803,7 @@ class Pdox
                     }
                 }
 
-                if (!is_null($this->cache)) {
+                if (! is_null($this->cache)) {
                     $this->cache->setCache($this->query, $this->result);
                 }
                 $this->cache = null;
@@ -813,7 +813,7 @@ class Pdox
 
                 return $this->error();
             }
-        } elseif ((!$cache && !$str) || ($cache && !$str)) {
+        } elseif ((! $cache && ! $str) || ($cache && ! $str)) {
             $this->cache = null;
             $this->result = $this->pdo->exec($this->query);
 
@@ -859,6 +859,11 @@ class Pdox
         return $this->query;
     }
 
+    public function __destruct()
+    {
+        $this->pdo = null;
+    }
+
     protected function reset()
     {
         $this->select = '*';
@@ -879,10 +884,5 @@ class Pdox
         $this->transactionCount = 0;
 
         return;
-    }
-
-    public function __destruct()
-    {
-        $this->pdo = null;
     }
 }

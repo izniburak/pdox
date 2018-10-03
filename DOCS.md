@@ -139,11 +139,11 @@ $db->select(['title AS t', 'content AS c'])->table('test')->getAll();
 ### select functions (min, max, sum, avg, count)
 ```php
 # Usage 1:
-$db->table('test')->max('price');
+$db->table('test')->max('price')->get();
 # Output: "SELECT MAX(price) FROM test"
 
 # Usage 2:
-$db->table('test')->count('id', 'total_row');
+$db->table('test')->count('id', 'total_row')->get();
 # Output: "SELECT COUNT(id) AS total_row FROM test"
 ```
 
