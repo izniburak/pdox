@@ -740,10 +740,13 @@ class Pdox
         }
 
         if ($all) {
-            return $query->fetchAll($type);
+            $result = $query->fetchAll($type);
+        } else {
+            $result = $query->fetch($type);
         }
 
-        return $query->fetch($type);
+        $this->numRows = count($result);
+        return $result;
     }
 
     public function fetchAll($array = false)
