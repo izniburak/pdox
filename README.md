@@ -63,7 +63,7 @@ var_dump($records);
 ```
 
 ## 文档
-Documentation page: [PDOx Docs][doc-url]
+文档页面: [PDOx Docs][doc-url]
 
 ## 支持
 [izniburak's homepage][author-url]
@@ -71,15 +71,15 @@ Documentation page: [PDOx Docs][doc-url]
 [izniburak's twitter][twitter-url]
 
 ## 协议
-[MIT Licence][mit-url]
+[遵循 MIT 开源协议][mit-url]
 
 ## 贡献
 
 1. Fork it ( https://github.com/izniburak/pdox/fork )
-2. Create your feature branch (git checkout -b my-new-feature)
-3. Commit your changes (git commit -am 'Add some feature')
-4. Push to the branch (git push origin my-new-feature)
-5. Create a new Pull Request
+2. 创建分支 (git checkout -b my-new-feature)
+3. 提交您的更改 (git commit -am 'Add some feature')
+4. 推送分支 (git push origin my-new-feature)
+5. 创建一个新的合并请求 (new pull request)
 
 ## 贡献者
 
