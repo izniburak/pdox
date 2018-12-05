@@ -7,14 +7,14 @@
  | |    | |__| | |__| |>  <
  |_|    |_____/ \____//_/\_\
 ```
-Fast, efficient and useful Query Builder and PDO Class for #PHP
+快速高效的PHP PDO查询构造器
 
 [![Total Downloads](https://poser.pugx.org/izniburak/pdox/d/total.svg)](https://packagist.org/packages/izniburak/pdox)
 [![Latest Stable Version](https://poser.pugx.org/izniburak/pdox/v/stable.svg)](https://packagist.org/packages/izniburak/pdox)
 [![Latest Unstable Version](https://poser.pugx.org/izniburak/pdox/v/unstable.svg)](https://packagist.org/packages/izniburak/pdox)
 [![License](https://poser.pugx.org/izniburak/pdox/license.svg)](https://packagist.org/packages/izniburak/pdox)
 
-## Install
+## 安装
 
 composer.json file:
 ```json
@@ -24,18 +24,18 @@ composer.json file:
     }
 }
 ```
-after run the install command.
+运行安装命令.
 ```
 $ composer install
 ```
 
-OR run the following command directly.
+或者直接运行以下命令.
 
 ```
 $ composer require izniburak/pdox
 ```
 
-## Example Usage
+## 用法示例
 ```php
 require 'vendor/autoload.php';
 
@@ -62,32 +62,32 @@ $records = $db->table('users')
 var_dump($records);
 ```
 
-## Docs
-Documentation page: [PDOx Docs][doc-url]
+## 文档
+文档页面: [PDOx Docs][doc-url]
 
-## Support
+## 支持
 [izniburak's homepage][author-url]
 
 [izniburak's twitter][twitter-url]
 
-## Licence
-[MIT Licence][mit-url]
+## 协议
+[遵循 MIT 开源协议][mit-url]
 
-## Contributing
+## 贡献
 
 1. Fork it ( https://github.com/izniburak/pdox/fork )
-2. Create your feature branch (git checkout -b my-new-feature)
-3. Commit your changes (git commit -am 'Add some feature')
-4. Push to the branch (git push origin my-new-feature)
-5. Create a new Pull Request
+2. 创建分支 (git checkout -b my-new-feature)
+3. 提交您的更改 (git commit -am 'Add some feature')
+4. 推送分支 (git push origin my-new-feature)
+5. 创建一个新的合并请求 (new pull request)
 
-## Contributors
+## 贡献者
 
 - [izniburak](https://github.com/izniburak) İzni Burak Demirtaş - creator, maintainer
 
 [pdox-img]: http://burakdemirtas.org/uploads/images/20140610210255_pdox_pdo_class_for_php.jpg
 [paypal-donate-url]: http://burakdemirtas.org
 [mit-url]: http://opensource.org/licenses/MIT
-[doc-url]: https://github.com/izniburak/PDOx/blob/master/DOCS.md
+[doc-url]: https://github.com/imsole/PDOx/blob/master/DOCS.md
 [author-url]: http://burakdemirtas.org
 [twitter-url]: https://twitter.com/izniburak

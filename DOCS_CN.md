@@ -1,6 +1,6 @@
-# PDOx Documentation
+# PDOx 文档
 
-## Install
+## 安装
 `composer.json` file:
 ```json
 {
@@ -9,18 +9,18 @@
     }
 }
 ```
-after run the install command.
+运行安装命令.
 ```
 $ composer install
 ```
 
-OR run the following command directly.
+或者直接运行以下命令..
 
 ```
 $ composer require izniburak/pdox
 ```
 
-## Quick Usage
+## 快速入门
 ```php
 require 'vendor/autoload.php';
 
@@ -38,17 +38,17 @@ $config = [
 $db = new \Buki\Pdox($config);
 ```
 
-Congratulations! Now, you can use PDOx.
+恭喜！现在，您可以使用PDOx。
 
-If you have a problem, you can [contact me][support-url].
+如果您有问题，可以与我[联系][support-url].
 
-# Detailed Usage and Methods
+# 详细的使用方法
 
-## config
+## 配置
 ```php
 $config = [
 	# Host name or IP Address (optional)
-	# hostname:port (for Port Usage. Example: 127.0.0.1:1010)
+	# hostname:port (for Port 用法. 例如： 127.0.0.1:1010)
 	# default value: localhost
 	'host'      => 'localhost',
 
@@ -86,7 +86,7 @@ $config = [
 $db = new \Buki\Pdox($config);
 ```
 
-## Contents
+## 方法列表
 
  * [select](#select)
  * [select functions (min, max, sum, avg, count)](#select-functions-min-max-sum-avg-count)
@@ -116,56 +116,56 @@ $db = new \Buki\Pdox($config);
  * [queryCount](#querycount)
  * [getQuery](#getquery)
 
-## Methods
+## 方法
 
 ### select
 ```php
-# Usage 1: string parameter
+# 用法 1: 参数为字符串
 $db->select('title, content')->table('test')->getAll();
-# Output: "SELECT title, content FROM test"
+# 输出: "SELECT title, content FROM test"
 
 $db->select('title AS t, content AS c')->table('test')->getAll();
-# Output: "SELECT title AS t, content AS c FROM test"
+# 输出: "SELECT title AS t, content AS c FROM test"
 ```
 ```php
-# Usage2: array parameter
+# 用法2: 参数为数组
 $db->select(['title', 'content'])->table('test')->getAll();
-# Output: "SELECT title, content FROM test"
+# 输出: "SELECT title, content FROM test"
 
 $db->select(['title AS t', 'content AS c'])->table('test')->getAll();
-# Output: "SELECT title AS t, content AS c FROM test"
+# 输出: "SELECT title AS t, content AS c FROM test"
 ```
 
 ### select functions (min, max, sum, avg, count)
 ```php
-# Usage 1:
+# 用法 1:
 $db->table('test')->max('price')->get();
-# Output: "SELECT MAX(price) FROM test"
+# 输出: "SELECT MAX(price) FROM test"
 
-# Usage 2:
+# 用法 2:
 $db->table('test')->count('id', 'total_row')->get();
-# Output: "SELECT COUNT(id) AS total_row FROM test"
+# 输出: "SELECT COUNT(id) AS total_row FROM test"
 ```
 
 ### table
 ```php
-### Usage 1: string parameter
+### 用法 1: 参数为字符串
 $db->table('table');
-# Output: "SELECT * FROM table"
+# 输出: "SELECT * FROM table"
 
 $db->table('table1, table2');
-# Output: "SELECT * FROM table1, table2"
+# 输出: "SELECT * FROM table1, table2"
 
 $db->table('table1 AS t1, table2 AS t2');
-# Output: "SELECT * FROM table1 AS t1, table2 AS t2"
+# 输出: "SELECT * FROM table1 AS t1, table2 AS t2"
 ```
 ```php
-### Usage 2: array parameter
+### 用法 2: 参数为数组
 $db->table(['table1', 'table2']);
-# Output: "SELECT * FROM table1, table2"
+# 输出: "SELECT * FROM table1, table2"
 
 $db->table(['table1 AS t1', 'table2 AS t2']);
-# Output: "SELECT * FROM table1 AS t1, table2 AS t2"
+# 输出: "SELECT * FROM table1 AS t1, table2 AS t2"
 ```
 
 ### get AND getAll
@@ -174,19 +174,19 @@ $db->table(['table1 AS t1', 'table2 AS t2']);
 # getAll(): return multiple records.
 
 $db->table('test')->getAll(); 
-# Output: "SELECT * FROM test"
+# 输出: "SELECT * FROM test"
 
 $db->select('username')->table('users')->where('status', 1)->getAll();
-# Output: "SELECT username FROM users WHERE status='1'"
+# 输出: "SELECT username FROM users WHERE status='1'"
 
 $db->select('title')->table('pages')->where('id', 17)->get(); 
-# Output: "SELECT title FROM pages WHERE id='17' LIMIT 1"
+# 输出: "SELECT title FROM pages WHERE id='17' LIMIT 1"
 ```
 
 ### join
 ```php
 $db->table('test as t')->join('foo as f', 't.id', 'f.t_id')->where('t.status', 1)->getAll();
-# Output: "SELECT * FROM test as t JOIN foo as f ON t.id=f.t_id WHERE t.status='1'"
+# 输出: "SELECT * FROM test as t JOIN foo as f ON t.id=f.t_id WHERE t.status='1'"
 ```
 You can use this method in 7 ways. These;
 - join
@@ -200,12 +200,12 @@ You can use this method in 7 ways. These;
 Examples:
 ```php
 $db->table('test as t')->leftJoin('foo as f', 't.id', 'f.t_id')->getAll();
-# Output: "SELECT * FROM test as t LEFT JOIN foo as f ON t.id=f.t_id"
+# 输出: "SELECT * FROM test as t LEFT JOIN foo as f ON t.id=f.t_id"
 ```
 
 ```php
 $db->table('test as t')->fullOuterJoin('foo as f', 't.id', 'f.t_id')->getAll();
-# Output: "SELECT * FROM test as t FULL OUTER JOIN foo as f ON t.id=f.t_id"
+# 输出: "SELECT * FROM test as t FULL OUTER JOIN foo as f ON t.id=f.t_id"
 ```
 
 ### where
@@ -216,25 +216,25 @@ $where = [
 	'status' => 1
 ];
 $db->table('test')->where($where)->get();
-# Output: "SELECT * FROM test WHERE name='Burak' AND age='23' AND status='1' LIMIT 1"
+# 输出: "SELECT * FROM test WHERE name='Burak' AND age='23' AND status='1' LIMIT 1"
 
 # OR
 
 $db->table('test')->where('active', 1)->getAll();
-# Output: "SELECT * FROM test WHERE active='1'"
+# 输出: "SELECT * FROM test WHERE active='1'"
 
 # OR
 
 $db->table('test')->where('age', '>=', 18)->getAll();
-# Output: "SELECT * FROM test WHERE age>='18'"
+# 输出: "SELECT * FROM test WHERE age>='18'"
 
 # OR
 
 $db->table('test')->where('age = ? OR age = ?', [18, 20])->getAll();
-# Output: "SELECT * FROM test WHERE age='18' OR age='20'"
+# 输出: "SELECT * FROM test WHERE age='18' OR age='20'"
 ```
 
-You can use this method in 4 ways. These;
+其他方法：
 
 - where
 - orWhere
@@ -243,18 +243,18 @@ You can use this method in 4 ways. These;
 - whereNull
 - whereNotNull
 
-Example:
+例如：
 ```php
 $db->table('test')->where('active', 1)->notWhere('auth', 1)->getAll();
-# Output: "SELECT * FROM test WHERE active = '1' AND NOT auth = '1'"
+# 输出: "SELECT * FROM test WHERE active = '1' AND NOT auth = '1'"
 
 # OR
 
 $db->table('test')->where('age', 20)->orWhere('age', '>', 25)->getAll();
-# Output: "SELECT * FROM test WHERE age = '20' OR age > '25'"
+# 输出: "SELECT * FROM test WHERE age = '20' OR age > '25'"
 
 $db->table('test')->whereNotNull('email')->getAll();
-# Output: "SELECT * FROM test WHERE email IS NOT NULL"
+# 输出: "SELECT * FROM test WHERE email IS NOT NULL"
 ```
 
 ### grouped
@@ -271,154 +271,154 @@ $db->table('users')
 ### in
 ```php
 $db->table('test')->where('active', 1)->in('id', [1, 2, 3])->getAll();
-# Output: "SELECT * FROM test WHERE active = '1' AND id IN ('1', '2', '3')"
+# 输出: "SELECT * FROM test WHERE active = '1' AND id IN ('1', '2', '3')"
 ```
 
-You can use this method in 4 ways. These;
+其他方法：
 
 - in
 - orIn
 - notIn
 - orNotIn
 
-Example:
+例如：
 ```php
 $db->table('test')->where('active', 1)->notIn('id', [1, 2, 3])->getAll();
-# Output: "SELECT * FROM test WHERE active = '1' AND id NOT IN ('1', '2', '3')"
+# 输出: "SELECT * FROM test WHERE active = '1' AND id NOT IN ('1', '2', '3')"
 
 # OR
 
 $db->table('test')->where('active', 1)->orIn('id', [1, 2, 3])->getAll();
-# Output: "SELECT * FROM test WHERE active = '1' OR id IN ('1', '2', '3')"
+# 输出: "SELECT * FROM test WHERE active = '1' OR id IN ('1', '2', '3')"
 ```
 
 ### between
 ```php
 $db->table('test')->where('active', 1)->between('age', 18, 25)->getAll();
-# Output: "SELECT * FROM test WHERE active = '1' AND age BETWEEN '18' AND '25'"
+# 输出: "SELECT * FROM test WHERE active = '1' AND age BETWEEN '18' AND '25'"
 ```
 
-You can use this method in 4 ways. These;
+其他方法：
 
 - between
 - orBetween
 - notBetween
 - orNotBetween
 
-Example:
+例如：
 ```php
 $db->table('test')->where('active', 1)->notBetween('age', 18, 25)->getAll();
-# Output: "SELECT * FROM test WHERE active = '1' AND age NOT BETWEEN '18' AND '25'"
+# 输出: "SELECT * FROM test WHERE active = '1' AND age NOT BETWEEN '18' AND '25'"
 
 # OR
 
 $db->table('test')->where('active', 1)->orBetween('age', 18, 25)->getAll();
-# Output: "SELECT * FROM test WHERE active = '1' OR age BETWEEN '18' AND '25'"
+# 输出: "SELECT * FROM test WHERE active = '1' OR age BETWEEN '18' AND '25'"
 ```
 
 ### like
 ```php
 $db->table('test')->like('title', "%php%")->getAll();
-# Output: "SELECT * FROM test WHERE title LIKE '%php%'"
+# 输出: "SELECT * FROM test WHERE title LIKE '%php%'"
 ```
 
-You can use this method in 4 ways. These;
+其他方法：
 
 - like
 - orLike
 - notLike
 - orNotLike
 
-Example:
+例如：
 ```php
 $db->table('test')->where('active', 1)->notLike('tags', '%dot-net%')->getAll();
-# Output: "SELECT * FROM test WHERE active = '1' AND tags NOT LIKE '%dot-net%'"
+# 输出: "SELECT * FROM test WHERE active = '1' AND tags NOT LIKE '%dot-net%'"
 
 # OR
 
 $db->table('test')->like('bio', '%php%')->orLike('bio', '%java%')->getAll();
-# Output: "SELECT * FROM test WHERE bio LIKE '%php%' OR bio LIKE '%java%'"
+# 输出: "SELECT * FROM test WHERE bio LIKE '%php%' OR bio LIKE '%java%'"
 ```
 
 ### groupBy
 ```php
-# Usage 1: One parameter
+# 用法 1: 一个参数
 $db->table('test')->where('status', 1)->groupBy('cat_id')->getAll();
-# Output: "SELECT * FROM test WHERE status = '1' GROUP BY cat_id"
+# 输出: "SELECT * FROM test WHERE status = '1' GROUP BY cat_id"
 ```
 
 ```php
-# Usage 1: Array parameter
+# 用法 1: 参数为数组
 $db->table('test')->where('status', 1)->groupBy(['cat_id', 'user_id'])->getAll();
-# Output: "SELECT * FROM test WHERE status = '1' GROUP BY cat_id, user_id"
+# 输出: "SELECT * FROM test WHERE status = '1' GROUP BY cat_id, user_id"
 ```
 
 ### having
 ```php
 $db->table('test')->where('status', 1)->groupBy('city')->having('COUNT(person)', 100)->getAll();
-# Output: "SELECT * FROM test WHERE status='1' GROUP BY city HAVING COUNT(person) > '100'"
+# 输出: "SELECT * FROM test WHERE status='1' GROUP BY city HAVING COUNT(person) > '100'"
 
 # OR
 
 $db->table('test')->where('active', 1)->groupBy('department_id')->having('AVG(salary)', '<=', 500)->getAll();
-# Output: "SELECT * FROM test WHERE active='1' GROUP BY department_id HAVING AVG(salary) <= '500'"
+# 输出: "SELECT * FROM test WHERE active='1' GROUP BY department_id HAVING AVG(salary) <= '500'"
 
 # OR
 
 $db->table('test')->where('active', 1)->groupBy('department_id')->having('AVG(salary) > ? AND MAX(salary) < ?', [250, 1000])->getAll();
-# Output: "SELECT * FROM test WHERE active='1' GROUP BY department_id HAVING AVG(salary) > '250' AND MAX(salary) < '1000'"
+# 输出: "SELECT * FROM test WHERE active='1' GROUP BY department_id HAVING AVG(salary) > '250' AND MAX(salary) < '1000'"
 ```
 
 ### orderBy
 ```php
-# Usage 1: One parameter
+# 用法 1: 一个参数
 $db->table('test')->where('status', 1)->orderBy('id')->getAll();
-# Output: "SELECT * FROM test WHERE status='1' ORDER BY id ASC"
+# 输出: "SELECT * FROM test WHERE status='1' ORDER BY id ASC"
 
 ### OR
 
 $db->table('test')->where('status', 1)->orderBy('id desc')->getAll();
-# Output: "SELECT * FROM test WHERE status='1' ORDER BY id desc"
+# 输出: "SELECT * FROM test WHERE status='1' ORDER BY id desc"
 ```
 
 ```php
-# Usage 1: Two parameters
+# 用法 1: 两个参数
 $db->table('test')->where('status', 1)->orderBy('id', 'desc')->getAll();
-# Output: "SELECT * FROM test WHERE status='1' ORDER BY id DESC"
+# 输出: "SELECT * FROM test WHERE status='1' ORDER BY id DESC"
 ```
 
 ```php
-# Usage 3: Rand()
+# 用法 3: Rand()
 $db->table('test')->where('status', 1)->orderBy('rand()')->limit(10)->getAll();
-# Output: "SELECT * FROM test WHERE status='1' ORDER BY rand() LIMIT 10"
+# 输出: "SELECT * FROM test WHERE status='1' ORDER BY rand() LIMIT 10"
 ```
 
 ### limit - offset
 ```php
-# Usage 1: One parameter
+# 用法 1: 一个参数
 $db->table('test')->limit(10)->getAll();
-# Output: "SELECT * FROM test LIMIT 10"
+# 输出: "SELECT * FROM test LIMIT 10"
 ```
 ```php
-# Usage 2: Two parameters
+# 用法 2: 两个参数
 $db->table('test')->limit(10, 20)->getAll();
-# Output: "SELECT * FROM test LIMIT 10, 20"
+# 输出: "SELECT * FROM test LIMIT 10, 20"
 
-# Usage 3: with offset method
+# 用法 3: offset的使用
 $db->table('test')->limit(10)->offset(10)->getAll();
-# Output: "SELECT * FROM test LIMIT 10 OFFSET 10"
+# 输出: "SELECT * FROM test LIMIT 10 OFFSET 10"
 ```
 
 ### pagination
 ```php
-# First parameter: Data count of per page
-# Second parameter: Active page
+# 参数1: 每个页面显示的数量
+# 参数2: 第几页
 
 $db->table('test')->pagination(15, 1)->getAll();
-# Output: "SELECT * FROM test LIMIT 15 OFFSET 0"
+# 输出: "SELECT * FROM test LIMIT 15 OFFSET 0"
 
 $db->table('test')->pagination(15, 2)->getAll();
-# Output: "SELECT * FROM test LIMIT 15 OFFSET 15"
+# 输出: "SELECT * FROM test LIMIT 15 OFFSET 15"
 ```
 
 ### insert
@@ -431,7 +431,7 @@ $data = [
 ];
 
 $db->table('pages')->insert($data);
-# Output: "INSERT INTO test (title, content, time, status) VALUES ('test', 'Lorem ipsum dolor sit amet...', '2017-05-19 19:05:00', '1')"
+# 输出: "INSERT INTO test (title, content, time, status) VALUES ('test', 'Lorem ipsum dolor sit amet...', '2017-05-19 19:05:00', '1')"
 ```
 
 ### update
@@ -444,18 +444,18 @@ $data = [
 ];
 
 $db->table('users')->where('id', 10)->update($data);
-# Output: "UPDATE users SET username='izniburak', password='pass', activation='1', status='1' WHERE id='10'"
+# 输出: "UPDATE users SET username='izniburak', password='pass', activation='1', status='1' WHERE id='10'"
 ```
 
 ### delete
 ```php
 $db->table('test')->where("id", 17)->delete();
-# Output: "DELETE FROM test WHERE id = '17'"
+# 输出: "DELETE FROM test WHERE id = '17'"
 
 # OR
 
 $db->table('test')->delete();
-# Output: "TRUNCATE TABLE delete"
+# 输出: "TRUNCATE TABLE delete"
 ```
 
 ### transaction
@@ -476,42 +476,42 @@ $db->rollBack();
 ### analyze
 ```php
 $db->table('users')->analyze();
-# Output: "ANALYZE TABLE users"
+# 输出: "ANALYZE TABLE users"
 ```
 
 ### check
 ```php
 $db->table(['users', 'pages'])->check();
-# Output: "CHECK TABLE users, pages"
+# 输出: "CHECK TABLE users, pages"
 ```
 
 ### checksum
 ```php
 $db->table(['users', 'pages'])->checksum();
-# Output: "CHECKSUM TABLE users, pages"
+# 输出: "CHECKSUM TABLE users, pages"
 ```
 
 ### optimize
 ```php
 $db->table(['users', 'pages'])->optimize();
-# Output: "OPTIMIZE TABLE users, pages"
+# 输出: "OPTIMIZE TABLE users, pages"
 ```
 
 ### repair
 ```php
 $db->table(['users', 'pages'])->repair();
-# Output: "REPAIR TABLE users, pages"
+# 输出: "REPAIR TABLE users, pages"
 ```
 
 ### query
 ```php
-# Usage 1: Select all records
+# 用法 1: 查询所有记录
 $db->query('SELECT * FROM test WHERE id=? AND status=?', [10, 1])->fetchAll();
 
-# Usage 2: Select one record
+# 用法 2: 查询一条记录
 $db->query('SELECT * FROM test WHERE id=? AND status=?', [10, 1])->fetch();
 
-# Usage 3: Other queries like Update, Insert, Delete etc...
+# 用法 3: 其他查询，比如 更新, 插入, 删除 ...
 $db->query('DELETE FROM test WHERE id=?', [10])->exec();
 ```
 
@@ -542,15 +542,15 @@ $db->error();
 
 ### cache
 ```php
-# Usage: ...->cache($time)->...
+# 用法: ...->cache($time)->...
 $db->table('pages')->where('slug', 'example-page')->cache(60)->get(); 
-# cache time: 60 seconds
+# 缓存时间: 60 seconds
 ```
 
 ### queryCount
 ```php
 $db->queryCount(); 
-# The number of all SQL queries on the page until the end of the beginning.
+# 一个页面上所有的查询总数量.
 ```
 
 ### getQuery
