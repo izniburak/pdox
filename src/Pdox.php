@@ -87,7 +87,18 @@ class Pdox
 
             $this->from = rtrim($froms, ', ');
         } else {
-            $this->from = $this->prefix . $table;
+            // if parameter $table value is 'table1, table2'
+            // this is a bug!
+            $istables = strpos($table, ',') > 0;
+            if ( $istables ){
+                $tables = explode(',', $table);
+                foreach ($tables as $key => &$value) {
+                    $value = $this->prefix . ltrim($value);
+                }
+                $this->from = implode(',', $tables);
+            }else{
+                $this->from = $this->prefix . $table;
+            }
         }
 
         return $this;
