@@ -729,7 +729,7 @@ class Pdox
         }
 
         $query = $this->pdo->exec($this->query);
-        if (! $query) {
+        if ($query === false) {
             $this->error = $this->pdo->errorInfo()[2];
             return $this->error();
         }
