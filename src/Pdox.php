@@ -71,7 +71,7 @@ class Pdox
             $this->pdo->exec("SET CHARACTER SET '" . $config['charset'] . "'");
             $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
         } catch (PDOException $e) {
-            die('Cannot the connect to Database with PDO.<br /><br />' . $e->getMessage());
+            die('Cannot the connect to Database with PDO. ' . $e->getMessage());
         }
 
         return $this->pdo;
@@ -80,23 +80,20 @@ class Pdox
     public function table($table)
     {
         if (is_array($table)) {
-            $froms = '';
+            $from = '';
             foreach ($table as $key) {
-                $froms .= $this->prefix . $key . ', ';
+                $from .= $this->prefix . $key . ', ';
             }
 
-            $this->from = rtrim($froms, ', ');
+            $this->from = rtrim($from, ', ');
         } else {
-            // if parameter $table value is 'table1, table2'
-            // this is a bug!
-            $istables = strpos($table, ',') > 0;
-            if ( $istables ){
+            if (strpos($table, ',') > 0) {
                 $tables = explode(',', $table);
                 foreach ($tables as $key => &$value) {
                     $value = $this->prefix . ltrim($value);
                 }
-                $this->from = implode(',', $tables);
-            }else{
+                $this->from = implode(', ', $tables);
+            } else {
                 $this->from = $this->prefix . $table;
             }
         }
@@ -159,8 +156,8 @@ class Pdox
 
         if (! is_null($op)) {
             $on = (! in_array($op, $this->op) ?
-                $this->prefix . $field1 . ' = ' . $this->prefix . $op :
-                $this->prefix . $field1 . ' ' . $op . ' ' . $this->prefix . $field2);
+                $this->from . '.' . $field1 . ' = ' . $table . '.' . $op :
+                $this->from . '.' . $field1 . ' ' . $op . ' ' . $table . '.' . $field2);
         }
 
         if (is_null($this->join)) {
