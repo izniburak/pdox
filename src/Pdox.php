@@ -220,6 +220,8 @@ class Pdox
                 $_where[] = $type . $column . '=' . $this->escape($data);
             }
             $where = implode(' ' . $andOr . ' ', $_where);
+        } else if (is_null($where) || empty($where)) {
+            $where = null;
         } else {
             if (is_array($op)) {
                 $x = explode('?', $where);
