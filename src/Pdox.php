@@ -213,26 +213,24 @@ class Pdox
 
     public function where($where, $op = null, $val = null, $type = '', $andOr = 'AND')
     {
-        if (is_array($where)) {
+        if (is_array($where) && !empty($where)) {
             $_where = [];
-
             foreach ($where as $column => $data) {
                 $_where[] = $type . $column . '=' . $this->escape($data);
             }
             $where = implode(' ' . $andOr . ' ', $_where);
         } else if (is_null($where) || empty($where)) {
-            $where = null;
+            return $this;
         } else {
             if (is_array($op)) {
-                $x = explode('?', $where);
-                $w = '';
-
-                foreach ($x as $k => $v) {
-                    if (! empty($v)) {
-                        $w .= $type . $v . (isset($op[$k]) ? $this->escape($op[$k]) : '');
+                $params = explode('?', $where);
+                $_where = '';
+                foreach ($params as $key => $value) {
+                    if (! empty($value)) {
+                        $_where .= $type . $value . (isset($op[$key]) ? $this->escape($op[$key]) : '');
                     }
                 }
-                $where = $w;
+                $where = $_where;
             } elseif (! in_array($op, $this->op) || $op == false) {
                 $where = $type . $where . ' = ' . $this->escape($op);
             } else {
