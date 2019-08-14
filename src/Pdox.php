@@ -1089,7 +1089,7 @@ class Pdox
             $result = $query->fetch($type);
         }
 
-        $this->numRows = count($result);
+        $this->numRows = is_array($result) ? count($result) : 1;
         return $result;
     }
 
