@@ -1266,7 +1266,7 @@ class Pdox
      *
      * @return int
      */
-    public function getFetchType($type)
+    protected function getFetchType($type)
     {
         return $type === 'class'
             ? PDO::FETCH_CLASS
