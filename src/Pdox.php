@@ -787,7 +787,7 @@ class Pdox
     }
 
     /**
-     * @return void
+     * @throw PDOException
      */
     public function error()
     {
@@ -803,11 +803,12 @@ class Pdox
     }
 
     /**
-     * @param bool $type
+     * @param bool|string $type
+     * @param string|null $argument
      *
      * @return mixed|string
      */
-    public function get($type = false)
+    public function get($type = null, $argument = null)
     {
         $this->limit = 1;
         $query = $this->getAll(true);
@@ -816,15 +817,16 @@ class Pdox
             return $query;
         }
 
-        return $this->query($query, false, (($type == 'array') ? true : false));
+        return $this->query($query, false, $type, $argument);
     }
 
     /**
-     * @param bool $type
+     * @param bool|string $type
+     * @param string|null $argument
      *
      * @return mixed|string
      */
-    public function getAll($type = false)
+    public function getAll($type = null, $argument = null)
     {
         $query = 'SELECT ' . $this->select . ' FROM ' . $this->from;
 
@@ -860,7 +862,7 @@ class Pdox
             return $query;
         }
 
-        return $this->query($query, true, (($type === 'array') ? true : false));
+        return $this->query($query, true, $type, $argument);
     }
 
     /**
@@ -1058,59 +1060,63 @@ class Pdox
         $query = $this->pdo->exec($this->query);
         if ($query === false) {
             $this->error = $this->pdo->errorInfo()[2];
-            return $this->error();
+            $this->error();
         }
 
         return $query;
     }
 
     /**
-     * @param bool $array
-     * @param bool $all
+     * @param string $type
+     * @param string $argument
+     * @param bool   $all
      *
      * @return mixed
      */
-    public function fetch($array = false, $all = false)
+    public function fetch($type = null, $argument = null, $all = false)
     {
         if (is_null($this->query)) {
             return null;
         }
 
-        $type = ($array === false) ? PDO::FETCH_OBJ : PDO::FETCH_ASSOC;
         $query = $this->pdo->query($this->query);
         if (! $query) {
             $this->error = $this->pdo->errorInfo()[2];
-            return $this->error();
+            $this->error();
         }
 
-        if ($all) {
-            $result = $query->fetchAll($type);
+        $type = $this->getFetchType($type);
+        if ($type === PDO::FETCH_CLASS) {
+            $query->setFetchMode($type, $argument);
         } else {
-            $result = $query->fetch($type);
+            $query->setFetchMode($type);
         }
 
+        $result = $all ? $query->fetchAll() : $query->fetch();
         $this->numRows = is_array($result) ? count($result) : 1;
         return $result;
     }
 
     /**
-     * @param bool $array
+     * @param string $type
+     * @param string $argument
      *
      * @return mixed
      */
-    public function fetchAll($array = false)
+    public function fetchAll($type = null, $argument = null)
     {
-        return $this->fetch($array, true);
+        return $this->fetch($type, $argument, true);
     }
 
     /**
-     * @param      $query
-     * @param bool $all
-     * @param bool $array
+     * @param        $query
+     * @param bool   $all
+     * @param string $type
+     * @param string $argument
      *
      * @return $this|mixed
      */
-    public function query($query, $all = true, $array = false)
+    public function query($query, $all = true, $type = null, $argument = null)
     {
         $this->reset();
 
@@ -1136,41 +1142,33 @@ class Pdox
             }
         }
 
+        $type = $this->getFetchType($type);
         $cache = false;
-        if (! is_null($this->cache)) {
-            $cache = $this->cache->getCache($this->query, $array);
+        if (! is_null($this->cache) && $type !== PDO::FETCH_CLASS) {
+            $cache = $this->cache->getCache($this->query, $type === PDO::FETCH_ASSOC);
         }
 
         if (! $cache && $str) {
             $sql = $this->pdo->query($this->query);
-
             if ($sql) {
                 $this->numRows = $sql->rowCount();
-
                 if (($this->numRows > 0)) {
-                    if ($all) {
-                        $q = [];
-
-                        while ($result = ($array == false) ? $sql->fetchAll(PDO::FETCH_OBJ) : $sql->fetchAll(PDO::FETCH_ASSOC)) {
-                            $q[] = $result;
-                        }
-
-                        $this->result = $q[0];
+                    if ($type === PDO::FETCH_CLASS) {
+                        $sql->setFetchMode($type, $argument);
                     } else {
-                        $q = ($array == false) ? $sql->fetch(PDO::FETCH_OBJ) : $sql->fetch(PDO::FETCH_ASSOC);
-                        $this->result = $q;
+                        $sql->setFetchMode($type);
                     }
+                    $this->result = $all ? $sql->fetchAll() : $sql->fetch();
                 }
 
-                if (! is_null($this->cache)) {
+                if (! is_null($this->cache) && $type !== PDO::FETCH_CLASS) {
                     $this->cache->setCache($this->query, $this->result);
                 }
                 $this->cache = null;
             } else {
                 $this->cache = null;
                 $this->error = $this->pdo->errorInfo()[2];
-
-                return $this->error();
+                $this->error();
             }
         } elseif ((! $cache && ! $str) || ($cache && ! $str)) {
             $this->cache = null;
@@ -1178,8 +1176,7 @@ class Pdox
 
             if ($this->result === false) {
                 $this->error = $this->pdo->errorInfo()[2];
-
-                return $this->error();
+                $this->error();
             }
         } else {
             $this->cache = null;
@@ -1188,7 +1185,6 @@ class Pdox
         }
 
         $this->queryCount++;
-
         return $this->result;
     }
 
@@ -1263,5 +1259,19 @@ class Pdox
         $this->error = null;
         $this->result = [];
         $this->transactionCount = 0;
+    }
+
+    /**
+     * @param  $type
+     *
+     * @return int
+     */
+    public function getFetchType($type)
+    {
+        return $type === 'class'
+            ? PDO::FETCH_CLASS
+            : ($type === 'array'
+                ? PDO::FETCH_ASSOC
+                : PDO::FETCH_OBJ);
     }
 }
