@@ -18,6 +18,12 @@ use PDOException;
 class Pdox
 {
     /**
+     * PDOx Version
+     * @var string
+     */
+    const VERSION = '1.4.1';
+
+    /**
      * @var PDO|null
      */
     public $pdo = null;
