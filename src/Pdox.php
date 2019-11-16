@@ -1187,7 +1187,7 @@ class Pdox
         } else {
             $this->cache = null;
             $this->result = $cache;
-            $this->numRows = count($this->result);
+            $this->numRows = is_countable($this->result) ? count($this->result) : 0;
         }
 
         $this->queryCount++;
