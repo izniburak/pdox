@@ -4,7 +4,7 @@
  *
  * @class    Pdox
  * @author   izni burak demirtaş (@izniburak) <info@burakdemirtas.org>
- * @web      <http://burakdemirtas.org>
+ * @web      <https://burakdemirtas.org>
  * @url      <https://github.com/izniburak/PDOx>
  * @license  The MIT License (MIT) - <http://opensource.org/licenses/MIT>
  */
@@ -15,10 +15,11 @@ use Closure;
 use PDO;
 use PDOException;
 
-class Pdox
+class Pdox implements PdoxInterface
 {
     /**
      * PDOx Version
+     *
      * @var string
      */
     const VERSION = '1.4.1';
@@ -28,6 +29,9 @@ class Pdox
      */
     public $pdo = null;
 
+    /**
+     * @var mixed Query variables
+     */
     protected $select = '*';
     protected $from = null;
     protected $where = null;
@@ -44,11 +48,35 @@ class Pdox
     protected $error = null;
     protected $result = [];
     protected $prefix = null;
+
+    /**
+     * @var array SQL operators
+     */
     protected $op = ['=', '!=', '<', '>', '<=', '>=', '<>'];
+
+    /**
+     * @var null|Cache
+     */
     protected $cache = null;
+
+    /**
+     * @var string|null Cache Directory
+     */
     protected $cacheDir = null;
+
+    /**
+     * @var int Total query count
+     */
     protected $queryCount = 0;
+
+    /**
+     * @var bool
+     */
     protected $debug = true;
+
+    /**
+     * @var int Total transaction count
+     */
     protected $transactionCount = 0;
 
     /**
@@ -103,7 +131,6 @@ class Pdox
             foreach ($table as $key) {
                 $from .= $this->prefix . $key . ', ';
             }
-
             $this->from = rtrim($from, ', ');
         } else {
             if (strpos($table, ',') > 0) {
@@ -221,11 +248,9 @@ class Pdox
             $on = (! in_array($op, $this->op) ? $field1 . ' = ' . $op : $field1 . ' ' . $op . ' ' . $field2);
         }
 
-        if (is_null($this->join)) {
-            $this->join = ' ' . $type . 'JOIN' . ' ' . $table . ' ON ' . $on;
-        } else {
-            $this->join = $this->join . ' ' . $type . 'JOIN' . ' ' . $table . ' ON ' . $on;
-        }
+        $this->join = (is_null($this->join))
+            ? ' ' . $type . 'JOIN' . ' ' . $table . ' ON ' . $on
+            : $this->join . ' ' . $type . 'JOIN' . ' ' . $table . ' ON ' . $on;
 
         return $this;
     }
@@ -321,11 +346,11 @@ class Pdox
     }
 
     /**
-     * @param        $where
-     * @param null   $op
-     * @param null   $val
-     * @param string $type
-     * @param string $andOr
+     * @param array|string $where
+     * @param null         $op
+     * @param null         $val
+     * @param string       $type
+     * @param string       $andOr
      *
      * @return $this
      */
@@ -340,21 +365,21 @@ class Pdox
         } else {
             if (is_null($where) || empty($where)) {
                 return $this;
-            } else {
-                if (is_array($op)) {
-                    $params = explode('?', $where);
-                    $_where = '';
-                    foreach ($params as $key => $value) {
-                        if (! empty($value)) {
-                            $_where .= $type . $value . (isset($op[$key]) ? $this->escape($op[$key]) : '');
-                        }
+            }
+
+            if (is_array($op)) {
+                $params = explode('?', $where);
+                $_where = '';
+                foreach ($params as $key => $value) {
+                    if (! empty($value)) {
+                        $_where .= $type . $value . (isset($op[$key]) ? $this->escape($op[$key]) : '');
                     }
-                    $where = $_where;
-                } elseif (! in_array($op, $this->op) || $op == false) {
-                    $where = $type . $where . ' = ' . $this->escape($op);
-                } else {
-                    $where = $type . $where . ' ' . $op . ' ' . $this->escape($val);
                 }
+                $where = $_where;
+            } elseif (! in_array($op, $this->op) || $op == false) {
+                $where = $type . $where . ' = ' . $this->escape($op);
+            } else {
+                $where = $type . $where . ' ' . $op . ' ' . $this->escape($val);
             }
         }
 
@@ -363,11 +388,9 @@ class Pdox
             $this->grouped = false;
         }
 
-        if (is_null($this->where)) {
-            $this->where = $where;
-        } else {
-            $this->where = $this->where . ' ' . $andOr . ' ' . $where;
-        }
+        $this->where = (is_null($this->where))
+            ? $where
+            : $this->where . ' ' . $andOr . ' ' . $where;
 
         return $this;
     }
@@ -422,11 +445,9 @@ class Pdox
     public function whereNull($where)
     {
         $where = $where . ' IS NULL';
-        if (is_null($this->where)) {
-            $this->where = $where;
-        } else {
-            $this->where = $this->where . ' ' . 'AND ' . $where;
-        }
+        $this->where = (is_null($this->where))
+            ? $where
+            : $this->where . ' ' . 'AND ' . $where;
 
         return $this;
     }
@@ -439,11 +460,9 @@ class Pdox
     public function whereNotNull($where)
     {
         $where = $where . ' IS NOT NULL';
-        if (is_null($this->where)) {
-            $this->where = $where;
-        } else {
-            $this->where = $this->where . ' ' . 'AND ' . $where;
-        }
+        $this->where = (is_null($this->where))
+            ? $where
+            : $this->where . ' ' . 'AND ' . $where;
 
         return $this;
     }
@@ -477,19 +496,16 @@ class Pdox
             foreach ($keys as $k => $v) {
                 $_keys[] = (is_numeric($v) ? $v : $this->escape($v));
             }
-            $keys = implode(', ', $_keys);
-            $where = $field . ' ' . $type . 'IN (' . $keys . ')';
+            $where = $field . ' ' . $type . 'IN (' . implode(', ', $_keys) . ')';
 
             if ($this->grouped) {
                 $where = '(' . $where;
                 $this->grouped = false;
             }
 
-            if (is_null($this->where)) {
-                $this->where = $where;
-            } else {
-                $this->where = $this->where . ' ' . $andOr . ' ' . $where;
-            }
+            $this->where = (is_null($this->where))
+                ? $where
+                : $this->where . ' ' . $andOr . ' ' . $where;
         }
 
         return $this;
@@ -551,11 +567,9 @@ class Pdox
             $this->grouped = false;
         }
 
-        if (is_null($this->where)) {
-            $this->where = $where;
-        } else {
-            $this->where = $this->where . ' ' . $andOr . ' ' . $where;
-        }
+        $this->where = (is_null($this->where))
+            ? $where
+            : $this->where . ' ' . $andOr . ' ' . $where;
 
         return $this;
     }
@@ -621,11 +635,9 @@ class Pdox
             $this->grouped = false;
         }
 
-        if (is_null($this->where)) {
-            $this->where = $where;
-        } else {
-            $this->where = $this->where . ' ' . $andOr . ' ' . $where;
-        }
+        $this->where = (is_null($this->where))
+            ? $where
+            : $this->where . ' ' . $andOr . ' ' . $where;
 
         return $this;
     }
@@ -677,11 +689,9 @@ class Pdox
      */
     public function limit($limit, $limitEnd = null)
     {
-        if (! is_null($limitEnd)) {
-            $this->limit = $limit . ', ' . $limitEnd;
-        } else {
-            $this->limit = $limit;
-        }
+        $this->limit = (! is_null($limitEnd))
+            ? $limit . ', ' . $limitEnd
+            : $limit;
 
         return $this;
     }
@@ -723,11 +733,9 @@ class Pdox
         if (! is_null($orderDir)) {
             $this->orderBy = $orderBy . ' ' . strtoupper($orderDir);
         } else {
-            if (stristr($orderBy, ' ') || $orderBy == 'rand()') {
-                $this->orderBy = $orderBy;
-            } else {
-                $this->orderBy = $orderBy . ' ASC';
-            }
+            $this->orderBy = (stristr($orderBy, ' ') || $orderBy == 'rand()')
+                ? $orderBy
+                : $orderBy . ' ASC';
         }
 
         return $this;
@@ -740,11 +748,9 @@ class Pdox
      */
     public function groupBy($groupBy)
     {
-        if (is_array($groupBy)) {
-            $this->groupBy = implode(', ', $groupBy);
-        } else {
-            $this->groupBy = $groupBy;
-        }
+        $this->groupBy = (is_array($groupBy))
+            ? implode(', ', $groupBy)
+            : $groupBy;
 
         return $this;
     }
@@ -900,8 +906,7 @@ class Pdox
             return $query;
         }
 
-        $query = $this->query($query, false);
-        if ($query) {
+        if ($this->query($query, false)) {
             $this->insertId = $this->pdo->lastInsertId();
             return $this->insertId();
         }
@@ -1047,7 +1052,7 @@ class Pdox
     public function rollBack()
     {
         if (--$this->transactionCount) {
-            $this->pdo->exec('ROLLBACK TO trans' . $this->transactionCount + 1);
+            $this->pdo->exec('ROLLBACK TO trans' . ($this->transactionCount + 1));
             return true;
         }
 
@@ -1187,7 +1192,7 @@ class Pdox
         } else {
             $this->cache = null;
             $this->result = $cache;
-            $this->numRows = is_countable($this->result) ? count($this->result) : 0;
+            $this->numRows = is_array($this->result) ? count($this->result) : ($this->result == '' ? 0 : 1);
         }
 
         $this->queryCount++;
@@ -1201,11 +1206,7 @@ class Pdox
      */
     public function escape($data)
     {
-        if ($data === null) {
-            return 'NULL';
-        }
-
-        return $this->pdo->quote(trim($data));
+        return ($data === null) ? 'NULL' : $this->pdo->quote($data);
     }
 
     /**
