@@ -22,7 +22,7 @@ class Pdox implements PdoxInterface
      *
      * @var string
      */
-    const VERSION = '1.4.1';
+    const VERSION = '1.4.2';
 
     /**
      * @var PDO|null
