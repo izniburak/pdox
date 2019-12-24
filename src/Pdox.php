@@ -473,10 +473,10 @@ class Pdox implements PdoxInterface
      *
      * @return $this
      */
-    public function grouped(Closure $obj, $external_data=null)
+    public function grouped(Closure $obj, $externalData = null)
     {
         $this->grouped = true;
-        call_user_func_array($obj, [$this, $external_data]);
+        call_user_func_array($obj, [$this, $externalData]);
         $this->where .= ')';
 
         return $this;
