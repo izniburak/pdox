@@ -17,6 +17,23 @@
     "ext-pdo": "*",
     "ext-json": "*"
   },
+  "require-dev": {
+    "phpunit/phpunit": "^4.8 || ^5.7 || ^6.5 || ^7.0"
+  },
+  "suggest": {
+    "ext-pdo_cubrid": "Supports for CUBRID",
+    "ext-pdo_dblib": "Supports for  Microsoft SQL Server and Sybase",
+    "ext-pdo_firebird": "Supports for Firebird",
+    "ext-pdo_ibm": "Supports for IBM",
+    "ext-pdo_informix": "Supports for Informix",
+    "ext-pdo_mysql": "Supports for MySQL",
+    "ext-pdo_sqlsrv": "Supports for Microsoft SQL Server",
+    "ext-pdo_ocl": "Supports for Oracle",
+    "ext-pdo_odbc": "Supports for ODBC and DB2 ",
+    "ext-pdo_pgsql": "Supports for PostgreSQL",
+    "ext-pdo_sqlite": "Supports for SQLite",
+    "ext-pdo_4d": "Supports for 4D"
+  },
   "autoload": {
     "psr-4": {
       "Buki\\": "src"

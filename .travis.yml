@@ -1,6 +1,26 @@
-language: php 
-php:
-  - "7.0"
-  - "5.6"
-  - "5.5"
-  - "5.4"
+language: php
+
+dist: trusty
+
+services: mysql
+
+matrix:
+  include:
+  - php: 5.5
+  - php: 5.6
+  - php: 7.0
+  - php: 7.1
+  - php: 7.2
+  - php: 7.3
+  - php: 7.4
+
+sudo: false
+
+install:
+  - composer install
+
+before_script:
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS test;'
+
+script:
+  - vendor/bin/phpunit
