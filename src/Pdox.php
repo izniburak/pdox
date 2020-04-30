@@ -22,7 +22,7 @@ class Pdox implements PdoxInterface
      *
      * @var string
      */
-    const VERSION = '1.4.2';
+    const VERSION = '1.4.3';
 
     /**
      * @var PDO|null
@@ -90,7 +90,9 @@ class Pdox implements PdoxInterface
         $config['host'] = (isset($config['host']) ? $config['host'] : 'localhost');
         $config['charset'] = (isset($config['charset']) ? $config['charset'] : 'utf8');
         $config['collation'] = (isset($config['collation']) ? $config['collation'] : 'utf8_general_ci');
-        $config['port'] = (strstr($config['host'], ':') ? explode(':', $config['host'])[1] : '');
+        $config['port'] = isset($config['port'])
+            ? $config['port']
+            : (strstr($config['host'], ':') ? explode(':', $config['host'])[1] : '');
         $this->prefix = (isset($config['prefix']) ? $config['prefix'] : '');
         $this->cacheDir = (isset($config['cachedir']) ? $config['cachedir'] : __DIR__ . '/cache/');
         $this->debug = (isset($config['debug']) ? $config['debug'] : true);

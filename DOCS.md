@@ -25,8 +25,8 @@ $ composer require izniburak/pdox
 require 'vendor/autoload.php';
 
 $config = [
-	'host'      => 'localhost',
 	'driver'    => 'mysql',
+	'host'      => 'localhost',
 	'database'  => 'test',
 	'username'  => 'root',
 	'password'  => '',
@@ -47,15 +47,19 @@ If you have a problem, you can [contact me][support-url].
 ## config
 ```php
 $config = [
+	# Database Driver Type (optional)
+	# default value: mysql
+	# values: mysql, pgsql, sqlite, oracle
+	'driver'    => 'mysql',
+
 	# Host name or IP Address (optional)
 	# hostname:port (for Port Usage. Example: 127.0.0.1:1010)
 	# default value: localhost
 	'host'      => 'localhost',
 
-	# Database Driver Type (optional)
-	# default value: mysql
-	# values: mysql, pgsql, sqlite, oracle
-	'driver'    => 'mysql',
+	# IP Address for Database Host (optional)
+	# default value: null
+	'port'      => 3306,
 
 	# Database Name (required)
 	'database'  => 'test',
