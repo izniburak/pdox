@@ -98,7 +98,7 @@ class Pdox implements PdoxInterface
         $dsn = '';
 
         if ($config['driver'] == 'mysql' || $config['driver'] == '' || $config['driver'] == 'pgsql') {
-            $dsn = $config['driver'] . ':host=' . $config['host'] . ';'
+            $dsn = $config['driver'] . ':host=' . str_replace(":" . $config['port'], "", $config['host']) . ';'
                 . (($config['port']) != '' ? 'port=' . $config['port'] . ';' : '')
                 . 'dbname=' . $config['database'];
         } elseif ($config['driver'] == 'sqlite') {
