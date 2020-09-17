@@ -56,12 +56,17 @@ class Pdox implements PdoxInterface
     /**
      * @var Cache|null
      */
-    protected $cache = null;
+    protected $cacheType = null;
 
     /**
-     * @var string|null Cache Directory
+     * @var array Cache Config
      */
-    protected $cacheDir = null;
+    protected $cacheConfig = [];
+
+    /**
+     * @var Cache|null
+     */
+    protected $cache = null;
 
     /**
      * @var int Total query count
@@ -91,11 +96,20 @@ class Pdox implements PdoxInterface
         $config['collation'] = isset($config['collation']) ? $config['collation'] : 'utf8_general_ci';
         $config['port'] = isset($config['port'])
             ? $config['port']
-            : strstr($config['host'], ':') ? explode(':', $config['host'])[1] : '';
+            : (strstr($config['host'], ':') ? explode(':', $config['host'])[1] : '');
+
         $this->prefix = isset($config['prefix']) ? $config['prefix'] : '';
-        $this->cacheDir = isset($config['cachedir']) ? $config['cachedir'] : __DIR__ . '/cache/';
         $this->debug = isset($config['debug']) ? $config['debug'] : true;
 
+        if ((isset($config['cache']) && (is_array($config['cache'])))) {
+            $this->cacheConfig = $config['cache'];
+            $this->cacheType = isset($this->cacheConfig['type']) ? $this->cacheConfig['type'] : '';
+            if ($this->cacheType === 'memcached') {
+                $this->cacheConfig['host'] = isset($this->cacheConfig['host']) ? $this->cacheConfig['host'] : 'localhost';
+                $this->cacheConfig['port'] = isset($this->cacheConfig['port']) ? $this->cacheConfig['port'] : 11211;
+                $this->cacheConfig['masterkey'] = isset($this->cacheConfig['masterkey']) ? $this->cacheConfig['masterkey'] : 'masterkey';
+            }
+        }
         $dsn = '';
         if (in_array($config['driver'], ['', 'mysql', 'pgsql'])) {
             $dsn = $config['driver'] . ':host=' . str_replace(':' . $config['port'], '', $config['host']) . ';'
@@ -1117,14 +1131,14 @@ class Pdox implements PdoxInterface
                 if (!is_null($this->cache) && $type !== PDO::FETCH_CLASS) {
                     $this->cache->setCache($this->query, $this->result);
                 }
-                $this->cache = null;
+                //$this->cache = null;
             } else {
-                $this->cache = null;
+                //$this->cache = null;
                 $this->error = $this->pdo->errorInfo()[2];
                 $this->error();
             }
         } elseif ((!$cache && !$str) || ($cache && !$str)) {
-            $this->cache = null;
+            //$this->cache = null;
             $this->result = $this->pdo->exec($this->query);
 
             if ($this->result === false) {
@@ -1132,7 +1146,7 @@ class Pdox implements PdoxInterface
                 $this->error();
             }
         } else {
-            $this->cache = null;
+            //$this->cache = null;
             $this->result = $cache;
             $this->numRows = is_array($this->result) ? count($this->result) : ($this->result === '' ? 0 : 1);
         }
@@ -1148,9 +1162,7 @@ class Pdox implements PdoxInterface
      */
     public function escape($data)
     {
-        return $data === null ? 'NULL' : (
-            is_int($data) || is_float($data) ? $data : $this->pdo->quote($data)
-        );
+        return $data === null ? 'NULL' : (is_int($data) || is_float($data) ? $data : $this->pdo->quote($data));
     }
 
     /**
@@ -1160,9 +1172,30 @@ class Pdox implements PdoxInterface
      */
     public function cache($time)
     {
-        $this->cache = new CacheMem($this->cacheDir, $time);
-
+        if ($this->cacheType === 'file') {
+            $this->cache = new Cache($this->cacheConfig['dir'], $time);
+        } else {
+            if (is_null($this->cache)) {
+                $this->cache = new CacheMem($this->cacheConfig);
+            }
+            $this->cache->setCacheTime($time);
+        }
         return $this;
+    }
+
+    /**
+     * @param $masterKey
+     *
+     * @return string
+     */
+    public function clearCache($masterKey = null)
+    {
+        if ($this->cacheType === 'memcached') {
+            if (is_null($this->cache)) {
+                $this->cache = new CacheMem($this->cacheConfig);
+            }
+            return $this->cache->clearCache(isset($masterKey) ? $masterKey : $this->cacheConfig['masterkey']);
+        }
     }
 
     /**

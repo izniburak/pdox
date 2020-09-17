@@ -1,11 +1,12 @@
 <?php
+
 /**
- * PDOx - Useful Query Builder & PDO Class & Memcached
+ * PDOx - Useful Query Builder & PDO Class
  *
  * @class    CacheMem
- * @author   KaraKunT
- * @web      <https://www.karakunt.com>
- * @url      <https://github.com/KaraKunT/pdox>
+ * @author   Şükrü Kansız
+ * @web      <http://burakdemirtas.org>
+ * @url      <https://github.com/izniburak/PDOx>
  * @license  The MIT License (MIT) - <http://opensource.org/licenses/MIT>
  */
 
@@ -15,26 +16,31 @@ use Memcached;
 
 class CacheMem
 {
-    protected $cacheDir = null;
+    protected $masterKey = null;
     protected $cache = null;
     protected $finish = null;
 
     protected $memcached = null;
 
     /**
-     * Cache constructor.
+     * CacheMem constructor.
      *
-     * @param null $dir
+     * @param null $config
+     */
+    function __construct($config = [])
+    {
+        $this->masterKey = $config['masterkey'];
+        $this->memcached = new Memcached();
+        $this->memcached->addServer($config['host'], $config['port']);
+    }
+
+    /**
      * @param int  $time
      */
-    function __construct($dir = null, $time = 0)
+    public function setCacheTime($time = 0)
     {
-        $this->cacheDir = $dir;
         $this->cache = $time;
         $this->finish = time() + $time;
-
-        $this->memcached = new Memcached;
-        $this->memcached->addServer('localhost', 11211);     
     }
 
     /**
@@ -45,17 +51,17 @@ class CacheMem
      */
     public function getCache($sql, $array = false)
     {
-        
+
         if (is_null($this->cache)) {
             return false;
         }
 
         if (($cache = $this->memcached->get($this->keyName($sql)))) {
-            if($this->memcached->getResultCode() == Memcached::RES_SUCCESS){
+            if ($this->memcached->getResultCode() == Memcached::RES_SUCCESS) {
                 $cache = json_decode($cache, $array);
                 return ($array ? $cache['data'] : $cache->data);
             }
-        }              
+        }
 
         return false;
     }
@@ -71,10 +77,26 @@ class CacheMem
         if (is_null($this->cache)) {
             return false;
         }
-
         $this->memcached->set($this->keyName($sql), json_encode(['data' => $result, 'finish' => $this->finish]), $this->finish);
-
         return;
+    }
+
+    /**
+     * @param $masterKey
+     *
+     * @return array
+     */
+    public function clearCache($masterKey)
+    {
+        $data = null;
+        $keys = $this->memcached->getAllKeys();
+        foreach ($keys as $item) {
+            if (preg_match('/' . $masterKey . '.PDOx.*/', $item)) {
+                $this->memcached->delete($item);
+                $data[] = $item;
+            }
+        }
+        return is_array($data) ? $data : null;
     }
 
     /**
@@ -84,6 +106,16 @@ class CacheMem
      */
     protected function keyName($name)
     {
-        return md5($this->cacheDir.':'.$name);
+        return $this->masterKey . '.PDOx.' . md5($this->masterKey . ':' . $name);
+    }
+
+    /**
+     * @return void
+     */
+    public function __destruct()
+    {
+        if (!is_null($this->memcached)) {
+            $this->memcached->quit();
+        }
     }
 }

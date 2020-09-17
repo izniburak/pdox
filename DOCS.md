@@ -82,9 +82,32 @@ $config = [
 	# default value: null
 	'prefix'     => '',
 
-	# Cache Directory of the Sql Result (optional)
-	# default value: __DIR__ . '/cache/'
-	'cachedir'	=> __DIR__ . '/cache/sql/'
+	# Cache Type: File 
+	'cache'     => [
+		'type' => 'file',
+
+		# Cache Directory of the Sql Result (optional)
+		# default value: __DIR__ . '/cache/'
+		'dir' => __DIR__ . '/cache/sql/'
+	],
+
+	# Cache Type: Memcached 
+	'cache'     => [
+		'type' => 'memcached',
+
+		# Memcached server address
+		# default value: localhost
+		'host' => 'localhost',
+
+		# Memcached server address port
+		# default value: 11211
+		'port' => 11211,
+
+		# The key under which to store the value. 
+		# available characters: = 0-9 a-z A-Z _ - . 
+		# default value: masterkey
+		'masterkey' => 'database.name_key'
+	],
 ];
 
 $db = new \Buki\Pdox($config);
@@ -549,6 +572,12 @@ $db->error();
 # Usage: ...->cache($time)->...
 $db->table('pages')->where('slug', 'example-page')->cache(60)->get(); 
 # cache time: 60 seconds
+
+# Memcached clear
+print_r($db->clearCache());
+
+# Cleaning using the masterkey 
+print_r($db->clearCache('database.name_key'));
 ```
 
 ### queryCount
