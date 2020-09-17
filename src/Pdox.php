@@ -1160,7 +1160,7 @@ class Pdox implements PdoxInterface
      */
     public function cache($time)
     {
-        $this->cache = new Cache($this->cacheDir, $time);
+        $this->cache = new CacheMem($this->cacheDir, $time);
 
         return $this;
     }
