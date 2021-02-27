@@ -563,4 +563,49 @@ $db->getQuery();
 # Last SQL Query.
 ```
 
+### DataTable Entegration
+```php
+$draw = $_POST['draw'];
+$row = $_POST['start'];
+$rowperpage = $_POST['length']; // Rows display per page
+$columnIndex = $_POST['order'][0]['column']; // Column index
+$columnName = $_POST['columns'][$columnIndex]['data']; // Column name
+$columnSortOrder = $_POST['order'][0]['dir']; // asc or desc
+$searchValue = $_POST['search']['value']; // Search value
+
+$searchArray = array();
+
+$totalRecords = count($db->table('tags')->getAll());
+
+$totalRecordwithFilter = count($db->table('tags')->like('name', '%'.$searchValue.'%')->orLike('slug', '%'.$searchValue.'%')->getAll());
+
+$allRecords = $db->table('tags')->like('name', '%'.$searchValue.'%')->orLike('slug', '%'.$searchValue.'%')->orderBy($columnName, $columnSortOrder)->limit($rowperpage)->offset($row)->getAll();
+
+$data = array();
+
+foreach($allRecords as $row){
+	$data[] = array(
+		"id" => $row->id,
+		"name" => $row->name,
+		"slug" => $row->slug,
+		"statu" => $row->statu,
+		"buttons" => '
+			<a href="'.ADMIN.'/etiket/duzenle/'.$row->id.'" class="btn btn-primary"><i class="fa fa-edit"></i></a>
+			<a href="#" class="btn btn-danger delete-item" data-id="'.$row->id.'" data-item="tag"><i class="fa fa-times"></i></a>
+		',
+	);
+}
+
+## Response
+$response = array(
+	"draw" => intval($draw),
+	"iTotalRecords" => $totalRecords,
+	"iTotalDisplayRecords" => $totalRecordwithFilter,
+	"aaData" => $data
+);
+# Code Example.
+```
+
+echo json_encode($response);
+
 [support-url]: https://github.com/izniburak/PDOx#support

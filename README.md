@@ -85,6 +85,10 @@ Documentation page: [PDOx Docs][doc-url]
 
 - [izniburak](https://github.com/izniburak) İzni Burak Demirtaş - creator, maintainer
 
+## Useful Packages
+
+- DataTable
+
 [pdox-img]: http://burakdemirtas.org/uploads/images/20140610210255_pdox_pdo_class_for_php.jpg
 [paypal-donate-url]: http://burakdemirtas.org
 [mit-url]: http://opensource.org/licenses/MIT
