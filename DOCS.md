@@ -603,9 +603,9 @@ $response = array(
 	"iTotalDisplayRecords" => $totalRecordwithFilter,
 	"aaData" => $data
 );
+echo json_encode($response);
 # Code Example.
 ```
 
-echo json_encode($response);
 
 [support-url]: https://github.com/izniburak/PDOx#support
