@@ -21,7 +21,7 @@ class Pdox implements PdoxInterface
      *
      * @var string
      */
-    const VERSION = '1.5.0';
+    const VERSION = '1.6.0';
 
     /**
      * @var PDO|null
@@ -87,11 +87,11 @@ class Pdox implements PdoxInterface
     {
         $config['driver'] = isset($config['driver']) ? $config['driver'] : 'mysql';
         $config['host'] = isset($config['host']) ? $config['host'] : 'localhost';
-        $config['charset'] = isset($config['charset']) ? $config['charset'] : 'utf8';
-        $config['collation'] = isset($config['collation']) ? $config['collation'] : 'utf8_general_ci';
+        $config['charset'] = isset($config['charset']) ? $config['charset'] : 'utf8mb4';
+        $config['collation'] = isset($config['collation']) ? $config['collation'] : 'utf8mb4_general_ci';
         $config['port'] = isset($config['port'])
             ? $config['port']
-            : strstr($config['host'], ':') ? explode(':', $config['host'])[1] : '';
+            : (strstr($config['host'], ':') ? explode(':', $config['host'])[1] : '');
         $this->prefix = isset($config['prefix']) ? $config['prefix'] : '';
         $this->cacheDir = isset($config['cachedir']) ? $config['cachedir'] : __DIR__ . '/cache/';
         $this->debug = isset($config['debug']) ? $config['debug'] : true;
@@ -760,14 +760,14 @@ class Pdox implements PdoxInterface
      */
     public function error()
     {
-        $msg = '<h1>Database Error</h1>';
-        $msg .= '<h4>Query: <em style="font-weight:normal;">"' . $this->query . '"</em></h4>';
-        $msg .= '<h4>Error: <em style="font-weight:normal;">' . $this->error . '</em></h4>';
-
         if ($this->debug === true) {
             if (php_sapi_name() === 'cli') {
                 die("Query: " . $this->query . PHP_EOL . "Error: " . $this->error . PHP_EOL);
             }
+
+            $msg = '<h1>Database Error</h1>';
+            $msg .= '<h4>Query: <em style="font-weight:normal;">"' . $this->query . '"</em></h4>';
+            $msg .= '<h4>Error: <em style="font-weight:normal;">' . $this->error . '</em></h4>';
             die($msg);
         }
 
