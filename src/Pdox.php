@@ -246,7 +246,7 @@ class Pdox implements PdoxInterface
 
         if (!is_null($operator)) {
             $on = !in_array($operator, $this->operators)
-                ? $field1 . ' = ' . $operator
+                ? $field1 . ' = ' . $operator . (!is_null($field2) ? ' ' . $field2 : '')
                 : $field1 . ' ' . $operator . ' ' . $field2;
         }
 
