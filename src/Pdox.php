@@ -969,7 +969,8 @@ class Pdox implements PdoxInterface
      */
     public function transaction()
     {
-        if (!$this->transactionCount++) {
+        if (!$this->transactionCount) {
+            $this->transactionCount++;
             return $this->pdo->beginTransaction();
         }
 
@@ -982,7 +983,7 @@ class Pdox implements PdoxInterface
      */
     public function commit()
     {
-        if (!--$this->transactionCount) {
+        if ($this->transactionCount) {
             return $this->pdo->commit();
         }
 
@@ -994,8 +995,9 @@ class Pdox implements PdoxInterface
      */
     public function rollBack()
     {
-        if (--$this->transactionCount) {
-            $this->pdo->exec('ROLLBACK TO trans' . ($this->transactionCount + 1));
+        if ($this->transactionCount) {
+            $this->pdo->exec('ROLLBACK TO trans' . $this->transactionCount);
+            $this->transactionCount--;
             return true;
         }
 
