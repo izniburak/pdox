@@ -521,16 +521,16 @@ class Pdox implements PdoxInterface
     {
         return $this->in($field, $keys, 'NOT ', 'OR');
     }
-    
+
     /**
-     * @param string $field
-     * @param string $key
-     * @param string $type
-     * @param string $andOr
+     * @param string         $field
+     * @param string|integer $key
+     * @param string         $type
+     * @param string         $andOr
      *
      * @return $this
      */
-    public function findInSet(string $field, string $key, string $type = '', string $andOr = 'AND')
+    public function findInSet($field, $key, $type = '', $andOr = 'AND')
     {
         $key = is_numeric($key) ? $key : $this->escape($key);
         $where =  $type . 'FIND_IN_SET (' . $key . ', '.$field.')';
@@ -553,7 +553,7 @@ class Pdox implements PdoxInterface
      *
      * @return $this
      */
-    public function notFindInSet(string $field, string $key)
+    public function notFindInSet($field, $key)
     {
         return $this->findInSet($field, $key, 'NOT ');
     }
@@ -564,7 +564,7 @@ class Pdox implements PdoxInterface
      *
      * @return $this
      */
-    public function orFindInSet(string $field, string $key)
+    public function orFindInSet($field, $key)
     {
         return $this->findInSet($field, $key, '', 'OR');
     }
@@ -575,7 +575,7 @@ class Pdox implements PdoxInterface
      *
      * @return $this
      */
-    public function orNotFindInSet(string $field, string $key)
+    public function orNotFindInSet($field, $key)
     {
         return $this->findInSet($field, $key, 'NOT ', 'OR');
     }
