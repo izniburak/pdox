@@ -100,6 +100,7 @@ $db = new \Buki\Pdox($config);
  * [where](#where)
  * [grouped](#grouped)
  * [in](#in)
+ * [findInSet](#findinset)
  * [between](#between)
  * [like](#like)
  * [groupBy](#groupby)
@@ -294,6 +295,30 @@ $db->table('test')->where('active', 1)->notIn('id', [1, 2, 3])->getAll();
 
 $db->table('test')->where('active', 1)->orIn('id', [1, 2, 3])->getAll();
 # Output: "SELECT * FROM test WHERE active = '1' OR id IN ('1', '2', '3')"
+```
+
+### findInSet
+```php
+$db->table('test')->where('active', 1)->findInSet('selected_ids', 1)->getAll();
+# Output: "SELECT * FROM test WHERE active = '1' AND FIND_IN_SET (1, selected_ids)"
+```
+
+You can use this method in 4 ways. These;
+
+- findInSet
+- orFindInSet
+- notFindInSet
+- orNotFindInSet
+
+Example:
+```php
+$db->table('test')->where('active', 1)->notFindInSet('selected_ids', 1)->getAll();
+# Output: "SELECT * FROM test WHERE active = '1' AND NOT FIND_IN_SET (1, selected_ids)"
+
+# OR
+
+$db->table('test')->where('active', 1)->orFindInSet('selected_ids', 1)->getAll();
+# Output: "SELECT * FROM test WHERE active = '1' OR FIND_IN_SET (1, selected_ids)"
 ```
 
 ### between
