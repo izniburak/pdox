@@ -816,16 +816,16 @@ class Pdox implements PdoxInterface
     {
         if ($this->debug === true) {
             if ( PHP_SAPI === 'cli') {
-                die("Query: " . $this->query . PHP_EOL . "Error: " . $this->error . PHP_EOL);
+                throw new PdoxException("Query: " . $this->query . PHP_EOL . "Error: " . $this->error . PHP_EOL);
             }
 
             $msg = '<h1>Database Error</h1>';
             $msg .= '<h4>Query: <em style="font-weight:normal;">"' . $this->query . '"</em></h4>';
             $msg .= '<h4>Error: <em style="font-weight:normal;">' . $this->error . '</em></h4>';
-            die($msg);
+            throw new PdoxException($msg);
         }
 
-        throw new PDOException($this->error . '. (' . $this->query . ')');
+        throw new PdoxException($this->error . '. (' . $this->query . ')');
     }
 
     /**
