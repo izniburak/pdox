@@ -33,7 +33,7 @@ $config = [
 	'charset'   => 'utf8',
 	'collation' => 'utf8_general_ci',
 	'prefix'    => '',
-  'options'   => [ ]
+  	'options'   => [ ]
 ];
 
 $db = new \Buki\Pdox($config);
@@ -87,8 +87,8 @@ $config = [
 	# default value: __DIR__ . '/cache/'
 	'cachedir'	=> __DIR__ . '/cache/sql/',
 
-  # Connection options (Things like SSL certificates, etc)
-  'options' => [ ]
+  	# Connection options (Things like SSL certificates, etc)
+  	'options' => [ ]
 ];
 
 $db = new \Buki\Pdox($config);
