@@ -108,7 +108,7 @@ class Pdox implements PdoxInterface
         }
 
         try {
-            $this->pdo = new PDO($dsn, $config['username'], $config['password']);
+            $this->pdo = new PDO($dsn, $config['username'], $config['password'], isset($config['options']) ? $config['options'] : null);
             $this->pdo->exec("SET NAMES '" . $config['charset'] . "' COLLATE '" . $config['collation'] . "'");
             $this->pdo->exec("SET CHARACTER SET '" . $config['charset'] . "'");
             $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
