@@ -112,10 +112,15 @@ class Pdox implements PdoxInterface
             $this->pdo->exec("SET NAMES '" . $config['charset'] . "' COLLATE '" . $config['collation'] . "'");
             $this->pdo->exec("SET CHARACTER SET '" . $config['charset'] . "'");
             $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
+            $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            
+            
         } catch (PDOException $e) {
             die('Cannot the connect to Database with PDO. ' . $e->getMessage());
         }
-
+        // when recall __construct it will be use
+        $this->config = $config;  
+        
         return $this->pdo;
     }
 
@@ -1296,5 +1301,20 @@ class Pdox implements PdoxInterface
         $this->select = $this->select === '*'
             ? $fields
             : $this->select . ', ' . $fields;
+    }
+    
+    /**
+     * Ping to database if connection is not alive recall self::_connstruct(); 
+     *
+     * @return void
+     */
+    public function ping() {
+        try {
+            $this->pdo->query('SELECT 1');
+        } catch (PDOException $e) {
+            $this->__construct($this->config);            
+        }
+
+        return true;
     }
 }
