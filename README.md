@@ -84,6 +84,7 @@ Documentation page: [PDOx Docs][doc-url]
 ## Contributors
 
 - [izniburak](https://github.com/izniburak) İzni Burak Demirtaş - creator, maintainer
+- [Others](https://github.com/izniburak/pdox/graphs/contributors)
 
 [pdox-img]: http://burakdemirtas.org/uploads/images/20140610210255_pdox_pdo_class_for_php.jpg
 [paypal-donate-url]: http://burakdemirtas.org
