@@ -111,9 +111,7 @@ class Pdox implements PdoxInterface
             $this->pdo = new PDO($dsn, $config['username'], $config['password']);
             $this->pdo->exec("SET NAMES '" . $config['charset'] . "' COLLATE '" . $config['collation'] . "'");
             $this->pdo->exec("SET CHARACTER SET '" . $config['charset'] . "'");
-            $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
-            $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            
+            $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);            
             
         } catch (PDOException $e) {
             die('Cannot the connect to Database with PDO. ' . $e->getMessage());
