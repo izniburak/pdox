@@ -113,14 +113,14 @@ class Pdox implements PdoxInterface
             $this->pdo->exec("SET CHARACTER SET '" . $config['charset'] . "'");
             $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
         } catch (PDOException $e) {
-            die('Cannot the connect to Database with PDO. ' . $e->getMessage());
+            throw new PdoxException( 'Cannot the connect to Database with PDO. ' . $e->getMessage(), $e->getCode() );
         }
-
-        return $this->pdo;
     }
 
     /**
-     * @param $table
+     * @param array|string $table
+     *      ['table1','table2'] or 'table1,table2'
+     *      ['table1 t1','table2 t2'] or 'table1 t1, table2 t2'
      *
      * @return $this
      */
@@ -132,16 +132,14 @@ class Pdox implements PdoxInterface
                 $from .= $this->prefix . $key . ', ';
             }
             $this->from = rtrim($from, ', ');
-        } else {
-            if (strpos($table, ',') > 0) {
-                $tables = explode(',', $table);
-                foreach ($tables as $key => &$value) {
-                    $value = $this->prefix . ltrim($value);
-                }
-                $this->from = implode(', ', $tables);
-            } else {
-                $this->from = $this->prefix . $table;
+        } elseif ( strpos($table, ',') > 0) {
+            $tables = explode(',', $table);
+            foreach ($tables as $key => &$value) {
+                $value = $this->prefix . ltrim($value);
             }
+            $this->from = implode(', ', $tables);
+        } else {
+            $this->from = $this->prefix . $table;
         }
 
         return $this;
@@ -336,11 +334,11 @@ class Pdox implements PdoxInterface
     }
 
     /**
-     * @param array|string $where
-     * @param string       $operator
-     * @param string       $val
-     * @param string       $type
-     * @param string       $andOr
+     * @param array|string      $where
+     * @param string|array|null $operator
+     * @param string            $val
+     * @param string            $type
+     * @param string            $andOr
      *
      * @return $this
      */
@@ -353,7 +351,7 @@ class Pdox implements PdoxInterface
             }
             $where = implode(' ' . $andOr . ' ', $_where);
         } else {
-            if (is_null($where) || empty($where)) {
+            if (empty($where)) {
                 return $this;
             }
 
@@ -429,7 +427,7 @@ class Pdox implements PdoxInterface
      */
     public function whereNull($where, $not = false)
     {
-        $where = $where . ' IS ' . ($not ? 'NOT' : '') . ' NULL';
+        $where .= ' IS ' . ( $not ? 'NOT' : '' ) . ' NULL';
         $this->where = is_null($this->where) ? $where : $this->where . ' ' . 'AND ' . $where;
 
         return $this;
@@ -469,22 +467,20 @@ class Pdox implements PdoxInterface
      */
     public function in($field, array $keys, $type = '', $andOr = 'AND')
     {
-        if (is_array($keys)) {
-            $_keys = [];
-            foreach ($keys as $k => $v) {
-                $_keys[] = is_numeric($v) ? $v : $this->escape($v);
-            }
-            $where = $field . ' ' . $type . 'IN (' . implode(', ', $_keys) . ')';
-
-            if ($this->grouped) {
-                $where = '(' . $where;
-                $this->grouped = false;
-            }
-
-            $this->where = is_null($this->where)
-                ? $where
-                : $this->where . ' ' . $andOr . ' ' . $where;
+        $_keys = [];
+        foreach ($keys as $k => $v) {
+            $_keys[] = is_numeric($v) ? $v : $this->escape($v);
         }
+        $where = $field . ' ' . $type . 'IN (' . implode(', ', $_keys) . ')';
+
+        if ($this->grouped) {
+            $where = '(' . $where;
+            $this->grouped = false;
+        }
+
+        $this->where = is_null($this->where)
+            ? $where
+            : $this->where . ' ' . $andOr . ' ' . $where;
 
         return $this;
     }
@@ -819,17 +815,17 @@ class Pdox implements PdoxInterface
     public function error()
     {
         if ($this->debug === true) {
-            if (php_sapi_name() === 'cli') {
-                die("Query: " . $this->query . PHP_EOL . "Error: " . $this->error . PHP_EOL);
+            if ( PHP_SAPI === 'cli') {
+                throw new PdoxException("Query: " . $this->query . PHP_EOL . "Error: " . $this->error . PHP_EOL);
             }
 
             $msg = '<h1>Database Error</h1>';
             $msg .= '<h4>Query: <em style="font-weight:normal;">"' . $this->query . '"</em></h4>';
             $msg .= '<h4>Error: <em style="font-weight:normal;">' . $this->error . '</em></h4>';
-            die($msg);
+            throw new PdoxException($msg);
         }
 
-        throw new PDOException($this->error . '. (' . $this->query . ')');
+        throw new PdoxException($this->error . '. (' . $this->query . ')');
     }
 
     /**
