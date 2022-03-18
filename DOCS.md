@@ -32,7 +32,8 @@ $config = [
 	'password'  => '',
 	'charset'   => 'utf8',
 	'collation' => 'utf8_general_ci',
-	'prefix'    => ''
+	'prefix'    => '',
+  	'options'   => [ ]
 ];
 
 $db = new \Buki\Pdox($config);
@@ -84,7 +85,10 @@ $config = [
 
 	# Cache Directory of the Sql Result (optional)
 	# default value: __DIR__ . '/cache/'
-	'cachedir'	=> __DIR__ . '/cache/sql/'
+	'cachedir'	=> __DIR__ . '/cache/sql/',
+
+  	# Connection options (Things like SSL certificates, etc)
+  	'options' => [ ]
 ];
 
 $db = new \Buki\Pdox($config);
@@ -178,13 +182,13 @@ $db->table(['table1 AS t1', 'table2 AS t2']);
 # get(): return 1 record.
 # getAll(): return multiple records.
 
-$db->table('test')->getAll(); 
+$db->table('test')->getAll();
 # Output: "SELECT * FROM test"
 
 $db->select('username')->table('users')->where('status', 1)->getAll();
 # Output: "SELECT username FROM users WHERE status='1'"
 
-$db->select('title')->table('pages')->where('id', 17)->get(); 
+$db->select('title')->table('pages')->where('id', 17)->get();
 # Output: "SELECT title FROM pages WHERE id='17' LIMIT 1"
 ```
 
@@ -572,19 +576,19 @@ $db->error();
 ### cache
 ```php
 # Usage: ...->cache($time)->...
-$db->table('pages')->where('slug', 'example-page')->cache(60)->get(); 
+$db->table('pages')->where('slug', 'example-page')->cache(60)->get();
 # cache time: 60 seconds
 ```
 
 ### queryCount
 ```php
-$db->queryCount(); 
+$db->queryCount();
 # The number of all SQL queries on the page until the end of the beginning.
 ```
 
 ### getQuery
 ```php
-$db->getQuery(); 
+$db->getQuery();
 # Last SQL Query.
 ```
 
