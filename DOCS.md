@@ -1,15 +1,19 @@
 # PDOx Documentation
 
 ## Install
+
 `composer.json` file:
+
 ```json
 {
-    "require": {
-        "izniburak/pdox": "^1"
-    }
+  "require": {
+    "izniburak/pdox": "^1"
+  }
 }
 ```
+
 after run the install command.
+
 ```
 $ composer install
 ```
@@ -21,6 +25,7 @@ $ composer require izniburak/pdox
 ```
 
 ## Quick Usage
+
 ```php
 require 'vendor/autoload.php';
 
@@ -32,8 +37,7 @@ $config = [
 	'password'  => '',
 	'charset'   => 'utf8',
 	'collation' => 'utf8_general_ci',
-	'prefix'    => '',
-  	'options'   => [ ]
+	'prefix'    => ''
 ];
 
 $db = new \Buki\Pdox($config);
@@ -46,6 +50,7 @@ If you have a problem, you can [contact me][support-url].
 # Detailed Usage and Methods
 
 ## config
+
 ```php
 $config = [
 	# Database Driver Type (optional)
@@ -85,10 +90,7 @@ $config = [
 
 	# Cache Directory of the Sql Result (optional)
 	# default value: __DIR__ . '/cache/'
-	'cachedir'	=> __DIR__ . '/cache/sql/',
-
-  	# Connection options (Things like SSL certificates, etc)
-  	'options' => [ ]
+	'cachedir'	=> __DIR__ . '/cache/sql/'
 ];
 
 $db = new \Buki\Pdox($config);
@@ -96,38 +98,39 @@ $db = new \Buki\Pdox($config);
 
 ## Contents
 
- * [select](#select)
- * [select functions (min, max, sum, avg, count)](#select-functions-min-max-sum-avg-count)
- * [table](#table)
- * [get AND getAll](#get-and-getall)
- * [join](#join)
- * [where](#where)
- * [grouped](#grouped)
- * [in](#in)
- * [findInSet](#findinset)
- * [between](#between)
- * [like](#like)
- * [groupBy](#groupby)
- * [having](#having)
- * [orderBy](#orderby)
- * [limit - offset](#limit---offset)
- * [pagination](#pagination)
- * [insert](#insert)
- * [update](#update)
- * [delete](#delete)
- * [analyze](#analyze) - [check](#check) - [checksum](#checksum) - [optimize](#optimize) - [repair](#repair)
- * [query](#query)
- * [insertId](#insertid)
- * [numRows](#numrows)
- * [cache](#cache)
- * [transaction](#transaction) - [commit](#transaction) - [rollBack](#transaction)
- * [error](#error)
- * [queryCount](#querycount)
- * [getQuery](#getquery)
+- [select](#select)
+- [select functions (min, max, sum, avg, count)](#select-functions-min-max-sum-avg-count)
+- [table](#table)
+- [get AND getAll](#get-and-getall)
+- [join](#join)
+- [where](#where)
+- [grouped](#grouped)
+- [in](#in)
+- [findInSet](#findinset)
+- [between](#between)
+- [like](#like)
+- [groupBy](#groupby)
+- [having](#having)
+- [orderBy](#orderby)
+- [limit - offset](#limit---offset)
+- [pagination](#pagination)
+- [insert](#insert)
+- [update](#update)
+- [delete](#delete)
+- [analyze](#analyze) - [check](#check) - [checksum](#checksum) - [optimize](#optimize) - [repair](#repair)
+- [query](#query)
+- [insertId](#insertid)
+- [numRows](#numrows)
+- [cache](#cache)
+- [transaction](#transaction) - [commit](#transaction) - [rollBack](#transaction)
+- [error](#error)
+- [queryCount](#querycount)
+- [getQuery](#getquery)
 
 ## Methods
 
 ### select
+
 ```php
 # Usage 1: string parameter
 $db->select('title, content')->table('test')->getAll();
@@ -136,6 +139,7 @@ $db->select('title, content')->table('test')->getAll();
 $db->select('title AS t, content AS c')->table('test')->getAll();
 # Output: "SELECT title AS t, content AS c FROM test"
 ```
+
 ```php
 # Usage2: array parameter
 $db->select(['title', 'content'])->table('test')->getAll();
@@ -146,6 +150,7 @@ $db->select(['title AS t', 'content AS c'])->table('test')->getAll();
 ```
 
 ### select functions (min, max, sum, avg, count)
+
 ```php
 # Usage 1:
 $db->table('test')->max('price')->get();
@@ -157,6 +162,7 @@ $db->table('test')->count('id', 'total_row')->get();
 ```
 
 ### table
+
 ```php
 ### Usage 1: string parameter
 $db->table('table');
@@ -168,6 +174,7 @@ $db->table('table1, table2');
 $db->table('table1 AS t1, table2 AS t2');
 # Output: "SELECT * FROM table1 AS t1, table2 AS t2"
 ```
+
 ```php
 ### Usage 2: array parameter
 $db->table(['table1', 'table2']);
@@ -178,6 +185,7 @@ $db->table(['table1 AS t1', 'table2 AS t2']);
 ```
 
 ### get AND getAll
+
 ```php
 # get(): return 1 record.
 # getAll(): return multiple records.
@@ -193,11 +201,14 @@ $db->select('title')->table('pages')->where('id', 17)->get();
 ```
 
 ### join
+
 ```php
 $db->table('test as t')->join('foo as f', 't.id', 'f.t_id')->where('t.status', 1)->getAll();
 # Output: "SELECT * FROM test as t JOIN foo as f ON t.id=f.t_id WHERE t.status='1'"
 ```
+
 You can use this method in 7 ways. These;
+
 - join
 - left_join
 - right_join
@@ -207,6 +218,7 @@ You can use this method in 7 ways. These;
 - right_outer_join
 
 Examples:
+
 ```php
 $db->table('test as t')->leftJoin('foo as f', 't.id', 'f.t_id')->getAll();
 # Output: "SELECT * FROM test as t LEFT JOIN foo as f ON t.id=f.t_id"
@@ -218,6 +230,7 @@ $db->table('test as t')->fullOuterJoin('foo as f', 't.id', 'f.t_id')->getAll();
 ```
 
 ### where
+
 ```php
 $where = [
 	'name' => 'Burak',
@@ -253,6 +266,7 @@ You can use this method in 4 ways. These;
 - whereNotNull
 
 Example:
+
 ```php
 $db->table('test')->where('active', 1)->notWhere('auth', 1)->getAll();
 # Output: "SELECT * FROM test WHERE active = '1' AND NOT auth = '1'"
@@ -264,9 +278,16 @@ $db->table('test')->where('age', 20)->orWhere('age', '>', 25)->getAll();
 
 $db->table('test')->whereNotNull('email')->getAll();
 # Output: "SELECT * FROM test WHERE email IS NOT NULL"
+
+$db->table('test')->whereNull('email', true)->getAll();
+# Output: "SELECT * FROM test WHERE email IS NOT NULL"
+
+$db->table('test')->where('age', 20)->whereNull('email', true, 'OR')->getAll();
+# Output: "SELECT * FROM test WHERE age = '20' OR email IS NOT NULL"
 ```
 
 ### grouped
+
 ```php
 $db->table('users')
 	->grouped(function($q) {
@@ -278,6 +299,7 @@ $db->table('users')
 ```
 
 ### in
+
 ```php
 $db->table('test')->where('active', 1)->in('id', [1, 2, 3])->getAll();
 # Output: "SELECT * FROM test WHERE active = '1' AND id IN ('1', '2', '3')"
@@ -291,6 +313,7 @@ You can use this method in 4 ways. These;
 - orNotIn
 
 Example:
+
 ```php
 $db->table('test')->where('active', 1)->notIn('id', [1, 2, 3])->getAll();
 # Output: "SELECT * FROM test WHERE active = '1' AND id NOT IN ('1', '2', '3')"
@@ -302,6 +325,7 @@ $db->table('test')->where('active', 1)->orIn('id', [1, 2, 3])->getAll();
 ```
 
 ### findInSet
+
 ```php
 $db->table('test')->where('active', 1)->findInSet('selected_ids', 1)->getAll();
 # Output: "SELECT * FROM test WHERE active = '1' AND FIND_IN_SET (1, selected_ids)"
@@ -315,6 +339,7 @@ You can use this method in 4 ways. These;
 - orNotFindInSet
 
 Example:
+
 ```php
 $db->table('test')->where('active', 1)->notFindInSet('selected_ids', 1)->getAll();
 # Output: "SELECT * FROM test WHERE active = '1' AND NOT FIND_IN_SET (1, selected_ids)"
@@ -326,6 +351,7 @@ $db->table('test')->where('active', 1)->orFindInSet('selected_ids', 1)->getAll()
 ```
 
 ### between
+
 ```php
 $db->table('test')->where('active', 1)->between('age', 18, 25)->getAll();
 # Output: "SELECT * FROM test WHERE active = '1' AND age BETWEEN '18' AND '25'"
@@ -339,6 +365,7 @@ You can use this method in 4 ways. These;
 - orNotBetween
 
 Example:
+
 ```php
 $db->table('test')->where('active', 1)->notBetween('age', 18, 25)->getAll();
 # Output: "SELECT * FROM test WHERE active = '1' AND age NOT BETWEEN '18' AND '25'"
@@ -350,6 +377,7 @@ $db->table('test')->where('active', 1)->orBetween('age', 18, 25)->getAll();
 ```
 
 ### like
+
 ```php
 $db->table('test')->like('title', "%php%")->getAll();
 # Output: "SELECT * FROM test WHERE title LIKE '%php%'"
@@ -363,6 +391,7 @@ You can use this method in 4 ways. These;
 - orNotLike
 
 Example:
+
 ```php
 $db->table('test')->where('active', 1)->notLike('tags', '%dot-net%')->getAll();
 # Output: "SELECT * FROM test WHERE active = '1' AND tags NOT LIKE '%dot-net%'"
@@ -374,6 +403,7 @@ $db->table('test')->like('bio', '%php%')->orLike('bio', '%java%')->getAll();
 ```
 
 ### groupBy
+
 ```php
 # Usage 1: One parameter
 $db->table('test')->where('status', 1)->groupBy('cat_id')->getAll();
@@ -387,6 +417,7 @@ $db->table('test')->where('status', 1)->groupBy(['cat_id', 'user_id'])->getAll()
 ```
 
 ### having
+
 ```php
 $db->table('test')->where('status', 1)->groupBy('city')->having('COUNT(person)', 100)->getAll();
 # Output: "SELECT * FROM test WHERE status='1' GROUP BY city HAVING COUNT(person) > '100'"
@@ -403,6 +434,7 @@ $db->table('test')->where('active', 1)->groupBy('department_id')->having('AVG(sa
 ```
 
 ### orderBy
+
 ```php
 # Usage 1: One parameter
 $db->table('test')->where('status', 1)->orderBy('id')->getAll();
@@ -427,11 +459,13 @@ $db->table('test')->where('status', 1)->orderBy('rand()')->limit(10)->getAll();
 ```
 
 ### limit - offset
+
 ```php
 # Usage 1: One parameter
 $db->table('test')->limit(10)->getAll();
 # Output: "SELECT * FROM test LIMIT 10"
 ```
+
 ```php
 # Usage 2: Two parameters
 $db->table('test')->limit(10, 20)->getAll();
@@ -443,6 +477,7 @@ $db->table('test')->limit(10)->offset(10)->getAll();
 ```
 
 ### pagination
+
 ```php
 # First parameter: Data count of per page
 # Second parameter: Active page
@@ -455,6 +490,7 @@ $db->table('test')->pagination(15, 2)->getAll();
 ```
 
 ### insert
+
 ```php
 $data = [
 	'title' => 'test',
@@ -468,6 +504,7 @@ $db->table('pages')->insert($data);
 ```
 
 ### update
+
 ```php
 $data = [
 	'username' => 'izniburak',
@@ -481,6 +518,7 @@ $db->table('users')->where('id', 10)->update($data);
 ```
 
 ### delete
+
 ```php
 $db->table('test')->where("id", 17)->delete();
 # Output: "DELETE FROM test WHERE id = '17'"
@@ -492,6 +530,7 @@ $db->table('test')->delete();
 ```
 
 ### transaction
+
 ```php
 $db->transaction();
 
@@ -507,36 +546,42 @@ $db->rollBack();
 ```
 
 ### analyze
+
 ```php
 $db->table('users')->analyze();
 # Output: "ANALYZE TABLE users"
 ```
 
 ### check
+
 ```php
 $db->table(['users', 'pages'])->check();
 # Output: "CHECK TABLE users, pages"
 ```
 
 ### checksum
+
 ```php
 $db->table(['users', 'pages'])->checksum();
 # Output: "CHECKSUM TABLE users, pages"
 ```
 
 ### optimize
+
 ```php
 $db->table(['users', 'pages'])->optimize();
 # Output: "OPTIMIZE TABLE users, pages"
 ```
 
 ### repair
+
 ```php
 $db->table(['users', 'pages'])->repair();
 # Output: "REPAIR TABLE users, pages"
 ```
 
 ### query
+
 ```php
 # Usage 1: Select all records
 $db->query('SELECT * FROM test WHERE id=? AND status=?', [10, 1])->fetchAll();
@@ -549,6 +594,7 @@ $db->query('DELETE FROM test WHERE id=?', [10])->exec();
 ```
 
 ### insertId
+
 ```php
 $data = [
 	'title' => 'test',
@@ -562,6 +608,7 @@ var_dump($db->insertId());
 ```
 
 ### numRows
+
 ```php
 $db->select('id, title')->table('test')->where('status', 1)->orWhere('status', 2)->getAll();
 
@@ -569,11 +616,13 @@ var_dump($db->numRows());
 ```
 
 ### error
+
 ```php
 $db->error();
 ```
 
 ### cache
+
 ```php
 # Usage: ...->cache($time)->...
 $db->table('pages')->where('slug', 'example-page')->cache(60)->get();
@@ -581,12 +630,14 @@ $db->table('pages')->where('slug', 'example-page')->cache(60)->get();
 ```
 
 ### queryCount
+
 ```php
 $db->queryCount();
 # The number of all SQL queries on the page until the end of the beginning.
 ```
 
 ### getQuery
+
 ```php
 $db->getQuery();
 # Last SQL Query.
