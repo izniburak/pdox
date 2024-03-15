@@ -108,7 +108,7 @@ class Pdox implements PdoxInterface
         }
 
         try {
-            $this->pdo = new PDO($dsn, $config['username'], $config['password'], isset($config['options']) ? $config['options'] : null);
+            $this->pdo = new PDO($dsn, $config['username'], $config['password']);
             $this->pdo->exec("SET NAMES '" . $config['charset'] . "' COLLATE '" . $config['collation'] . "'");
             $this->pdo->exec("SET CHARACTER SET '" . $config['charset'] . "'");
             $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
@@ -424,13 +424,19 @@ class Pdox implements PdoxInterface
     /**
      * @param string $where
      * @param bool   $not
+     * @param string $andOr
      *
      * @return $this
      */
-    public function whereNull($where, $not = false)
+    public function whereNull($where, $not = false, $andOr = 'AND')
     {
+        if ($this->grouped) {
+            $where = '(' . $where;
+            $this->grouped = false;
+        }
+
         $where = $where . ' IS ' . ($not ? 'NOT' : '') . ' NULL';
-        $this->where = is_null($this->where) ? $where : $this->where . ' ' . 'AND ' . $where;
+        $this->where = is_null($this->where) ? $where : $this->where . ' ' . $andOr . ' ' . $where;
 
         return $this;
     }
@@ -533,7 +539,7 @@ class Pdox implements PdoxInterface
     public function findInSet($field, $key, $type = '', $andOr = 'AND')
     {
         $key = is_numeric($key) ? $key : $this->escape($key);
-        $where =  $type . 'FIND_IN_SET (' . $key . ', '.$field.')';
+        $where =  $type . 'FIND_IN_SET (' . $key . ', ' . $field . ')';
 
         if ($this->grouped) {
             $where = '(' . $where;
@@ -1091,6 +1097,17 @@ class Pdox implements PdoxInterface
             return null;
         }
 
+        if (!is_null($this->cache) && $type !== PDO::FETCH_CLASS) {
+            $cache = $this->cache->getCache($this->query, $type === PDO::FETCH_ASSOC);
+            if ($cache) {
+                $this->cache = null;
+                $this->numRows = is_array($cache) ? count($cache) : ($cache === '' ? 0 : 1);
+                return $all ? $cache : (isset($cache[0]) ? $cache[0] : $cache);
+            }
+        } else {
+            $this->cache = null;
+        }
+
         $query = $this->pdo->query($this->query);
         if (!$query) {
             $this->error = $this->pdo->errorInfo()[2];
@@ -1106,6 +1123,10 @@ class Pdox implements PdoxInterface
 
         $result = $all ? $query->fetchAll() : $query->fetch();
         $this->numRows = is_array($result) ? count($result) : 1;
+
+        if (!is_null($this->cache) && $type !== PDO::FETCH_CLASS) {
+            $this->cache->setCache($this->query, $result);
+        }
         return $result;
     }
 
