@@ -3,6 +3,7 @@
 namespace Buki;
 
 use Closure;
+use InvalidArgumentException;
 use PDO;
 use PDOException;
 
@@ -245,7 +246,7 @@ class Pdox implements PdoxInterface
         $table = $this->prefix . $table;
 
         if (!is_null($operator)) {
-            $on = !in_array($operator, $this->operators)
+            $on = !in_array($operator, $this->operators, true)
                 ? $field1 . ' = ' . $operator . (!is_null($field2) ? ' ' . $field2 : '')
                 : $field1 . ' ' . $operator . ' ' . $field2;
         }
@@ -366,7 +367,7 @@ class Pdox implements PdoxInterface
                     }
                 }
                 $where = $_where;
-            } elseif (!in_array($operator, $this->operators) || $operator == false) {
+            } elseif (!in_array($operator, $this->operators, true) || $operator == false) {
                 $where = $type . $where . ' = ' . $this->escape($operator);
             } else {
                 $where = $type . $where . ' ' . $operator . ' ' . $this->escape($val);
@@ -733,6 +734,8 @@ class Pdox implements PdoxInterface
      */
     public function pagination($perPage, $page)
     {
+        $perPage = (int) $perPage;
+        $page = (int) $page;
         $this->limit = $perPage;
         $this->offset = (($page > 0 ? $page : 1) - 1) * $perPage;
 
@@ -748,7 +751,11 @@ class Pdox implements PdoxInterface
     public function orderBy($orderBy, $orderDir = null)
     {
         if (!is_null($orderDir)) {
-            $this->orderBy = $orderBy . ' ' . strtoupper($orderDir);
+            $orderDir = strtoupper($orderDir);
+            if (!in_array($orderDir, ['ASC', 'DESC'], true)) {
+                throw new InvalidArgumentException('Order direction must be either ASC or DESC.');
+            }
+            $this->orderBy = $orderBy . ' ' . $orderDir;
         } else {
             $this->orderBy = stristr($orderBy, ' ') || strtolower($orderBy) === 'rand()'
                 ? $orderBy
@@ -788,7 +795,7 @@ class Pdox implements PdoxInterface
                 }
             }
             $this->having = $where;
-        } elseif (!in_array($operator, $this->operators)) {
+        } elseif (!in_array($operator, $this->operators, true)) {
             $this->having = $field . ' > ' . $this->escape($operator);
         } else {
             $this->having = $field . ' ' . $operator . ' ' . $this->escape($val);
